@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# 请修改成实际需要转发的URL后取消注释
+#RewriteCond %{HTTP_HOST} ^(ssectec.com|ssectec\.cn|www\.ssectec\.cn)$ [NC]
+#RewriteRule ^(.*)$ http://www.ssectec.com/$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond $1 !^(index\.php|images|robots\.txt)
+RewriteRule ^(.*)$ index.php/$1 [L]

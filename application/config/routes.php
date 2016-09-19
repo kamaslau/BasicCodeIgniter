@@ -43,12 +43,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | This is not exactly a route, but allows you to automatically route
 | controller and method names that contain dashes. '-' isn't a valid
 | class or method name character, so it requires translation.
-| When you set this option to TRUE, it will replace ALL dashes with
-| underscores in the controller and method URI segments.
+| When you set this option to TRUE, it will replace ALL dashes in the
+| controller and method URI segments.
 |
 | Examples:	my-controller/index	-> my_controller/index
 |		my-controller/my-method	-> my_controller/my_method
 */
-$route['default_controller'] = 'welcome';
+
+/* Home 首页 */
+$route['home'] = 'home/index'; // 首页
+
+/* Account 账号 */
+$route['login'] = 'account/login'; // 登录
+$route['register'] = 'account/register'; // 注册
+$route['logout'] = 'account/logout'; // 退出当前账号
+$route['email_reset'] = 'account/email_reset'; // 换绑Email（仅限登录后）
+$route['mobile_reset'] = 'account/mobile_reset'; // 换绑手机号（仅限登录后）
+$route['password_reset'] = 'account/password_reset'; // 重置密码（仅限登录前）
+$route['password_change'] = 'account/password_change'; // 修改密码（仅限登录后）
+$route['account'] = 'account/index'; // 账户中心（仅限登录后）
+
+/* 以下按控制器类名称字母降序排列 */
+
+/* Article 文章 */
+$route['article/detail'] = 'article/detail'; // 文章详情
+$route['article/create'] = 'article/create'; // 创建文章
+$route['article/edit'] = 'article/edit'; // 编辑文章
+$route['article'] = 'article/index'; // 文章列表
+
+/* User 用户（无社交功能的前台一般可删除此组） */
+$route['user/detail'] = 'user/detail'; // 用户详情
+$route['user'] = 'user/index'; // 用户列表
+
+$route['default_controller'] = 'home/index';
 $route['404_override'] = '';
-$route['translate_uri_dashes'] = FALSE;
+$route['translate_uri_dashes'] = TRUE; // 将路径中的“-”解析为“_”，兼顾SEO需要与类命名规范
+
+/* End of file routes.php */
+/* Location: ./application/config/routes.php */

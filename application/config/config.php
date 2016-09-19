@@ -1,6 +1,31 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// 需要自定义的常量
+define('SITE_NAME', 'Go Basic!'); // 站点名称
+define('SITE_SLOGAN', '快一点，简单一点。'); // 站点广告语
+define('SITE_KEYWORDS', 'Basic,PHP,开发框架,开源,CodeIgniter,CI,GitHub'); // 站点关键词
+define('SITE_DESCRIPTION', 'Basic是一个开源的PHP开发框架，源自CI最新稳定版'); // 站点描述
+define('ICP_NUMBER', '鲁ICP备15027187号-1'); // ICP备案号码，没有请留空
+
+define('BASE_URL', '//'. $_SERVER['SERVER_NAME']); // 可对外使用的站点URL, 自动判断协议（HTTP/HTTPS等等）
+//define('IMAGES_URL', '//images.xx.com/'); // （可选）非样式图片存储的根目录所在URL，可用于配合又拍云等第三方存储
+define('COOKIE_DOMAIN', '.suiyimen.cn'); // cookie存储路径，方便起见可让所有子域共享
+define('SESSION_TABLE', 'ci_sessions'); // 用于session存储的数据库表名
+define('SESSION_PERIOD', 2592000); // session有效期秒数，此处设为30天，即60秒*60分*24小时*30天
+define('ENCRYPTION_KEY', ''); // 秘钥用于加密相关功能，可为空
+
+/* 以下是为下一个版本将要增加的功能预留的参数 */
+// TODO: 微信公众平台参数
+define('WECHAT_APP_ID', '');
+define('WECHAT_APP_SECRET', '');
+define('WECHAT_TOKEN', '');
+define('AES_KEY', '');
+
+// TODO: 微信支付参数（常用JS调起支付方式及被扫支付方式根路径）
+define('WEPAY_URL_JSAPI', BASE_URL.'payment/wepay/example/jsapi.php?showwxpaytitle=1&');
+define('WEPAY_URL_NATIVE', BASE_URL.'/payment/wepay/example/native.php?showwxpaytitle=1&');
+
 /*
 |--------------------------------------------------------------------------
 | Base Site URL
@@ -23,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = '';
+$config['base_url'] = BASE_URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +60,7 @@ $config['base_url'] = '';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
@@ -63,8 +88,6 @@ $config['uri_protocol']	= 'REQUEST_URI';
 | For more information please see the user guide:
 |
 | https://codeigniter.com/user_guide/general/urls.html
-|
-| Note: This option is ignored for CLI requests.
 */
 $config['url_suffix'] = '';
 
@@ -78,7 +101,7 @@ $config['url_suffix'] = '';
 | than english.
 |
 */
-$config['language']	= 'english';
+$config['language']	= 'chinese';
 
 /*
 |--------------------------------------------------------------------------
@@ -158,8 +181,6 @@ $config['composer_autoload'] = FALSE;
 | and it will be executed as: ! preg_match('/^[<permitted_uri_chars>]+$/i
 |
 | DO NOT CHANGE THIS UNLESS YOU FULLY UNDERSTAND THE REPERCUSSIONS!!
-|
-| Note: This option is ignored for CLI requests.
 |
 */
 $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
@@ -318,7 +339,7 @@ $config['cache_query_string'] = FALSE;
 | https://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = '';
+$config['encryption_key'] = ENCRYPTION_KEY;
 
 /*
 |--------------------------------------------------------------------------
@@ -371,10 +392,10 @@ $config['encryption_key'] = '';
 | except for 'cookie_prefix' and 'cookie_httponly', which are ignored here.
 |
 */
-$config['sess_driver'] = 'files';
+$config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'ci_session';
-$config['sess_expiration'] = 7200;
-$config['sess_save_path'] = NULL;
+$config['sess_expiration'] = SESSION_PERIOD;
+$config['sess_save_path'] = SESSION_TABLE;
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;
@@ -395,7 +416,7 @@ $config['sess_regenerate_destroy'] = FALSE;
 |
 */
 $config['cookie_prefix']	= '';
-$config['cookie_domain']	= '';
+$config['cookie_domain']	= COOKIE_DOMAIN;
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
@@ -482,7 +503,8 @@ $config['compress_output'] = FALSE;
 | helper' page of the user guide for information regarding date handling.
 |
 */
-$config['time_reference'] = 'local';
+$config['time_reference'] = 'Asia/Shanghai';
+date_default_timezone_set('Asia/Shanghai');
 
 /*
 |--------------------------------------------------------------------------
@@ -515,3 +537,6 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+/* End of file config.php */
+/* Location: ./application/config/config.php */

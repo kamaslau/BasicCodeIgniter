@@ -1,0 +1,37 @@
+/**
+ * style.css
+ *
+ * 适用于整站的样式规则
+ */
+@charset "utf-8";
+@viewport{width:device-width;}
+
+* {box-sizing:border-box;}
+body {color:#111;background-color:#fff;font:1em/1.5 "微软雅黑",verdana,sans-serif;}
+figure {line-height:1;}
+img {width:100%;max-width:100%;}
+a {color:#333;}
+	a:hover {color:#999;}
+
+.horizontal {overflow:hidden;}
+	.horizontal li,.horizontal .li {float:left;display:inline;}
+
+#totop {position:fixed;right:1em;bottom:1em;}
+
+/* 宽度在640像素以上的设备 */
+@media only screen and (min-width:641px)
+{
+	.container {width:95%;margin:0 auto;}
+}
+
+/* 宽度在960像素以上的设备 */
+@media only screen and (min-width:961px)
+{
+	.container {width:960px;}
+}
+
+/* 宽度在1280像素以上的设备 */
+@media only screen and (min-width:1281px)
+{
+	.container {width:1280px;}
+}
