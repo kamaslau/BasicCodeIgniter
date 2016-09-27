@@ -3,7 +3,7 @@
 /* 宽度在960像素以上的设备 */
 @media only screen and (min-width:961px)
 {
-	
+
 }
 </style>
 
@@ -26,7 +26,7 @@
 			<div class=input-group>
 				<label for=password_new>新密码</label>
 				<div>
-					<input name=password_new placeholder="新密码" required>
+					<input name=password_new type=password placeholder="新密码" required>
 					<?php echo form_error('password_new') ?>
 				</div>
 			</div>
@@ -34,7 +34,7 @@
 			<div class=input-group>
 				<label for=password2>确认新密码</label>
 				<div>
-					<input name=password2 placeholder="确认新密码" required>
+					<input name=password2 type=password placeholder="确认新密码" required>
 					<?php echo form_error('password2') ?>
 				</div>
 			</div>

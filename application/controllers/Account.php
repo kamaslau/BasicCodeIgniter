@@ -120,7 +120,7 @@
 				endif;
 			endif;
 		}
-		
+
 		/**
 		* 注册
 		*
@@ -134,7 +134,7 @@
 		public function register()
 		{
 			if ($this->session->logged_in === TRUE) redirect(base_url());
-			
+
 			// 页面信息
 			$data = array(
 				'title' => '注册',
@@ -155,7 +155,7 @@
 				$data['error'] = '<p>该手机号已注册过账户，请<a title="登录" href="'. base_url('login') .'">登录</a>。</p>';
 				$this->load->view('templates/header', $data);
 				$this->load->view($this->view_root.'register', $data);
-				$this->load->view('templates/footer', $data);			
+				$this->load->view('templates/footer', $data);
 
 			else:
 
@@ -235,6 +235,15 @@
 			$this->form_validation->set_rules('password_new', '新密码', 'trim|required|is_natural|exact_length[6]');
 			$this->form_validation->set_rules('password2', '确认密码', 'trim|required|matches[password_new]');
 
+			if ($this->input->post('password') === $this->input->post('password_new')):
+				$data['error'] = '新密码需要不同于原密码';
+				$this->load->view('templates/header', $data);
+				$this->load->view($this->view_root.'password_change', $data);
+				$this->load->view('templates/footer', $data);
+				var_dump($data);
+				exit;
+			endif;
+
 			// 需要存入数据库的信息
 			$data_to_edit = array(
 				'password' => sha1($this->input->post('password_new'))
@@ -242,7 +251,7 @@
 
 			// Go Basic!
 			$this->basic->edit($data, $data_to_edit, 'password_change');
-			
+
 			var_dump($this->basic_model->password_check());
 		}
 
@@ -267,7 +276,7 @@
 				'class' => $this->class_name.' '. $this->class_name.'-'.'password-reset'
 			);
 		}
-		
+
 		/**
 		* 退出账户
 		*

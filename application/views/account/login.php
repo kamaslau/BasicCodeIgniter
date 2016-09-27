@@ -3,7 +3,7 @@
 /* 宽度在960像素以上的设备 */
 @media only screen and (min-width:961px)
 {
-	
+
 }
 </style>
 
@@ -43,4 +43,9 @@
 
 		<button type=submit>登录</button>
 	</form>
+
+	<ul>
+		<li><a title="注册" href="<?php echo base_url('register') ?>">注册</a></li>
+		<li><a title="找回密码" href="<?php echo base_url('password_reset') ?>">找回密码</a></li>
+	</ul>
 </div>

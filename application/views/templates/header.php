@@ -1,10 +1,10 @@
 <?php
-	// 生成SEO相关变量，一般为页面特定信息拼接在config/config.php中设置的站点通用信息
+	// 生成SEO相关变量，一般为页面特定信息与在config/config.php中设置的站点通用信息拼接
 	$title = isset($title)? $title.' - '.SITE_NAME: SITE_NAME.' - '.SITE_SLOGAN;
 	$keywords = isset($keywords)? $keywords.',': NULL;
-	$keywords.= SITE_KEYWORDS;
+	$keywords .= SITE_KEYWORDS;
 	$description = isset($description)? $description: NULL;
-	$description.= SITE_DESCRIPTION;
+	$description .= SITE_DESCRIPTION;
 ?>
 <!doctype html>
 <html lang=zh-cn>
@@ -15,7 +15,7 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20160919">
+		<meta name=version content="revision20160926">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
@@ -47,7 +47,7 @@
 		<link rel=stylesheet media=all href="<?php echo base_url() ?>css/style.css">
 
 		<link rel="shortcut icon" href="//images.guangchecheng.com/logos/logo_32x32.png">
-		<link rel="apple-touch-icon" href="//images.guangchecheng.com/logos/logo_120x120.png">
+		<link rel=apple-touch-icon href="//images.guangchecheng.com/logos/logo_120x120.png">
 
 		<link rel=canonical href="<?php echo current_url() ?>">
 

@@ -3,7 +3,7 @@
 /* 宽度在960像素以上的设备 */
 @media only screen and (min-width:961px)
 {
-	
+
 }
 </style>
 
@@ -31,11 +31,11 @@
 					<?php echo form_error('mobile') ?>
 				</div>
 			</div>
-			
+
 			<div class=input-group>
 				<label for=password>密码</label>
 				<div>
-					<input name=password placeholder="密码" required>
+					<input name=password type=password placeholder="密码" required>
 					<?php echo form_error('password') ?>
 				</div>
 			</div>
@@ -43,7 +43,7 @@
 			<div class=input-group>
 				<label for=password2>确认密码</label>
 				<div>
-					<input name=password2 placeholder="确认密码" required>
+					<input name=password2 type=password placeholder="确认密码" required>
 					<?php echo form_error('password2') ?>
 				</div>
 			</div>

@@ -23,7 +23,7 @@
 					<a title="工业和信息化部网站备案系统" href="http://www.miitbeian.gov.cn/" target=_blank rel=nofollow><?php echo ICP_NUMBER ?></a>
 					<?php endif ?>
 
-					<a id=support title="访问Basic的Github主页" href="https://github.com/kamaslau/Basic" target=_blank>由Basic驱动</a></p>
+					<a id=support title="访问Basic的Github主页" href="https://github.com/kamaslau/BasicCodeigniter" target=_blank>由Basic驱动</a></p>
 				</div>
 			</div>
 

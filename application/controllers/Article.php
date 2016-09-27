@@ -14,25 +14,25 @@
 	{
 		/* 类名称小写，应用于多处动态生成内容 */
 		public $class_name;
-		
+
 		/* 类名称中文，应用于多处动态生成内容 */
 		public $class_name_cn;
-		
+
 		/* 主要相关表名 */
 		public $table_name;
-		
+
 		/* 主要相关表的主键名*/
 		public $id_name;
-		
+
 		/* 视图文件所在目录名 */
 		public $view_root;
 
 		public function __construct()
 		{
 			parent::__construct();
-			
+
 			// 未登录用户转到登录页
-			//if ($this->session->logged_in !== TRUE) redirect(base_url('login'));
+			if ($this->session->logged_in !== TRUE) redirect(base_url('login'));
 
 			// 向类属性赋值
 			$this->class_name = strtolower(__CLASS__);
@@ -60,7 +60,7 @@
 				'keywords' => '关键词一,关键词二,关键词三', // （可选，后台功能可删除此行）页面关键词；每个关键词之间必须用半角逗号","分隔才能保证搜索引擎兼容性
 				'description' => '这个页面的主要内容是一大波文章的列表' // （可选，后台功能可删除此行）页面内容描述
 			);
-			
+
 			// Go Basic！
 			$this->basic->index($data);
 		}
@@ -112,7 +112,7 @@
 			$min_level = 0; // 员工最低权限
 			$this->basic->permission_check($role_allowed, $min_level);
 			*/
-			
+
 			// 待验证的表单项
 			$this->form_validation->set_rules('title', '标题', 'trim|required');
 			$this->form_validation->set_rules('content', '内容', 'trim|required');

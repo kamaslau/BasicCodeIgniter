@@ -5,7 +5,7 @@
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
 	 * @copyright SSEC <www.ssectec.com>
-	 * @copyright Basic <https://github.com/liuyajie728/Basic>
+	 * @copyright Basic <https://github.com/kamaslau/BasicCodeIgniter>
 	 */
 	class Basic_model extends CI_Model
 	{
@@ -205,7 +205,7 @@
 
 			$query = $this->db->get($this->table_name);
 			return $query->result_array();
-			
+
 			if ($return_ids === TRUE):
 				// 多维数组转换为一维数组
 				$ids = array();

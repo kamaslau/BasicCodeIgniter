@@ -50,9 +50,9 @@
 		 */
 		public function upload()
 		{
-		 
+
 		}
-		
+
 		/**
 		 * 调用错误提示页面
 		 *
@@ -105,7 +105,7 @@
 		 */
 		public function file_edit($url, $data)
 		{
-			$this->CI->load->helper('file');	
+			$this->CI->load->helper('file');
 			if ( ! write_file($url, $data, 'w+'))
 			{
 				return FALSE;
@@ -165,7 +165,7 @@
 
 			// 获取项目
 			$data['item'] = $this->CI->basic_model->select_by_id($id);
-			
+
 			// 生成最终页面标题
 			$dynamic_title = $title_name !== NULL? $data['item'][$title_name]: NULL;
 			$data['title'] = $position === 'before'? $dynamic_title. $data['title']: $data['title']. $dynamic_title;
@@ -288,13 +288,13 @@
 				$this->CI->load->view('templates/header', $data);
 				$this->CI->load->view($this->view_root.'result', $data);
 				$this->CI->load->view('templates/footer', $data);
-				
+
 			endif;
 		}
 
 		/**
 		 * 编辑多行数据
-		 * 
+		 *
 		 * 一般为后台功能，单独或批量编辑多行数据的单独或多个字段；
 		 * 简单修改359行即可应用于单独或批量删除、恢复、上架、下架、发布、存为草稿等场景
 		 *
@@ -336,7 +336,7 @@
 					exit;
 				endif;
 
-				// 更新文章状态
+				// 更新数据
 				$ids = explode('|', $ids);
 				foreach ($ids as $id):
 					$result = $this->CI->basic_model->edit($id, $data_to_edit);
@@ -354,6 +354,6 @@
 			endif;
 		}
 	}
-	
+
 /* End of file Basic.php */
 /* Location: ./application/controllers/Basic.php */
