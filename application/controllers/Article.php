@@ -71,7 +71,7 @@
 			// 页面信息
 			$data = array(
 				'title' => $this->class_name_cn.'详情',
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__, // 一般均直接将类名、类名与方法名的组合作为页面body元素的class值，但为了尊重前端工程师的选择权，此处不做进一步抽象；若确需直接进一步抽象，则直接将此行在libraries/Basic.php文件的相应方法中体现即可。
+				'class' => $this->class_name.' '. $this->class_name.'-detail', // 一般均直接将类名、类名与方法名的组合作为页面body元素的class值，但为了尊重前端工程师的选择权，此处不做进一步抽象；若确需直接进一步抽象，则直接将此行在libraries/Basic.php文件的相应方法中体现即可。
 				'keywords' => '关键词一,关键词二,关键词三',
 				'description' => '这个页面的主要内容是一大波文章的列表'
 			);
@@ -89,7 +89,7 @@
 			// 页面信息
 			$data = array(
 				'title' => $this->class_name_cn.'回收站',
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__
+				'class' => $this->class_name.' '. $this->class_name.'-trash'
 				// 对于后台功能，一般不需要特别指定具体页面的keywords和description，下同
 			);
 
@@ -103,7 +103,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '创建'.$this->class_name_cn,
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__
+				'class' => $this->class_name.' '. $this->class_name.'-create'
 			);
 
 			// 检查操作权限
@@ -142,7 +142,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '编辑'.$this->class_name_cn,
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__
+				'class' => $this->class_name.' '. $this->class_name.'-edit'
 			);
 
 			// 检查操作权限
@@ -180,7 +180,7 @@
 			// 页面信息
 			$data = array(
 				'title' => $op_name. $this->class_name_cn,
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__
+				'class' => $this->class_name.' '. $this->class_name.'-delete'
 			);
 
 			// 检查操作权限

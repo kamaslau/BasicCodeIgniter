@@ -60,7 +60,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '登录',
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__
+				'class' => $this->class_name.' '. $this->class_name.'-login'
 			);
 
 			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural|exact_length[11]');
@@ -138,7 +138,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '注册',
-				'class' => $this->class_name.' '. $this->class_name.'-'. __METHOD__
+				'class' => $this->class_name.' '. $this->class_name.'-register'
 			);
 
 			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural|exact_length[11]');
@@ -221,7 +221,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '修改密码',
-				'class' => $this->class_name.' '. $this->class_name.'-'.'password-change',
+				'class' => $this->class_name.' '. $this->class_name.'-password-change',
 				'id' => $this->session->user_id
 			);
 			$data1 = array(
@@ -273,7 +273,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '重置密码',
-				'class' => $this->class_name.' '. $this->class_name.'-'.'password-reset'
+				'class' => $this->class_name.' '. $this->class_name.'-password-reset'
 			);
 		}
 

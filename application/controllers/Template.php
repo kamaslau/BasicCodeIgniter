@@ -15,21 +15,37 @@
 		/* 类名称小写，应用于多处动态生成内容 */
 		public $class_name;
 
+		/* 类名称中文，应用于多处动态生成内容 */
+		public $class_name_cn;
+
+		/* 主要相关表名 */
+		public $table_name;
+
+		/* 主要相关表的主键名*/
+		public $id_name;
+
+		/* 视图文件所在目录名 */
+		public $view_root;
+
 		public function __construct()
 		{
 			parent::__construct();
 
 			// （可选）未登录用户转到登录页
 			//if ($this->session->logged_in !== TRUE) redirect(base_url('login'));
-
+			
 			// 向类属性赋值
 			$this->class_name = strtolower(__CLASS__);
+			$this->class_name_cn = '账户'; // 改这里……
+			$this->table_name = 'user'; // 和这里……
+			$this->id_name = 'user_id';  // 还有这里，OK，这就可以了
+			$this->view_root = $this->class_name. '/';
 
 			// 设置并调用Basic核心库
 			$basic_configs = array(
-				'table_name' => 'article',
-				'id_name' => 'article_id',
-				'view_root' => $this->class_name
+				'table_name' => $this->table_name,
+				'id_name' => $this->id_name,
+				'view_root' => $this->view_root
 			);
 			$this->load->library('basic', $basic_configs);
 
@@ -82,6 +98,114 @@
 			
 			// Go Basic！
 			$this->basic->trash($data);
+		}
+		
+		// 创建项目（一般为后台功能）
+		public function create()
+		{
+			// 页面信息
+			$data = array(
+				'title' => '创建'.$this->class_name_cn,
+				'class' => $this->class_name.' '. $this->class_name.'-create'
+			);
+
+			// 检查操作权限
+			/*
+			$role_allowed = array('editor', 'manager'); // 员工角色要求
+			$min_level = 0; // 员工最低权限
+			$this->basic->permission_check($role_allowed, $min_level);
+			*/
+
+			// 待验证的表单项
+			$this->form_validation->set_rules('title', '标题', 'trim|required');
+			$this->form_validation->set_rules('content', '内容', 'trim|required');
+			$this->form_validation->set_rules('excerpt', '摘要', 'trim');
+
+			// 需要存入数据库的信息
+			$title = $this->input->post('title');
+			$content = $this->input->post('content');
+			$excerpt = $this->input->post('excerpt');
+			$data_to_create = array(
+				'title' => $title, // 不建议直接用$this->input->post、$this->input->get等方法直接在此处赋值，分开处理会保持最大的灵活性以应对图片上传等场景
+				'content' => $content,
+				'excerpt' => $excerpt
+			);
+
+			// Go Basic!
+			$this->basic->create($data, $data_to_create);
+		}
+
+		/**
+		 * 编辑项目详情（一般为后台功能）
+		 *
+		 *
+		 */
+		public function edit()
+		{
+			// 页面信息
+			$data = array(
+				'title' => '编辑'.$this->class_name_cn,
+				'class' => $this->class_name.' '. $this->class_name.'-edit'
+			);
+
+			// 检查操作权限
+			/*
+			$role_allowed = array('editor', 'manager'); // 员工角色要求
+			$min_level = 0; // 员工最低权限
+			$this->basic->permission_check($role_allowed, $min_level);
+			*/
+
+			// 待验证的表单项
+			$this->form_validation->set_rules('title', '标题', 'trim|required');
+			$this->form_validation->set_rules('content', '内容', 'trim|required');
+			$this->form_validation->set_rules('excerpt', '摘要', 'trim');
+
+			// 需要存入数据库的信息
+			$data_to_edit = array(
+				'title' => $this->input->post('title'),
+				'content' => $this->input->post('content'),
+				'excerpt' => $this->input->post('excerpt')
+			);
+
+			// Go Basic!
+			$this->basic->edit($data, $data_to_edit);
+		}
+
+		/**
+		 * 批量处理单行或多行项目
+		 *
+		 * 一般用于存为草稿、上架、下架、删除、恢复等状态变化，请根据需要修改方法名，例如delete、restore、draft等
+		 */
+		public function delete()
+		{
+			$op_name = '删除'; // 操作的名称
+
+			// 页面信息
+			$data = array(
+				'title' => $op_name. $this->class_name_cn,
+				'class' => $this->class_name.' '. $this->class_name.'-delete'
+			);
+
+			// 检查操作权限
+			/*
+			$role_allowed = array('editor', 'manager'); // 员工角色要求
+			$min_level = 0; // 员工最低权限
+			$this->basic->permission_check($role_allowed, $min_level);
+			*/
+
+			// 待验证的表单项
+			$this->form_validation->set_rules('password', '密码', 'trim|required|is_natural|exact_length[6]');
+
+			// 需要存入数据库的信息
+			$data_to_edit = array(
+				'time_delete' => date('y-m-d H:i:s')
+				// 此处换为'time_delete' => NULL即可批量恢复
+				// 此处换为'name' => 'value'即可批量修改其它数据
+				// 添加多行'name' => 'value', 最后一行去掉逗号即可批量修改多个字段
+			);
+
+			// Go Basic!
+			$this->basic->bulk($data, $data_to_edit, $op_name);
 		}
 	}
 
