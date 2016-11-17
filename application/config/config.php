@@ -23,11 +23,11 @@ define('WECHAT_TOKEN', '');
 define('AES_KEY', '');
 
 // 微信支付参数（常用JS调起支付方式及被扫支付方式根路径）
-define('WEPAY_URL_JSAPI', BASE_URL.'payment/wepay/example/jsapi.php?showwxpaytitle=1&');
+define('WEPAY_URL_JSAPI', BASE_URL.'/payment/wepay/example/jsapi.php?showwxpaytitle=1&');
 define('WEPAY_URL_NATIVE', BASE_URL.'/payment/wepay/example/native.php?showwxpaytitle=1&');
 
 // 支付宝参数
-define('ALIPAY_URL', BASE_URL.'payment/alipay/alipayapi.php?');
+define('ALIPAY_URL', BASE_URL.'/payment/alipay/alipayapi.php?');
 
 /*
 |--------------------------------------------------------------------------

@@ -32,9 +32,9 @@
 			// 向类属性赋值
 			$this->class_name = strtolower(__CLASS__);
 			$this->class_name_cn = '账户'; // 改这里……
-			$this->table_name = 'user'; // 和这里……
-			$this->id_name = 'user_id';  // 还有这里，OK，这就可以了
-			$this->view_root = $this->class_name. '/';
+			$this->table_name = 'stuff'; // 和这里……
+			$this->id_name = 'stuff_id';  // 还有这里，OK，这就可以了
+			$this->view_root = $this->class_name;
 
 			// 设置并调用Basic核心库
 			$basic_configs = array(
@@ -68,7 +68,7 @@
 
 			if ($this->form_validation->run() === FALSE):
 				$this->load->view('templates/header', $data);
-				$this->load->view($this->view_root.'login', $data);
+				$this->load->view($this->view_root.'/login', $data);
 				$this->load->view('templates/footer', $data);
 
 			else:
@@ -81,20 +81,13 @@
 				// 成功登录
 				if ( ! empty($result)):
 					// 获取用户信息
-					$data['user'] = $result;
+					$data['stuff'] = $result;
 
-					// 将管理员信息写入session
-					$user_data = array(
-						'user_id' => $data['user']['user_id'],
-						'lastname' => $data['user']['lastname'],
-						'firstname' => $data['user']['firstname'],
-						'gender' => $data['user']['gender'],
-						'mobile' => $data['user']['mobile'],
-						'role' => $data['user']['role'],
-						'level' => $data['user']['level'],
-						'status' => $data['user']['status'],
-						'logged_in' => TRUE
-					);
+					// 将信息键值对写入session
+					foreach ($data['stuff'] as $key => $value):
+						$user_data[$key] = $value;
+					endforeach;
+					$user_data['logged_in'] = TRUE; // 标记登录状态，便于快速判断是否已登录
 					$this->session->set_userdata($user_data);
 
 					// 将管理员手机号写入cookie并保存1个月
@@ -107,14 +100,14 @@
 				elseif ( empty($if_exsit) ):
 					$data['error'] = '<p>此手机号未注册为用户，请<a title="注册" href="'. base_url('register') .'">注册</a>。</p>';
 					$this->load->view('templates/header', $data);
-					$this->load->view($this->view_root.'login', $data);
+					$this->load->view($this->view_root.'/login', $data);
 					$this->load->view('templates/footer', $data);
 
 				// 若密码错误
 				else:
 					$data['error'] = '<p>密码不正确，请确认后重试。</p>';
 					$this->load->view('templates/header', $data);
-					$this->load->view($this->view_root.'login', $data);
+					$this->load->view($this->view_root.'/login', $data);
 					$this->load->view('templates/footer', $data);
 
 				endif;
@@ -147,14 +140,14 @@
 
 			if ($this->form_validation->run() === FALSE):
 				$this->load->view('templates/header', $data);
-				$this->load->view($this->view_root.'register', $data);
+				$this->load->view($this->view_root.'/register', $data);
 				$this->load->view('templates/footer', $data);
 
 			elseif ( ! empty($this->basic_model->find('mobile', $this->input->post('mobile')))):
 				// 若用户已存在
 				$data['error'] = '<p>该手机号已注册过账户，请<a title="登录" href="'. base_url('login') .'">登录</a>。</p>';
 				$this->load->view('templates/header', $data);
-				$this->load->view($this->view_root.'register', $data);
+				$this->load->view($this->view_root.'/register', $data);
 				$this->load->view('templates/footer', $data);
 
 			else:
@@ -168,27 +161,17 @@
 				// 成功创建
 				if ( ! empty($result)):
 					// 获取用户信息
-					$data['user'] = $this->basic_model->select_by_id($result);
+					$data['stuff'] = $this->basic_model->select_by_id($result);
 
-					// 将管理员信息写入session
-					$user_data = array(
-						'user_id' => $data['user']['user_id'],
-						'nickname' => $data['user']['nickname'],
-						'lastname' => $data['user']['lastname'],
-						'firstname' => $data['user']['firstname'],
-						'gender' => $data['user']['gender'],
-						'mobile' => $data['user']['mobile'],
-						'email' => $data['user']['email'],
-						'dob' => $data['user']['dob'],
-						'logo_url' => $data['user']['logo_url'],
-						'wechat_open_id' => $data['user']['wechat_open_id'],
-						'time_last_login' => $data['user']['time_last_login'],
-						'logged_in' => TRUE
-					);
+					// 将信息键值对写入session
+					foreach ($data['stuff'] as $key => $value):
+						$user_data[$key] = $value;
+					endforeach;
+					$user_data['logged_in'] = TRUE; // 标记登录状态，便于快速判断是否已登录
 					$this->session->set_userdata($user_data);
 
 					// 将管理员手机号写入cookie并保存1个月
-					$this->input->set_cookie('mobile', $data['user']['mobile'], 60*60*24*30, COOKIE_DOMAIN);
+					$this->input->set_cookie('mobile', $data['stuff']['mobile'], 60*60*24*30, COOKIE_DOMAIN);
 					// 转到首页
 					redirect(base_url());
 
@@ -196,7 +179,7 @@
 				else:
 					$data['error'] = '<p>注册失败，请确认后重试。</p>';
 					$this->load->view('templates/header', $data);
-					$this->load->view($this->view_root.'register', $data);
+					$this->load->view($this->view_root.'/register', $data);
 					$this->load->view('templates/footer', $data);
 
 				endif;
@@ -222,10 +205,10 @@
 			$data = array(
 				'title' => '修改密码',
 				'class' => $this->class_name.' '. $this->class_name.'-password-change',
-				'id' => $this->session->user_id
+				'id' => $this->session->stuff_id
 			);
 			$data1 = array(
-				'user_id' => $this->session->user_id,
+				'user_id' => $this->session->stuff_id,
 				'password' => sha1($this->input->post('password'))
 			);
 			var_dump($data1);
@@ -238,7 +221,7 @@
 			if ($this->input->post('password') === $this->input->post('password_new')):
 				$data['error'] = '新密码需要不同于原密码';
 				$this->load->view('templates/header', $data);
-				$this->load->view($this->view_root.'password_change', $data);
+				$this->load->view($this->view_root.'/password_change', $data);
 				$this->load->view('templates/footer', $data);
 				var_dump($data);
 				exit;
