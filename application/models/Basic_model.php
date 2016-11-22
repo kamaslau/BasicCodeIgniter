@@ -70,11 +70,11 @@
 		public function password_check()
 		{
 			$data = array(
-				'user_id' => $this->session->user_id,
+				'stuff_id' => $this->session->stuff_id,
 				'password' => sha1($this->input->post('password'))
 			);
 
-			$query = $this->db->get_where($this->table_name, $data);
+			$query = $this->db->get_where('stuff', $data);
 			return $query->row_array();
 		}
 
@@ -121,9 +121,9 @@
 				foreach ($order_by as $column_name => $value):
 					$this->db->order_by($column_name, $value);
 				endforeach;
-			// 若未指定排序条件，则默认按照创建时间倒序排列
+			// 若未指定排序条件，则默认按照ID倒序排列
 			else:
-				$this->db->order_by('time_create', 'DESC');
+				$this->db->order_by($this->id_name, 'DESC');
 			endif;
 
 			// 默认不返回已删除项
@@ -140,7 +140,7 @@
 				// 多维数组转换为一维数组
 				$ids = array();
 				foreach ($results as $item):
-					$ids[] = $item[$this->id_name];
+					$ids[] = $item[0];
 				endforeach;
 
 				// 释放原结果数组以节省内存
@@ -230,9 +230,10 @@
 		 */
 		public function create($data, $return_id = FALSE)
 		{
-			// 更新创建时间为当前时间，最后操作者为当前用户
+			// 更新创建时间为当前时间，创建者和最后操作者为当前用户
 			$data['time_create'] = date('Y-m-d H:i:s');
 			if ( isset($this->session->stuff_id)):
+				$data['creator_id'] = $this->session->stuff_id;
 				$data['operator_id'] = $this->session->stuff_id;
 			endif;
 

@@ -40,6 +40,67 @@
 			$this->CI->basic_model->table_name = $configs['table_name']; // 表名
 			$this->CI->basic_model->id_name = $configs['id_name']; // 主键名
 		}
+		
+		/**
+		 * 输出表单各输入项
+		 *
+		 * @param array $input 字段数据
+		 * @param string $type 表单类型；edit编辑，create创建
+		 * @param array $item 需要编辑/修改的数据
+		 */
+		public function generate_input($input, $type = 'edit', $item = NULL)
+		{
+			?>
+		<div class=form-group>
+		<?php echo '<label for='. $input[0]. ' class="col-sm-2 control-label">'. $input['1']. (( $input[3] === FALSE )? '（选填）': NULL). '</label>' ?>
+			<div class=col-sm-10>
+		<?php
+			// 生成输入字段
+			$input_type = array('text', 'number', 'email', 'tel', 'date', 'datetime', 'password', 'color');
+			if ( in_array($input[5], $input_type) ):
+				$input_html = '<input class=form-control name='. $input[0].' type='. $input[5];
+				$input_html .= ( isset($input[6]) )? ' '.$input[6]: NULL;
+				$input_html .= ( isset($input[4]) )? ' placeholder="'.$input[4].'"': NULL;
+				$input_html .= ( $input[3] === TRUE )? ' required': NULL;
+				
+				if ($type === 'edit'):
+					$input_html .= ' value="'. $item[$input[0]] .'"';
+				else:
+					$input_html .= ' value="'. set_value($input[0]) .'"';
+				endif;
+				$input_html .= '>';
+
+			elseif ($input[5] === 'select'):
+				$input_html = '<select class=form-control name='. $input[0]. (( $input[3] === TRUE )? ' required': NULL). '>';
+				foreach ($input[7] as $option):
+					if ($type === 'edit'):
+						$selected = ($option === $item[$input[0]])? ' selected': NULL;
+						$input_html .= '<option value="'.$option.'"'.$selected.'>'.$option.'</option>';
+					else:
+						$input_html .= '<option value="'.$option.'">'.$option.'</option>';
+					endif;
+				endforeach;
+				$input_html .= '</select>';
+
+			elseif ($input[5] === 'textarea'):
+				$input_html = '<textarea class=form-control name='. $input[0]. (( $input[3] === TRUE )? ' required': NULL);
+				if ($type === 'edit'):
+					$input_html .= ' value="'. $item[$input[0]] .'"';
+				else:
+					$input_html .= ' value="'. set_value($input[0]) .'"';
+				endif;
+				$input_html .= '>';
+				$input_html .= '</textarea>';
+
+			endif;
+
+			echo $input_html;
+			echo form_error($input[0]);
+		?>
+			</div>
+		</div>
+		<?php
+		}
 
 		/**
 		 * 文件上传
@@ -51,6 +112,75 @@
 		public function upload()
 		{
 
+		}
+		
+		/**
+		 * 保存EXCEL文件中数据到数据库
+		 *
+		 * @param string $file_url 文件路径
+		 */
+		public function upload_excel($data, $file_url)
+		{
+			$this->CI->load->view('templates/header', $data); // 载入视图文件，下同
+			// 载入相关类文件
+			require_once 'phpexcel/Classes/PHPExcel.php';
+			require_once 'phpexcel/Classes/PHPExcel/IOFactory.php';
+
+			// 解析文件并生成文件对象
+			$objPHPExcel = PHPExcel_IOFactory::load($file_url); // 自动判断文件格式并解析文件流
+			$sheet = $objPHPExcel->setActiveSheetIndex(0); // 获取第一个工作表为当前工作表
+			$sheet = $objPHPExcel->getActiveSheet(); // 获取当前工作表
+			$row_count = $sheet->getHighestRow(); // 表格最大行号（例如10），用于循环读取每行数据
+			$column_max = $sheet->getHighestColumn(); // 表格最大列名（例如D）
+			$column_count = PHPExcel_Cell::columnIndexFromString($column_max);
+
+			echo '<p>此表共有'.$row_count.'行，'.$column_count.'列（'.$column_max.'）</p>';
+?>
+	<table class="table table-condensed table-hover table-responsive table-striped sortable">
+		<thead>
+			<tr>
+				<?php
+				$data_to_process = $this->CI->data_to_process;
+				foreach ($data_to_process as $key):
+					echo '<th>'. $key[1]. '</th>';
+				endforeach;
+				?>
+				<th>上传结果</th>
+			</tr>
+		</thead>
+
+		<tbody>
+<?php
+			// 循环读取并写入每行数据到数据库
+			// 可以通过设置$i=2的初始值来跳过表头；无表头$i=1
+			for ($i = 2; $i <= count($data_to_process); $i++)
+			{
+				// 跳过第一个单元格没有内容的行（视为空行）
+				$first_cell = $sheet->getCell('A'.$i)->getValue();
+				if ( isset($first_cell) ):
+					$data_to_create = array(); // 保存当前行的数据
+					// 当前行每列的值
+					for ($column = 0; $column < $column_count; $column++):
+						$current_cell = $sheet->getCellByColumnAndRow($column,$i);
+						$tr[$column] = $current_cell->getValue();
+						// 按键值对保存每行
+						$data_to_create[$data_to_process[$column][0]] = $current_cell->getValue();
+					endfor;
+			
+					// 使用当前行数据在数据库中创建记录
+					$result = $this->CI->basic_model->create($data_to_create);
+
+					// 输出HTML
+					echo '<tr>';
+					foreach ($tr as $item):
+						echo '<td>'.$item.'</td>';
+					endforeach;
+					echo '	<td>'. ($result !== FALSE? '上传成功': '上传失败'). '</td>'; // 上传结果
+					echo '</tr>';
+				endif;
+			}
+
+			$this->CI->load->view('templates/footer', $data);
 		}
 
 		/**
@@ -301,10 +431,11 @@
 		 * @param array $data 从控制器中直接传入的数据
 		 * @param array $ids 需编辑的数据ID们（单独编辑时只传入1个ID即可）
 		 * @param array $op_name 批量操作的名称，例如“删除”、“下架”、“恢复”等等
+		 * @param array $op_view 视图文件名
 		 * @param void 按需传入
 		 * @return void
 		 */
-		public function bulk($data, $data_to_edit, $op_name)
+		public function bulk($data, $data_to_edit, $op_name, $op_view) // 视图文件名)
 		{
 			// 从表单获取待修改项ID数组，或从URL获取待修改单项ID后转换为数组
 			$this->CI->input->post('ids')? $ids = $this->CI->input->post('ids'): $ids[0] = $this->CI->input->get('ids');
@@ -320,7 +451,7 @@
 				endforeach;
 
 				$this->CI->load->view('templates/header', $data);
-				$this->CI->load->view($this->view_root.'bulk', $data);
+				$this->CI->load->view($this->view_root. $op_view, $data);
 				$this->CI->load->view('templates/footer', $data);
 
 			else:
