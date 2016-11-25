@@ -33,7 +33,7 @@
 	?>
 	<a class="btn btn-primary" title="所有<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name) ?>"><i class="fa fa-list"></i> 所有<?php echo $this->class_name_cn ?></a>
 	<a class="btn btn-default" title="回收站" href="<?php echo base_url($this->view_root. 'trash') ?>"><i class="fa fa-trash"></i> 回收站</a>
-	<a class="btn btn-primary" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->view_root.'create') ?>"><i class="fa fa-plus"></i> 创建<?php echo $this->class_name_cn ?></a>
+	<a class="btn btn-primary" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->view_root.'/create') ?>"><i class="fa fa-plus"></i> 创建<?php echo $this->class_name_cn ?></a>
 	<?php endif ?>
 
 	<?php if (empty($items)): ?>

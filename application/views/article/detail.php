@@ -20,8 +20,8 @@
 	}
 </style>
 
-<ol id=breadcrumb class="container horizontal">
-	<li><a href="<?php echo base_url('article') ?>"><?php echo $this->class_name_cn ?></a> >&nbsp</li>
+<ol id=breadcrumb class="breadcrumb container">
+	<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
 	<li><?php echo $item['title'] ?></li>
 </ol>
 

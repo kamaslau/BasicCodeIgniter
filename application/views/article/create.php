@@ -1,3 +1,25 @@
+<style>
+
+
+	/* 宽度在640像素以上的设备 */
+	@media only screen and (min-width:641px)
+	{
+
+	}
+	
+	/* 宽度在960像素以上的设备 */
+	@media only screen and (min-width:961px)
+	{
+
+	}
+
+	/* 宽度在1280像素以上的设备 */
+	@media only screen and (min-width:1281px)
+	{
+
+	}
+</style>
+
 <ol class=breadcrumb>
 	<li><a href="<?php echo base_url() ?>">首页</a></li>
 	<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
