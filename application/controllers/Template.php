@@ -39,7 +39,7 @@
 			$this->class_name_cn = '账户'; // 改这里……
 			$this->table_name = 'user'; // 和这里……
 			$this->id_name = 'user_id';  // 还有这里，OK，这就可以了
-			$this->view_root = $this->class_name. '/';
+			$this->view_root = $this->class_name;
 
 			// 设置并调用Basic核心库
 			$basic_configs = array(
@@ -61,7 +61,7 @@
 		{
 			// 页面信息
 			$data = array(
-				'title' => '', // 页面标题
+				'title' => $this->class_name_cn. '管理', // 页面标题
 				'class' => $this->class_name.' '. $this->class_name.'-index', // 页面body标签的class属性值
 				'keywords' => '关键词一,关键词二,关键词三', // （可选，后台功能可删除此行）页面关键词；每个关键词之间必须用半角逗号","分隔才能保证搜索引擎兼容性
 				'description' => '这个页面的主要内容是一大波文章的列表' // （可选，后台功能可删除此行）页面内容描述
@@ -76,7 +76,7 @@
 		{
 			// 页面信息
 			$data = array(
-				'title' => '文章详情',
+				'title' => $this->class_name_cn. '详情',
 				'class' => $this->class_name.' '. $this->class_name.'-detail',
 				'keywords' => '关键词一,关键词二,关键词三',
 				'description' => '这个页面的主要内容是一大波文章的列表'
@@ -91,8 +91,8 @@
 		{
 			// 页面信息
 			$data = array(
-				'title' => '回收站',
-				'class' => 'class' => $this->class_name.' '. $this->class_name.'-trash'
+				'title' => $this->class_name_cn. '回收站',
+				'class' => $this->class_name.' '. $this->class_name.'-trash'
 				// 对于后台功能，一般不需要特别指定具体页面的keywords和description
 			);
 			
@@ -161,6 +161,9 @@
 			$this->form_validation->set_rules('excerpt', '摘要', 'trim');
 
 			// 需要存入数据库的信息
+			$title = $this->input->post('title');
+			$content = $this->input->post('content');
+			$excerpt = $this->input->post('excerpt');
 			$data_to_edit = array(
 				'title' => $this->input->post('title'),
 				'content' => $this->input->post('content'),
@@ -172,13 +175,14 @@
 		}
 
 		/**
-		 * 批量处理单行或多行项目
+		 * 删除单行或多行项目
 		 *
 		 * 一般用于存为草稿、上架、下架、删除、恢复等状态变化，请根据需要修改方法名，例如delete、restore、draft等
 		 */
 		public function delete()
 		{
 			$op_name = '删除'; // 操作的名称
+			$op_view = 'delete'; // 视图文件名
 
 			// 页面信息
 			$data = array(
@@ -193,19 +197,63 @@
 			$this->basic->permission_check($role_allowed, $min_level);
 			*/
 
+			// 将需要处理的数据传到视图以备使用
+			$data['data_to_process'] = $this->data_to_process;
+
 			// 待验证的表单项
 			$this->form_validation->set_rules('password', '密码', 'trim|required|is_natural|exact_length[6]');
 
 			// 需要存入数据库的信息
 			$data_to_edit = array(
-				'time_delete' => date('y-m-d H:i:s')
-				// 此处换为'time_delete' => NULL即可批量恢复
-				// 此处换为'name' => 'value'即可批量修改其它数据
-				// 添加多行'name' => 'value', 最后一行去掉逗号即可批量修改多个字段
+				'time_delete' => date('y-m-d H:i:s') // 批量删除
+				// 'time_delete' => NULL // 批量恢复
+				// 'name' => 'value' // 批量修改其它数据
+				// 'name' => 'value', // 最后一行去掉逗号即可批量修改多个字段
 			);
 
 			// Go Basic!
-			$this->basic->bulk($data, $data_to_edit, $op_name);
+			$this->basic->bulk($data, $data_to_edit, $op_name, $op_view);
+		}
+		
+		/**
+		 * 恢复单行或多行项目
+		 *
+		 * 一般用于存为草稿、上架、下架、删除、恢复等状态变化，请根据需要修改方法名，例如delete、restore、draft等
+		 */
+		public function restore()
+		{
+			$op_name = '恢复'; // 操作的名称
+			$op_view = 'restore'; // 视图文件名
+
+			// 页面信息
+			$data = array(
+				'title' => $op_name. $this->class_name_cn,
+				'class' => $this->class_name.' '. $this->class_name.'-restore'
+			);
+
+			// 检查操作权限
+			/*
+			$role_allowed = array('editor', 'manager'); // 员工角色要求
+			$min_level = 0; // 员工最低权限
+			$this->basic->permission_check($role_allowed, $min_level);
+			*/
+
+			// 将需要处理的数据传到视图以备使用
+			$data['data_to_process'] = $this->data_to_process;
+
+			// 待验证的表单项
+			$this->form_validation->set_rules('password', '密码', 'trim|required|is_natural|exact_length[6]');
+
+			// 需要存入数据库的信息
+			$data_to_edit = array(
+				// 'time_delete' => date('y-m-d H:i:s') // 批量删除
+				'time_delete' => NULL // 批量恢复
+				// 'name' => 'value' // 批量修改其它数据
+				// 'name' => 'value', // 最后一行去掉逗号即可批量修改多个字段
+			);
+
+			// Go Basic!
+			$this->basic->bulk($data, $data_to_edit, $op_name, $op_view);
 		}
 	}
 
