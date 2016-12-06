@@ -10,6 +10,18 @@ Release Date: Not Released
 -  Core
 
    -  Changed :doc:`URI Library <libraries/uri>` to ignore the ``$config['url_suffix']``, ``$config['permitted_uri_chars']`` configuration settings for CLI requests.
+   -  Removed previously deprecated :doc:`Input Library <libraries/input>` method ``is_cli_request()`` (use :php:func:`is_cli()` instead).
+   -  Removed previously deprecated :doc:`Routing Class <general/routing>` methods ``fetch_directory()``, ``fetch_class()`` and ``fetch_method()`` (use the respective class properties instead).
+   -  Removed previously deprecated :doc:`Config Library <libraries/config>` method ``system_url()`` (encourages insecure practices).
+   -  Removed previously deprecated :doc:`Form Validation Library <libraries/form_validation>` method ``prep_for_form()`` / rule *prep_for_form*.
+   -  Removed previously deprecated :doc:`Date Helper <helpers/date_helper>` function ``standard_date()`` (use PHP's native ``date()`` instead).
+   -  Removed previously deprecated :doc:`Security Helper <helpers/security_helper>` function ``do_hash()`` (use PHP's native ``hash()`` instead).
+   -  Removed previously deprecated :doc:`HTML Helper <helpers/html_helper>` functions ``br()`` and ``nbs()`` (use PHP's native ``str_repeat()`` with ``'<br />'`` and ``'&nbsp;'`` respectively).
+   -  Removed previously deprecated :doc:`String Helper <helpers/string_helper>` functions ``trim_slashes()`` and ``repeater()`` (use PHP's native ``trim()`` with ``'/'`` and ``str_repeat()`` respectively).
+   -  Removed previously deprecated :doc:`File Helper <helpers/file_helper>` function ``read_file()`` (use PHP's native ``file_get_contents()`` instead).
+   -  Removed previously deprecated :doc:`Form Helper <helpers/form_helper>` function ``form_prep()`` (use :php:func:`html_escape()` instead).
+   -  Removed previously deprecated *Email Helper* (had only two functions, aliases for PHP's native ``filter_var()`` and ``mail()``).
+   -  Removed previously deprecated *Javascript Library* (it was always experimental in the first place).
 
 -  Libraries
 
@@ -31,6 +43,10 @@ Release Date: Not Released
 
       - Changed method ``clear()`` to also reset captions.
 
+   -  :doc:`Email Library <libraries/email>` changes include:
+
+      - Changed the default value of the **validate** option to ``TRUE``.
+
 -  :doc:`Database <database/index>`
 
    -  Changed method ``initialize()`` to return void and instead throw a ``RuntimeException`` in case of failure.
@@ -47,6 +63,30 @@ Release Date: Not Released
    -  Updated :doc:`Download Helper <helpers/download_helper>` :php:func:`force_download()` to allow existing files to be renamed for download.
    -  Updated :doc:`HTML Helper <helpers/html_helper>` function :php:func:`meta()` with support for "charset" and "property" properties.
    -  Changed :doc:`HTML Helper <helpers/html_helper>` function :php:func:`doctype()` default document type to HTML 5.
+
+Version 3.1.3
+=============
+
+Release Date: Not Released
+
+-  General Changes
+
+   -  Deprecated :doc:`Date Helper <helpers/date_helper>` function :php:func:`nice_date()`.
+
+Bug fixes for 3.1.3
+-------------------
+
+-  Fixed a bug (#4886) - :doc:`Database Library <database/index>` didn't differentiate bind markers inside double-quoted strings in queries.
+-  Fixed a bug (#4890) - :doc:`XML-RPC Library <libraries/xmlrpc>` didn't work on PHP 7.
+-  Fixed a regression (#4887) - :doc:`File Uploading Library <libraries/file_uploading>` triggered fatal errors due to numerous PHP distribution channels (XAMPP and cPanel confirmed) explicitly disabling ext/fileinfo by default.
+-  Fixed a bug (#4679) - :doc:`Input Library <libraries/input>` method ``ip_address()`` didn't properly resolve ``$config['proxy_ips']`` IPv6 addresses.
+-  Fixed a bug (#4902) - :doc:`Image Manipulation Library <libraries/image_lib>` processing via ImageMagick didn't work.
+-  Fixed a bug (#4905) - :doc:`Loader Library <libraries/loader>` didn't take into account possible user-provided directory paths when loading helpers.
+-  Fixed a bug (#4916) - :doc:`Session Library <libraries/sessions>` with ``sess_match_ip`` enabled was unusable for IPv6 clients when using the 'database' driver on MySQL 5.7.5+.
+-  Fixed a bug (#4917) - :doc:`Date Helper <helpers/date_helper>` function :php:func:`nice_date()` didn't handle YYYYMMDD inputs properly.
+-  Fixed a bug (#4923) - :doc:`Session Library <libraries/sessions>` could execute an erroneous SQL query with the 'database' driver, if the lock attempt times out.
+-  Fixed a bug (#4927) - :doc:`Output Library <libraries/output>` method ``get_header()`` returned the first matching header, regardless of whether it would be replaced by a second ``set_header()`` call.
+-  Fixed a bug (#4844) - :doc:`Email Library <libraries/email>` didn't apply ``escapeshellarg()`` to the while passing the Sendmail ``-f`` parameter through ``popen()``.
 
 Version 3.1.2
 =============
@@ -516,12 +556,12 @@ Release Date: March 30, 2015
    -  :doc:`Form Helper <helpers/form_helper>` changes include:
 
       - :php:func:`form_dropdown()` will now also take an array for unity with other form helpers.
-      - :php:func:`form_prep()` is now DEPRECATED and only acts as an alias for :doc:`common function <general/common_functions>` :php:func:`html_escape()`.
+      - ``form_prep()`` is now DEPRECATED and only acts as an alias for :doc:`common function <general/common_functions>` :php:func:`html_escape()`.
       - :php:func:`set_value()` will now also accept a third argument, allowing to turn off HTML escaping of the value.
 
    -  :doc:`Security Helper <helpers/security_helper>` changes include:
 
-      - :php:func:`do_hash()` now uses PHP's native ``hash()`` function (supporting more algorithms) and is deprecated.
+      - ``do_hash()`` now uses PHP's native ``hash()`` function (supporting more algorithms) and is deprecated.
       - :php:func:`strip_image_tags()` is now an alias for the same method in the :doc:`Security Library <libraries/security>`.
 
    -  :doc:`Smiley Helper <helpers/smiley_helper>` changes include:
@@ -560,7 +600,7 @@ Release Date: March 30, 2015
    -  :doc:`Directory Helper <helpers/directory_helper>` :php:func:`directory_map()` will now append ``DIRECTORY_SEPARATOR`` to directory names in the returned array.
    -  :doc:`Array Helper <helpers/array_helper>` :php:func:`element()` and :php:func:`elements()` now return NULL instead of FALSE when the required elements don't exist.
    -  :doc:`Language Helper <helpers/language_helper>` :php:func:`lang()` now accepts an optional list of additional HTML attributes.
-   -  Deprecated the :doc:`Email Helper <helpers/email_helper>` as its ``valid_email()``, ``send_email()`` functions are now only aliases for PHP native functions ``filter_var()`` and ``mail()`` respectively.
+   -  Deprecated the *Email Helper* as its ``valid_email()``, ``send_email()`` functions are now only aliases for PHP native functions ``filter_var()`` and ``mail()`` respectively.
 
 -  Database
 
@@ -1086,7 +1126,7 @@ Bug fixes for 3.0
 -  Fixed a bug (#79) - :doc:`Form Validation Library <libraries/form_validation>` didn't properly validate array fields that use associative keys or have custom indexes.
 -  Fixed a bug (#427) - :doc:`Form Validation Library <libraries/form_validation>` method ``strip_image_tags()`` was an alias to a non-existent method.
 -  Fixed a bug (#1545) - :doc:`Query Builder <database/query_builder>` method ``limit()`` wasn't executed properly under Oracle.
--  Fixed a bug (#1551) - :doc:`Date Helper <helpers/date_helper>` function :php:func:`standard_date()` didn't properly format *W3C* and *ATOM* standard dates.
+-  Fixed a bug (#1551) - :doc:`Date Helper <helpers/date_helper>` function ``standard_date()`` didn't properly format *W3C* and *ATOM* standard dates.
 -  Fixed a bug where :doc:`Query Builder <database/query_builder>` method ``join()`` escaped literal values as if they were fields.
 -  Fixed a bug (#135) - PHP Error logging was impossible without the errors being displayed.
 -  Fixed a bug (#1613) - :doc:`Form Helper <helpers/form_helper>` functions :php:func:`form_multiselect()`, :php:func:`form_dropdown()` didn't properly handle empty array option groups.
@@ -1550,8 +1590,8 @@ Hg Tag: v2.0.2
 
 -  Helpers
 
-   -  Removed the previously deprecated dohash() from the :doc:`Security
-      helper <./helpers/security_helper>`; use do_hash() instead.
+   -  Removed the previously deprecated ``dohash()`` from the :doc:`Security
+      helper <./helpers/security_helper>`; use ``do_hash()`` instead.
    -  Changed the 'plural' function so that it doesn't ruin the
       captalization of your string. It also take into consideration
       acronyms which are all caps.
@@ -1793,7 +1833,7 @@ Hg Tag: v2.0.0
       helper <./helpers/text_helper>`.
    -  Added accept-charset to the list of inserted attributes of
       form_open() in the :doc:`Form Helper <helpers/form_helper>`.
-   -  Deprecated the dohash() function in favour of do_hash() for
+   -  Deprecated the ``dohash()`` function in favour of ``do_hash()`` for
       naming consistency.
    -  Non-backwards compatible change made to get_dir_file_info() in
       the :doc:`File Helper <helpers/file_helper>`. No longer recurses
@@ -1960,7 +2000,7 @@ Hg Tag: v1.7.2
    -  Modified form_hidden() in the :doc:`Form
       helper <helpers/form_helper>` to accept multi-dimensional
       arrays.
-   -  Modified form_prep() in the :doc:`Form
+   -  Modified ``form_prep()`` in the :doc:`Form
       helper <helpers/form_helper>` to keep track of prepped
       fields to avoid multiple prep/mutation from subsequent calls which
       can occur when using Form Validation and form helper functions to
@@ -2019,7 +2059,7 @@ Bug fixes for 1.7.2
 -  Fixed a case sensitive string replacement in xss_clean()
 -  Fixed a bug in form_textarea() where form data was not prepped
    correctly.
--  Fixed a bug in form_prep() causing it to not preserve entities in
+-  Fixed a bug in ``form_prep()`` causing it to not preserve entities in
    the user's original input when called back into a form element
 -  Fixed a bug in _protect_identifiers() where the swap prefix
    ($swap_pre) was not being observed.
@@ -2712,7 +2752,7 @@ Release Date: January 30, 2008
       class. <./libraries/sessions>`
    -  Removed 'last_visit' from the Session class.
    -  Added a language entry for valid_ip validation error.
-   -  Modified prep_for_form() in the Validation class to accept
+   -  Modified ``prep_for_form()`` in the Validation class to accept
       arrays, adding support for POST array validation (via callbacks
       only)
    -  Added an "integer" rule into the Validation library.
@@ -2736,8 +2776,7 @@ Release Date: January 30, 2008
       helper. <./helpers/html_helper>`
    -  Added img() to the :doc:`HTML helper. <./helpers/html_helper>`
    -  Added ability to :doc:`"extend" Helpers <./general/helpers>`.
-   -  Added an :doc:`email helper <./helpers/email_helper>` into core
-      helpers.
+   -  Added an *Email Helper* into core helpers.
    -  Added strip_quotes() function to :doc:`string
       helper <./helpers/string_helper>`.
    -  Added reduce_multiples() function to :doc:`string
@@ -2938,7 +2977,7 @@ Release Date: July 12, 2007
 -  Fixed various doc typos.
 -  Documented two functions from the :doc:`String
    helper <./helpers/string_helper>` that were missing from the
-   user guide: trim_slashes() and reduce_double_slashes().
+   user guide: ``trim_slashes()`` and ``reduce_double_slashes()``.
 -  Docs now validate to XHTML 1 transitional
 -  Updated the XSS Filtering to take into account the IE expression()
    ability and improved certain deletions to prevent possible exploits
@@ -2969,7 +3008,7 @@ Release Date: April 15, 2007
 -  Added array to string into the profiler
 -  Code Igniter references updated to CodeIgniter
 -  pMachine references updated to EllisLab
--  Fixed a bug in the repeater function of :doc:`string
+-  Fixed a bug in the ``repeater()`` function of :doc:`string
    helper <./helpers/string_helper>`.
 -  Fixed a bug in ODBC driver
 -  Fixed a bug in result_array() that was returning an empty array when
@@ -3068,8 +3107,7 @@ Release Date: October 30, 2006
 -  Added :doc:`Download Helper <./helpers/download_helper>`.
 -  Added :doc:`simple_query() <./database/queries>` function to the
    database classes
--  Added :doc:`standard_date() <./helpers/date_helper>` function to
-   the Date Helper.
+-  Added ``standard_date()`` function function to the :doc:`Date Helper <helpers/date_helper>`.
 -  Added :doc:`$query->free_result() <./database/results>` to database
    class.
 -  Added :doc:`$query->list_fields() <./database/metadata>` function to
@@ -3110,7 +3148,7 @@ Release Date: October 30, 2006
 -  Fixed a bug in the validation class.
 -  Fixed a bug in the typography helper that was incorrectly wrapping
    block level elements in paragraph tags.
--  Fixed a problem in the form_prep() function that was double encoding
+-  Fixed a problem in the ``form_prep()`` function that was double encoding
    entities.
 -  Fixed a bug that affects some versions of PHP when output buffering
    is nested.
@@ -3472,7 +3510,7 @@ Release Date: March 10, 2006
 -  Fixed a pagination problem in the scaffolding.
 -  Fixed a bug in the mysql class "where" function.
 -  Fixed a regex problem in some code that trimmed duplicate slashes.
--  Fixed a bug in the br() function in the HTML helper
+-  Fixed a bug in the ``br()`` function in the HTML helper
 -  Fixed a syntax mistake in the form_dropdown function in the Form
    Helper.
 -  Removed the "style" attributes form the form helpers.

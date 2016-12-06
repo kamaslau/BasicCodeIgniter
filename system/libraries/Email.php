@@ -161,7 +161,7 @@ class CI_Email {
 	 *
 	 * @var	bool
 	 */
-	public $validate	= FALSE;
+	public $validate	= TRUE;
 
 	/**
 	 * X-Priority header value.
@@ -1878,7 +1878,7 @@ class CI_Email {
 		// is popen() enabled?
 		if ( ! function_usable('popen')
 			OR FALSE === ($fp = @popen(
-						$this->mailpath.' -oi -f '.$this->clean_email($this->_headers['From']).' -t'
+						$this->mailpath.' -oi -f '.escapeshellarg($this->clean_email($this->_headers['From'])).' -t'
 						, 'w'))
 		) // server probably has popen disabled, so nothing we can do to get a verbose error.
 		{

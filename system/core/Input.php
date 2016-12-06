@@ -521,7 +521,7 @@ class CI_Input {
 						$netaddr = explode(':', str_replace('::', str_repeat(':', 9 - substr_count($netaddr, ':')), $netaddr));
 						for ($j = 0; $j < 8; $j++)
 						{
-							$netaddr[$i] = intval($netaddr[$j], 16);
+							$netaddr[$j] = intval($netaddr[$j], 16);
 						}
 					}
 					else
@@ -836,21 +836,6 @@ class CI_Input {
 	public function is_ajax_request()
 	{
 		return ( ! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Is CLI request?
-	 *
-	 * Test to see if a request was made from the command line.
-	 *
-	 * @deprecated	3.0.0	Use is_cli() instead
-	 * @return	bool
-	 */
-	public function is_cli_request()
-	{
-		return is_cli();
 	}
 
 	// --------------------------------------------------------------------
