@@ -15,7 +15,7 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20161118">
+		<meta name=version content="revision20161207">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
