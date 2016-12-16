@@ -7,26 +7,28 @@ Version 3.2.0
 
 Release Date: Not Released
 
+-  General Changes
+
+   -  Officially dropped any kind of support for anything under PHP 5.4.8.
+
 -  Core
 
-   -  Changed :doc:`URI Library <libraries/uri>` to ignore the ``$config['url_suffix']``, ``$config['permitted_uri_chars']`` configuration settings for CLI requests.
-   -  Removed previously deprecated :doc:`Input Library <libraries/input>` method ``is_cli_request()`` (use :php:func:`is_cli()` instead).
+   -  Removed ``$config['rewrite_short_tags']`` (irrelevant on PHP 5.4+).
+   -  Removed previously deprecated ``$config['global_xss_filtering']``.
    -  Removed previously deprecated :doc:`Routing Class <general/routing>` methods ``fetch_directory()``, ``fetch_class()`` and ``fetch_method()`` (use the respective class properties instead).
    -  Removed previously deprecated :doc:`Config Library <libraries/config>` method ``system_url()`` (encourages insecure practices).
-   -  Removed previously deprecated :doc:`Form Validation Library <libraries/form_validation>` method ``prep_for_form()`` / rule *prep_for_form*.
-   -  Removed previously deprecated :doc:`Date Helper <helpers/date_helper>` function ``standard_date()`` (use PHP's native ``date()`` instead).
-   -  Removed previously deprecated :doc:`Security Helper <helpers/security_helper>` function ``do_hash()`` (use PHP's native ``hash()`` instead).
-   -  Removed previously deprecated :doc:`HTML Helper <helpers/html_helper>` functions ``br()`` and ``nbs()`` (use PHP's native ``str_repeat()`` with ``'<br />'`` and ``'&nbsp;'`` respectively).
-   -  Removed previously deprecated :doc:`String Helper <helpers/string_helper>` functions ``trim_slashes()`` and ``repeater()`` (use PHP's native ``trim()`` with ``'/'`` and ``str_repeat()`` respectively).
-   -  Removed previously deprecated :doc:`File Helper <helpers/file_helper>` function ``read_file()`` (use PHP's native ``file_get_contents()`` instead).
-   -  Removed previously deprecated :doc:`Form Helper <helpers/form_helper>` function ``form_prep()`` (use :php:func:`html_escape()` instead).
-   -  Removed previously deprecated *Email Helper* (had only two functions, aliases for PHP's native ``filter_var()`` and ``mail()``).
-   -  Removed previously deprecated *Smiley Helper*.
-   -  Removed previously deprecated *Cart Library*.
-   -  Removed previously deprecated *Javascript Library* (it was always experimental in the first place).
+   -  Changed :doc:`URI Library <libraries/uri>` to ignore the ``$config['url_suffix']``, ``$config['permitted_uri_chars']`` configuration settings for CLI requests.
+
+   -  :doc:`Input Library <libraries/input>` changes include:
+
+      - Removed previously deprecated ``$config['allow_get_array']``.
+      - Removed previously deprecated ``$config['standardize_newlines']``.
+      - Removed previously deprecated method ``is_cli_request()`` (use :php:func:`is_cli()` instead).
 
 -  Libraries
 
+   -  Removed previously deprecated *Cart Library*.
+   -  Removed previously deprecated *Javascript Library* (it was always experimental in the first place).
    -  Added UNIX socket connection support to :doc:`Session Library <libraries/sessions>` 'redis' driver.
 
    -  :doc:`Cache Library <libraries/caching>` changes include:
@@ -39,6 +41,7 @@ Release Date: Not Released
 
    -  :doc:`Form Validation Library <libraries/form_validation>` changes include:
 
+      - Removed previously deprecated method ``prep_for_form()`` / rule *prep_for_form*.
       - Changed method ``set_rules()`` to throw a ``BadMethodCallException`` when its first parameter is not an array and the ``$rules`` one is unused.
 
    -  :doc:`HTML Table Library <libraries/table>` changes include:
@@ -49,11 +52,12 @@ Release Date: Not Released
 
       - Changed the default value of the **validate** option to ``TRUE``.
 
--  :doc:`Database <database/index>`
+-  :doc:`Database <database/index>` changes include:
 
+   -  Removed previously deprecated 'sqlite' driver (used for SQLite version 2; no longer shipped with PHP 5.4+).
+   -  Removed method ``db_set_charset()`` and the ability to change a connection character set at runtime.
    -  Changed method ``initialize()`` to return void and instead throw a ``RuntimeException`` in case of failure.
    -  Changed method ``db_connect()`` to always set the connection character set (if supported by the driver) and to fail if it can't.
-   -  Removed method ``db_set_charset()`` and the ability to change a connection character set at runtime.
 
    -  :doc:`Database Forge <database/forge>`:
 
@@ -61,10 +65,31 @@ Release Date: Not Released
 
 -  Helpers
 
+   -  Removed previously deprecated *Email Helper* (had only two functions, aliases for PHP's native ``filter_var()`` and ``mail()``).
+   -  Removed previously deprecated *Smiley Helper*.
+   -  Removed previously deprecated :doc:`Date Helper <helpers/date_helper>` function ``standard_date()`` (use PHP's native ``date()`` instead).
+   -  Removed previously deprecated :doc:`Security Helper <helpers/security_helper>` function ``do_hash()`` (use PHP's native ``hash()`` instead).
+   -  Removed previously deprecated :doc:`File Helper <helpers/file_helper>` function ``read_file()`` (use PHP's native ``file_get_contents()`` instead).
    -  Added new function :php:func:`ordinal_format()` to :doc:`Inflector Helper <helpers/inflector_helper>`.
    -  Updated :doc:`Download Helper <helpers/download_helper>` :php:func:`force_download()` to allow existing files to be renamed for download.
-   -  Updated :doc:`HTML Helper <helpers/html_helper>` function :php:func:`meta()` with support for "charset" and "property" properties.
-   -  Changed :doc:`HTML Helper <helpers/html_helper>` function :php:func:`doctype()` default document type to HTML 5.
+
+   -  :doc:`String Helper <helpers/string_helper>` changes include:
+
+      - Removed previously deprecated function ``trim_slashes()`` (use PHP's native ``trim()`` with ``'/'`` instead).
+      - Removed previously deprecated function ``repeater()`` (use PHP's native ``str_repeat()`` instead).
+
+   -  :doc:`HTML Helper <helpers/html_helper>` changes include:
+
+      - Removed previously deprecated function ``br()`` (use PHP's native ``str_repeat()`` with ``'<br />'`` instead).
+      - Removed previously deprecated function ``nbs()`` (use PHP's native ``str_repeat()`` with ``'&nbsp;'`` instead).
+      - Updated function :php:func:`meta()` with support for "charset" and "property" properties.
+      - Changed function :php:func:`doctype()` default document type to HTML 5.
+
+   -  :doc:`Form Helper <helpers/form_helper>` changes include:
+
+      - Removed previously deprecated function ``form_prep()`` (use :php:func:`html_escape()` instead).
+      - Removed the second (out of three) parameter from the :php:func:`form_upload()` function (it was never used).
+
 
 Version 3.1.3
 =============
@@ -73,6 +98,8 @@ Release Date: Not Released
 
 -  General Changes
 
+   -  Deprecated ``$config['allow_get_array']``.
+   -  Deprecated ``$config['standardize_newlines']``.
    -  Deprecated :doc:`Date Helper <helpers/date_helper>` function :php:func:`nice_date()`.
 
 Bug fixes for 3.1.3
@@ -89,6 +116,10 @@ Bug fixes for 3.1.3
 -  Fixed a bug (#4923) - :doc:`Session Library <libraries/sessions>` could execute an erroneous SQL query with the 'database' driver, if the lock attempt times out.
 -  Fixed a bug (#4927) - :doc:`Output Library <libraries/output>` method ``get_header()`` returned the first matching header, regardless of whether it would be replaced by a second ``set_header()`` call.
 -  Fixed a bug (#4844) - :doc:`Email Library <libraries/email>` didn't apply ``escapeshellarg()`` to the while passing the Sendmail ``-f`` parameter through ``popen()``.
+-  Fixed a bug (#4928) - the bootstrap file didn't check if *config/constants.php* exists before trying to load it.
+-  Fixed a bug (#4937) - :doc:`Image Manipulation Library <libraries/image_lib>` method ``initialize()`` didn't translate *new_image* inputs to absolute paths.
+-  Fixed a bug (#4941) - :doc:`Query Builder <database/query_builder>` method ``order_by()`` didn't work with 'RANDOM' under the 'pdo/sqlite' driver.
+-  Fixed a regression (#4892) - :doc:`Query Builder <database/query_builder>` method ``update_batch()`` didn't properly handle identifier escaping.
 
 Version 3.1.2
 =============
@@ -101,7 +132,7 @@ Release Date: Oct 28, 2016
 
 -  General Changes
 
-   -  Allowed PHP 4-style constructors (``Mathching_name::Matching_name()`` methods) to be used as routes, if there's a ``__construct()`` to override them.
+   -  Allowed PHP 4-style constructors (``Matching_name::Matching_name()`` methods) to be used as routes, if there's a ``__construct()`` to override them.
 
 Bug fixes for 3.1.2
 -------------------
