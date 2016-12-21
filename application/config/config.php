@@ -8,7 +8,7 @@ define('SITE_KEYWORDS', 'Basic,PHP,开发框架,开源,CodeIgniter,CI,GitHub'); 
 define('SITE_DESCRIPTION', 'Basic是一个开源的PHP开发框架，源自CI最新稳定版'); // 站点描述
 define('ICP_NUMBER', '鲁ICP备15027187号-1'); // ICP备案号码，没有请留空
 
-define('BASE_URL', '//'. $_SERVER['SERVER_NAME']); // 可对外使用的站点URL, 自动判断协议（HTTP/HTTPS等等）；在本地测试时须替换为类似“localhost/BasicCodeigniter”形式
+define('BASE_URL', 'https://'. $_SERVER['SERVER_NAME']); // 可对外使用的站点URL, 自动判断协议（HTTP/HTTPS等等）；在本地测试时须替换为类似“localhost/BasicCodeigniter”形式
 //define('IMAGES_URL', '//images.xx.com/'); // （可选）非样式图片存储的根目录所在URL，可用于配合又拍云等第三方存储
 define('COOKIE_DOMAIN', '.suiyimen.cn'); // cookie存储路径；方便起见可让所有子域共享，若需分离可自行配置
 define('SESSION_TABLE', 'ci_sessions'); // 用于session存储的数据库表名
