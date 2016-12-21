@@ -4,8 +4,8 @@
 	 *
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	 * @copyright SSEC <www.ssectec.com>
-	 * @copyright Basic <https://github.com/liuyajie728/Basic>
+	 * @copyright ICBG <www.bingshankeji.com>
+	 * @copyright Basic <https://github.com/kamaslau/BasicCodeIgniter>
 	 */
 	class Basic_model extends CI_Model
 	{
@@ -70,11 +70,11 @@
 		public function password_check()
 		{
 			$data = array(
-				'user_id' => $this->session->user_id,
-				'password' => sha1($this->input->post('password'))
+				'stuff_id' => $this->session->stuff_id,
+				'password' => sha1( $this->input->post('password') ),
 			);
 
-			$query = $this->db->get_where($this->table_name, $data);
+			$query = $this->db->get_where('stuff', $data);
 			return $query->row_array();
 		}
 
@@ -99,16 +99,15 @@
 		/**
 		 * 根据条件获取列表，默认不返回已删除项
 		 *
-		 * @param int $limit 需获取的行数
-		 * @param int $offset 需跳过的行数，与$limit参数配合做分页功能
+		 * @param int $limit 需获取的行数，通过get或post方式传入
+		 * @param int $offset 需跳过的行数，与$limit参数配合做分页功能，通过get或post方式传入
 		 * @param array $condition 需要获取的行的条件
 		 * @param array $order_by 结果集排序方式，默认为按创建日期由新到旧排列
 		 * @param bool $return_ids 是否仅返回ID列表；默认为FALSE
 		 * @param bool $allow_deleted 是否在返回结果中包含被标注为删除状态的行；默认为FALSE
-		 * @param bool $only_mine 是否仅返回当前用户ID对应的记录；默认为FALSE
 		 * @return array 结果数组（默认为多维数组，$return_ids为TRUE时返回一维数组）
 		 */
-		public function select($condition = NULL, $order_by = NULL, $return_ids = FALSE, $allow_deleted = FALSE, $only_mine = FALSE)
+		public function select($condition = NULL, $order_by = NULL, $return_ids = FALSE, $allow_deleted = FALSE)
 		{
 			$limit = $this->CI->input->get_post('limit')? $this->CI->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
 			$offset = $this->CI->input->get_post('offset')? $this->CI->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
@@ -129,13 +128,10 @@
 				foreach ($order_by as $column_name => $value):
 					$this->db->order_by($column_name, $value);
 				endforeach;
-			// 若未指定排序条件，则默认按照创建时间倒序排列
+			// 若未指定排序条件，则默认按照ID倒序排列
 			else:
-				$this->db->order_by('time_create', 'DESC');
+				$this->db->order_by($this->id_name, 'DESC');
 			endif;
-
-			// 默认不限制仅返回当前用户ID对应的记录
-			if ($only_mine === TRUE) $this->db->where('user_id', $this->session->user_id);
 			
 			// 默认不返回已删除项
 			if ($allow_deleted === FALSE) $this->db->where('time_delete', NULL);
@@ -151,7 +147,7 @@
 				// 多维数组转换为一维数组
 				$ids = array();
 				foreach ($results as $item):
-					$ids[] = $item[$this->id_name];
+					$ids[] = $item[$this->id_name]; // 返回当前行的主键
 				endforeach;
 
 				// 释放原结果数组以节省内存
@@ -183,8 +179,8 @@
 		/**
 		 * 获取已删除项列表
 		 *
-		 * @param int $limit 需获取的行数
-		 * @param int $offset 需跳过的行数，与$limit参数配合做分页功能
+		 * @param int $limit 需获取的行数，通过get或post方式传入
+		 * @param int $offset 需跳过的行数，与$limit参数配合做分页功能，通过get或post方式传入
 		 * @param array $condition 需要统计的行的条件
 		 * @param array $order_by 结果集排序方式，默认为按创建日期由新到旧排列
 		 * @param bool $return_ids 是否仅返回ID列表
@@ -224,7 +220,7 @@
 				// 多维数组转换为一维数组
 				$ids = array();
 				foreach ($results as $item):
-					$ids[] = $item[$this->id_name];
+					$ids[] = $item[$this->id_name]; // 返回当前行的主键
 				endforeach;
 
 				// 释放原结果数组以节省内存
@@ -244,9 +240,10 @@
 		 */
 		public function create($data, $return_id = FALSE)
 		{
-			// 更新创建时间为当前时间，最后操作者为当前用户
+			// 更新创建时间为当前时间，创建者和最后操作者为当前用户
 			$data['time_create'] = date('Y-m-d H:i:s');
 			if ( isset($this->session->stuff_id)):
+				$data['creator_id'] = $this->session->stuff_id;
 				$data['operator_id'] = $this->session->stuff_id;
 			endif;
 
