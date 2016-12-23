@@ -109,8 +109,8 @@
 		 */
 		public function select($condition = NULL, $order_by = NULL, $return_ids = FALSE, $allow_deleted = FALSE)
 		{
-			$limit = $this->CI->input->get_post('limit')? $this->CI->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
-			$offset = $this->CI->input->get_post('offset')? $this->CI->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
+			$limit = $this->input->get_post('limit')? $this->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
+			$offset = $this->input->get_post('offset')? $this->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
 
 			// 拆分筛选条件（若有）
 			if ($condition !== NULL):
@@ -188,8 +188,8 @@
 		 */
 		public function select_trash($condition = NULL, $order_by = NULL, $return_ids = FALSE)
 		{
-			$limit = $this->CI->input->get_post('limit')? $this->CI->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
-			$offset = $this->CI->input->get_post('offset')? $this->CI->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
+			$limit = $this->input->get_post('limit')? $this->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
+			$offset = $this->input->get_post('offset')? $this->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
 
 			// 拆分筛选条件（若有）
 			if ($condition !== NULL):
