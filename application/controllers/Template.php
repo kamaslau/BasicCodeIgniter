@@ -37,8 +37,8 @@
 			// 向类属性赋值
 			$this->class_name = strtolower(__CLASS__);
 			$this->class_name_cn = '类名'; // 改这里……
-			$this->table_name = 'class_table'; // 和这里……
-			$this->id_name = 'class_table_id';  // 还有这里，OK，这就可以了
+			$this->table_name = 'table'; // 和这里……
+			$this->id_name = 'table_id';  // 还有这里，OK，这就可以了
 			$this->view_root = $this->class_name;
 
 			// 设置并调用Basic核心库

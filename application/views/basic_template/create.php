@@ -20,25 +20,27 @@
 	}
 </style>
 
-<ol id=breadcrumb class=breadcrumb>
+<ol id=breadcrumb class="breadcrumb container">
 	<li><a href="<?php echo base_url() ?>">首页</a></li>
 	<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
 	<li class=active><?php echo $title ?></li>
 </ol>
 
-<div id=content>
+<div id=content class=container>
+	<?php
+	// 需要特定角色和权限进行该操作
+	$current_role = $this->session->role; // 当前用户角色
+	$current_level = $this->session->level; // 当前用户权限
+	$role_allowed = array('管理员');
+	$level_allowed = 1;
+	if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
+	?>
 	<div class=btn-group role=group>
 		<a type=button class="btn btn-default" title="所有<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name) ?>"><i class="fa fa-list fa-fw" aria-hidden=true></i> 所有<?php echo $this->class_name_cn ?></a>
-		<?php
-		// 需要特定角色和权限进行该操作
-		$role_allowed = array('管理员');
-		$level_allowed = 1;
-		if (in_array($this->session->role, $role_allowed) & $this->session->level >= $level_allowed):
-		?>
-	  	<a type=button class="btn btn-default" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
-	  	<a type=button class="btn btn-default" title="回收站" href="<?php echo base_url($this->class_name.'/trash') ?>"><i class="fa fa-trash fa-fw" aria-hidden=true></i> 回收站</a>
-		<?php endif ?>
+	  	<a type=button class="btn btn-default" title="<?php echo $this->class_name_cn ?>回收站" href="<?php echo base_url($this->class_name.'/trash') ?>"><i class="fa fa-trash fa-fw" aria-hidden=true></i> 回收站</a>
+		<a type=button class="btn btn-primary" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
 	</div>
+	<?php endif ?>
 
 	<?php
 		if (isset($error)) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
