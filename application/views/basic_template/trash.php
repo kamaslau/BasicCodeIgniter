@@ -47,14 +47,7 @@
 		<p>没有任何<?php echo $this->class_name_cn ?>曾经被删除。</p>
 	</blockquote>
 
-	<?php
-		else:
-			$data_to_display = array(
-				'name' => '名称',
-				'name' => '名称',
-				'name' => '名称',
-			);
-	?>
+	<?php else: ?>
 	<form method=post target=_blank>
 		<div class=form-group>
 			<?php

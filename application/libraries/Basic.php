@@ -435,7 +435,7 @@
 				if ($this->CI->basic_model->password_check() === NULL):
 					$data = array(
 						'title' => '密码错误',
-						'content' => '<p>您的操作密码错误，请重试。</p>'
+						'content' => '<p>您的操作密码错误，请重试。</p>',
 					);
 					$this->CI->load->view('templates/header', $data);
 					$this->CI->load->view($this->view_root.'result', $data);

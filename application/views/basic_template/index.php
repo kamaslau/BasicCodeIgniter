@@ -46,14 +46,7 @@
 		<p>这里空空如也，快点添加<?php echo $this->class_name_cn ?>吧</p>
 	</blockquote>
 
-	<?php
-		else:
-			$data_to_display = array(
-				'name' => '名称',
-				'name' => '名称',
-				'name' => '名称',
-			);
-	?>
+	<?php else: ?>
 	<table class="table table-condensed table-hover table-responsive table-striped sortable">
 		<thead>
 			<tr>

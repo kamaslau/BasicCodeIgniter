@@ -48,29 +48,63 @@
 		echo form_open($this->class_name.'/create', $attributes);
 	?>
 		<fieldset>
-			<legend>表单分区标题</legend>
+			<legend>请填写以下信息</legend>
 			
 			<div class=form-group>
-				<label for=flow_stuff class="col-sm-2 control-label">各阶段参与人</label>
+				<label for=name class="col-sm-2 control-label">名称</label>
 				<div class=col-sm-10>
-					<input class=form-control name=flow_stuff type=text value="<?php echo set_value('flow_stuff') ?>" placeholder="各阶段参与人stuff_id；如有多个项目，各项目间用一个空格分隔">
-					<?php echo form_error('flow_stuff') ?>
+					<input class=form-control name=name type=text value="<?php echo set_value('name') ?>" placeholder="名称" required>
+					<?php echo form_error('name') ?>
 				</div>
 			</div>
+			
 			<div class=form-group>
-				<label for=flow_type class="col-sm-2 control-label">各阶段任务类别</label>
+				<label for=tag_price class="col-sm-2 control-label">参考价（万元）</label>
 				<div class=col-sm-10>
-					<input class=form-control name=flow_type type=text value="<?php echo set_value('flow_type') ?>" placeholder="各阶段任务类别；如有多个项目，各项目间用一个空格分隔；完善信息、同意、不同意、知悉等">
-					<?php echo form_error('flow_type') ?>
+					<input class=form-control name=tag_price type=number step=0.01 min=1.00 max=99999.99 value="<?php echo set_value('tag_price') ?>" placeholder="保留两位小数">
+					<?php echo form_error('tag_price') ?>
 				</div>
 			</div>
+
 			<div class=form-group>
-				<label for=flow_mission class="col-sm-2 control-label">各阶段任务简述</label>
+				<label for=price class="col-sm-2 control-label">商城价（万元）</label>
 				<div class=col-sm-10>
-					<input class=form-control name=flow_mission type=text value="<?php echo set_value('flow_mission') ?>" placeholder="各阶段任务简述；如有多个项目，各项目间用一个空格分隔">
-					<?php echo form_error('flow_mission') ?>
+					<input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo set_value('price') ?>" placeholder="保留两位小数" required>
+					<?php echo form_error('price') ?>
 				</div>
 			</div>
+			
+			<div class=form-group>
+				<label for=userfile class="col-sm-2 control-label">主图</label>
+				<div class=col-sm-10>
+					<input class=form-control name=userfile type=file value="<?php echo set_value('userfile') ?>" placeholder="车版图片">
+					<?php echo form_error('userfile') ?>
+				</div>
+			</div>
+
+			<div class=form-group>
+				<label for=description class="col-sm-2 control-label">详情</label>
+				<div class=col-sm-10>
+					<textarea class=form-control name=description rows=10 placeholder="详情" required><?php echo set_value('description') ?></textarea>
+					<?php echo form_error('description') ?>
+				</div>
+			</div>
+
+			<div class=form-group>
+				<label for=delivery class="col-sm-2 control-label">库存状态</label>
+				<div class=col-sm-10>
+					<select class=form-control name=delivery required>
+						<?php
+							$options = array('现货','期货');
+							foreach ($options as $option):
+						?>
+							<option value="<?php echo $option ?>" <?php echo set_select('delivery', $option) ?>><?php echo $option ?></option>
+						<?php endforeach ?>
+					</select>
+					<?php echo form_error('delivery') ?>
+				</div>
+			</div>
+
 		</fieldset>
 
 		<div class=form-group>

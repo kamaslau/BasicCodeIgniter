@@ -46,15 +46,6 @@
 		<dd><?php echo $item[$this->id_name] ?></dd>
 		
 		<?php
-			$data_to_display = array(
-				'name' => '名称',
-				'description' => '说明',
-				'description' => '说明',
-				'flow_stuff' => '各阶段参与人',
-				'flow_type' => '各阶段任务类别',
-				'flow_mission' => '各阶段任务简述',
-			);
-
 			foreach ($data_to_display as $name => $name_cn):
 				$html = '<dt>'. $name_cn. '</dt>';
 				$html .= '<dd>'. $item[$name]. '</dd>';
@@ -62,29 +53,6 @@
 			endforeach;
 		?>
 	</dl>
-	
-	<div id=flow class=container-fluid>
-		<h3>流程设置</h3>
-		<ul class="list-group col-md-4">
-		<?php
-			$flow_stuff = explode(' ', $item['flow_stuff']);
-			$flow_type = explode(' ', $item['flow_type']);
-			$flow_mission = explode(' ', $item['flow_mission']);
-			for ($i = 0; $i < count($flow_stuff); $i++):
-				$current_stuff = ($flow_stuff[$i] !== 'me')? '查看审核者': '发起者';
-				$html = '<li class=list-group-item>';
-				if ($flow_stuff[$i] !== 'me'):
-					$html .= '	<a href="'.base_url('stuff/detail?id='.$flow_stuff[$i]).'" target=new>'. $current_stuff. '</a>';
-				else:
-					$html .= $current_stuff;
-				endif;
-				$html .= ' '. $flow_type[$i].'</li>';
-
-				echo $html;
-			endfor;
-		?>
-		</ul>
-	</div>
 
 	<dl id=list-record class=dl-horizontal>
 		<dt>创建时间</dt>

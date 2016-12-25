@@ -26,6 +26,9 @@
 
 		/* 视图文件所在目录名 */
 		public $view_root;
+		
+		/* 需要显示的字段 */
+		public $data_to_display;
 
 		public function __construct()
 		{
@@ -47,6 +50,13 @@
 				'id_name' => $this->id_name,
 				'view_root' => $this->view_root,
 			);
+			// 设置需要显示的字段
+			$this->data_to_display = array(
+				'name' => '名称',
+				'description' => '描述',
+			);
+
+			// 载入Basic库
 			$this->load->library('basic', $basic_configs);
 
 			// （可选）某些用于此类的自定义函数
@@ -93,6 +103,9 @@
 				'class' => $this->class_name.' '. $this->class_name.'-index',
 			);
 			
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
+			
 			// 筛选条件
 			$condition = NULL;
 			//$condition['name'] = 'value';
@@ -118,6 +131,9 @@
 				'description' => '这个页面的主要内容是一大波文章的列表',
 			);
 			
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
+			
 			// Go Basic！
 			$this->basic->detail($data, 'title'); // 当传入第二个参数时，将使用相应的字段值与上方传入的$data['title']进行拼接；如想直接使用该字段作为页面的title，则$data['title']设为NULL即可；更多功能可见model/basic_model.php
 		}
@@ -135,6 +151,9 @@
 				'class' => $this->class_name.' '. $this->class_name.'-trash',
 				// 对于后台功能，一般不需要特别指定具体页面的keywords和description
 			);
+			
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
 			
 			// 筛选条件
 			$condition = NULL;
@@ -237,6 +256,9 @@
 				'title' => $op_name. $this->class_name_cn,
 				'class' => $this->class_name.' '. $this->class_name.'-'. $op_view,
 			);
+			
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
 
 			// 检查操作权限
 			/*
@@ -275,6 +297,9 @@
 				'title' => $op_name. $this->class_name_cn,
 				'class' => $this->class_name.' '. $this->class_name.'-'. $op_view,
 			);
+			
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
 
 			// 检查操作权限
 			/*
