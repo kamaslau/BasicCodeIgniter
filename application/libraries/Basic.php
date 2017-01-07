@@ -8,7 +8,7 @@
 	 *
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	 * @copyright SSEC <www.ssectec.com>
+	 * @copyright ICBG <www.bingshankeji.com>
 	 */
 	class Basic
 	{

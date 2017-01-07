@@ -24,6 +24,8 @@ Release Date: Not Released
       - Removed previously deprecated ``$config['allow_get_array']``.
       - Removed previously deprecated ``$config['standardize_newlines']``.
       - Removed previously deprecated method ``is_cli_request()`` (use :php:func:`is_cli()` instead).
+      - Changed the ``set_cookie()`` method's default expiry time to 0 (expires when browser is closed).
+      - Changed the ``set_cookie()`` method to delete the cookie if a negative expiry time is passed to it.
 
 -  Libraries
 
@@ -43,6 +45,7 @@ Release Date: Not Released
 
       - Removed previously deprecated method ``prep_for_form()`` / rule *prep_for_form*.
       - Changed method ``set_rules()`` to throw a ``BadMethodCallException`` when its first parameter is not an array and the ``$rules`` one is unused.
+      - Added rule **valid_mac**, which replicates PHP's native ``filter_var()`` with ``FILTER_VALIDATE_MAC``.
 
    -  :doc:`HTML Table Library <libraries/table>` changes include:
 
@@ -71,7 +74,12 @@ Release Date: Not Released
    -  Removed previously deprecated :doc:`Security Helper <helpers/security_helper>` function ``do_hash()`` (use PHP's native ``hash()`` instead).
    -  Removed previously deprecated :doc:`File Helper <helpers/file_helper>` function ``read_file()`` (use PHP's native ``file_get_contents()`` instead).
    -  Added new function :php:func:`ordinal_format()` to :doc:`Inflector Helper <helpers/inflector_helper>`.
-   -  Updated :doc:`Download Helper <helpers/download_helper>` :php:func:`force_download()` to allow existing files to be renamed for download.
+   -  Added 'img_alt' option to :php:func`create_captcha()` :doc:`CAPTCHA Helper` with a default value of 'captcha'.
+
+   -  :doc:`Download Helper <helpers/download_helper>` changes include:
+
+      - Updated :php:func:`force_download()` to allow existing files to be renamed for download.
+      - Updated :php:func:`force_download()` to better utilize available server memory.
 
    -  :doc:`String Helper <helpers/string_helper>` changes include:
 

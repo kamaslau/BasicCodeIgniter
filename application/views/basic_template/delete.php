@@ -42,13 +42,6 @@
 	</div>
 	<?php endif ?>
 
-	<?php
-		$data_to_display = array(
-			'name' => '名称',
-			'name' => '名称',
-			'name' => '名称',
-		);
-	?>
 	<table class="table table-striped table-condensed table-responsive">
 		<thead>
 			<tr>

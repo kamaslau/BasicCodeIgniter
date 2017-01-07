@@ -8,7 +8,7 @@
 	 *
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	 * @copyright SSEC <www.ssectec.com>
+	 * @copyright ICBG <www.bingshankeji.com>
 	 */
 	class Class_name extends CI_Controller
 	{
@@ -78,7 +78,7 @@
 				'title' => $this->class_name_cn. '我的', // 页面标题
 				'class' => $this->class_name.' '. $this->class_name.'-mine', // 页面body标签的class属性值
 				'keywords' => '关键词一,关键词二,关键词三', // （可选，后台功能可删除此行）页面关键词；每个关键词之间必须用半角逗号","分隔才能保证搜索引擎兼容性
-				'description' => '这个页面的主要内容是一大波文章的列表', // （可选，后台功能可删除此行）页面内容描述
+				'description' => '这个页面的主要内容', // （可选，后台功能可删除此行）页面内容描述
 			);
 			
 			// 筛选条件
@@ -128,7 +128,7 @@
 				'title' => $this->class_name_cn. '详情',
 				'class' => $this->class_name.' '. $this->class_name.'-detail',
 				'keywords' => '关键词一,关键词二,关键词三',
-				'description' => '这个页面的主要内容是一大波文章的列表',
+				'description' => '这个页面的主要内容',
 			);
 			
 			// 将需要显示的数据传到视图以备使用

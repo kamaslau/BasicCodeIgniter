@@ -6,7 +6,7 @@
 	 *
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	 * @copyright SSEC <www.ssectec.com>
+	 * @copyright ICBG <www.bingshankeji.com>
 	 */
 	class Account extends CI_Controller
 	{
@@ -60,7 +60,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '登录',
-				'class' => $this->class_name.' '. $this->class_name.'-login'
+				'class' => $this->class_name.' '. $this->class_name.'-login',
 			);
 
 			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural|exact_length[11]');
@@ -131,7 +131,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '注册',
-				'class' => $this->class_name.' '. $this->class_name.'-register'
+				'class' => $this->class_name.' '. $this->class_name.'-register',
 			);
 
 			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural|exact_length[11]');
@@ -154,7 +154,7 @@
 
 				$data_to_create = array(
 					'mobile' => $this->input->post('mobile'),
-					'password' => sha1($this->input->post('password'))
+					'password' => sha1($this->input->post('password')),
 				);
 				$result = $this->basic_model->create($data_to_create, TRUE); // 尝试创建用户
 
@@ -205,7 +205,7 @@
 			$data = array(
 				'title' => '修改密码',
 				'class' => $this->class_name.' '. $this->class_name.'-password-change',
-				'id' => $this->session->stuff_id
+				'id' => $this->session->stuff_id,
 			);
 			$data1 = array(
 				'user_id' => $this->session->stuff_id,
@@ -223,7 +223,6 @@
 				$this->load->view('templates/header', $data);
 				$this->load->view($this->view_root.'/password_change', $data);
 				$this->load->view('templates/footer', $data);
-				var_dump($data);
 				exit;
 			endif;
 
@@ -234,8 +233,6 @@
 
 			// Go Basic!
 			$this->basic->edit($data, $data_to_edit, 'password_change');
-
-			var_dump($this->basic_model->password_check());
 		}
 
 		/**
@@ -256,7 +253,7 @@
 			// 页面信息
 			$data = array(
 				'title' => '重置密码',
-				'class' => $this->class_name.' '. $this->class_name.'-password-reset'
+				'class' => $this->class_name.' '. $this->class_name.'-password-reset',
 			);
 		}
 
