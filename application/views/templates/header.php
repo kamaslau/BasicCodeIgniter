@@ -15,7 +15,7 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20161207">
+		<meta name=version content="revision20170121">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
@@ -44,7 +44,7 @@
 		<link rel=stylesheet media=all href="//cdn.key2all.com/css/normalize.css">
 		<link rel=stylesheet media=all href="//cdn.key2all.com/css/reset.css">
 		<link rel=stylesheet media=all href="//cdn.key2all.com/font-awesome/css/font-awesome.min.css">
-		<link rel=stylesheet media=all href="<?php echo base_url() ?>css/style.css">
+		<link rel=stylesheet media=all href="/css/style.css">
 
 		<link rel="shortcut icon" href="//images.guangchecheng.com/logos/logo_32x32.png">
 		<link rel=apple-touch-icon href="//images.guangchecheng.com/logos/logo_120x120.png">

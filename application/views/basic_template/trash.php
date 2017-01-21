@@ -52,7 +52,7 @@
 		<div class=form-group>
 			<?php
 			$ids_value = '';
-			for ($i=0;$i<count($ids);$i++):
+			for ($i=0; $i<count($ids); $i++):
 				$ids_value .= $ids[$i][$this->id_name];
 				if ($i < (count($ids) - 1)) $ids_value .= '|';
 			endfor;
@@ -75,7 +75,6 @@
 							echo '<th>' .$th. '</th>';
 						endforeach;
 					?>
-					<th>编辑记录</th>
 					<th>操作</th>
 				</tr>
 			</thead>
@@ -93,14 +92,6 @@
 							echo '<td>' .$item[$td]. '</td>';
 						endforeach;
 					?>
-					<td>
-						删除时间 <?php echo $item['time_delete'] ?>
-						<hr>
-						创建时间 <?php echo $item['time_create'] ?><br>
-						<a href="<?php echo base_url('stuff/detail?id='.$item['creator_id']) ?>" target=new>查看创建者</a><br>
-						最后编辑 <?php echo $item['time_edit'] ?><br>
-						<a href="<?php echo base_url('stuff/detail?id='.$item['operator_id']) ?>" target=new>查看最后操作者</a>
-					</td>
 					<td>
 						<ul class=list-unstyled>
 							<li><a title="查看" href="<?php echo base_url($this->view_root.'/detail?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-eye"></i> 查看</a></li>

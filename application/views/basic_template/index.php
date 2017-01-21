@@ -47,7 +47,7 @@
 	</blockquote>
 
 	<?php else: ?>
-	<table class="table table-condensed table-hover table-responsive table-striped sortable">
+	<table class="table table-condensed table-responsive table-striped sortable">
 		<thead>
 			<tr>
 				<th><?php echo $this->class_name_cn ?>ID</th>
@@ -57,7 +57,6 @@
 						echo '<th>' .$th. '</th>';
 					endforeach;
 				?>
-				<th>编辑记录</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -72,12 +71,6 @@
 						echo '<td>' .$item[$td]. '</td>';
 					endforeach;
 				?>
-				<td>
-					创建时间 <?php echo $item['time_create'] ?><br>
-					<a href="<?php echo base_url('stuff/detail?id='.$item['creator_id']) ?>" target=new>查看创建者</a><br>
-					最后编辑 <?php echo $item['time_edit'] ?><br>
-					<a href="<?php echo base_url('stuff/detail?id='.$item['operator_id']) ?>" target=new>查看最后操作者</a>
-				</td>
 				<td>
 					<ul class=list-unstyled>
 						<li><a title="查看" href="<?php echo base_url($this->view_root.'/detail?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-eye"></i> 查看</a></li>
@@ -96,5 +89,6 @@
 		<?php endforeach ?>
 		</tbody>
 	</table>
+
 	<?php endif ?>
 </div>

@@ -60,6 +60,7 @@
 			<?php echo $item['time_create'] ?>
 			<a href="<?php echo base_url('stuff/detail?id='.$item['creator_id']) ?>" target=new>查看创建者</a>
 		</dd>
+
 		<?php if ( ! empty($item['time_delete'])): ?>
 		<dt>删除时间</dt>
 		<dd>
@@ -67,7 +68,8 @@
 			<a href="<?php echo base_url('stuff/detail?id='.$item['operator_id']) ?>" target=new>查看删除者</a>
 		</dd>
 		<?php endif ?>
-		<dt>最后编辑时间</dt>
+
+		<dt>最后操作时间</dt>
 		<dd>
 			<?php echo $item['time_edit'] ?>
 			<a href="<?php echo base_url('stuff/detail?id='.$item['operator_id']) ?>" target=new>查看最后操作者</a>

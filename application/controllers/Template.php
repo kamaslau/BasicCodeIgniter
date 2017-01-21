@@ -2,15 +2,16 @@
 	defined('BASEPATH') OR exit('此文件不可被直接访问');
 
 	/**
-	 * Class_name 类
+	 * Template 类
 	 *
-	 * 以文章的列表、详情等功能提供了常见功能的示例代码
+	 * 以我的XX列表、列表、详情、创建、单行编辑、单/多行编辑（删除、恢复）等功能提供了常见功能的示例代码
+	 * CodeIgniter官方网站 https://www.codeigniter.com/user_guide/
 	 *
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
 	 * @copyright ICBG <www.bingshankeji.com>
 	 */
-	class Class_name extends CI_Controller
+	class Template extends CI_Controller
 	{
 		/* 类名称小写，应用于多处动态生成内容 */
 		public $class_name;
@@ -44,19 +45,18 @@
 			$this->id_name = 'table_id';  // 还有这里，OK，这就可以了
 			$this->view_root = $this->class_name;
 
+			// 设置需要自动在视图文件中生成显示的字段
+			$this->data_to_display = array(
+				'name' => '名称',
+				'description' => '描述',
+			);
+
 			// 设置并调用Basic核心库
 			$basic_configs = array(
 				'table_name' => $this->table_name,
 				'id_name' => $this->id_name,
 				'view_root' => $this->view_root,
 			);
-			// 设置需要显示的字段
-			$this->data_to_display = array(
-				'name' => '名称',
-				'description' => '描述',
-			);
-
-			// 载入Basic库
 			$this->load->library('basic', $basic_configs);
 
 			// （可选）某些用于此类的自定义函数
@@ -64,6 +64,15 @@
 			{
 				//...
 		    }
+		}
+		
+		/**
+		 * 截止3.1.3为止，CI_Controller类无析构函数，所以无需继承相应方法
+		 */
+		public function __destruct()
+		{
+			// 调试信息输出开关
+			// $this->output->enable_profiler(TRUE);
 		}
 
 		/**
@@ -75,10 +84,12 @@
 		{
 			// 页面信息
 			$data = array(
-				'title' => $this->class_name_cn. '我的', // 页面标题
+				'title' => '我的'. $this->class_name_cn, // 页面标题
 				'class' => $this->class_name.' '. $this->class_name.'-mine', // 页面body标签的class属性值
+				
 				'keywords' => '关键词一,关键词二,关键词三', // （可选，后台功能可删除此行）页面关键词；每个关键词之间必须用半角逗号","分隔才能保证搜索引擎兼容性
 				'description' => '这个页面的主要内容', // （可选，后台功能可删除此行）页面内容描述
+				// 对于后台功能，一般不需要特别指定具体页面的keywords和description
 			);
 			
 			// 筛选条件
@@ -127,8 +138,6 @@
 			$data = array(
 				'title' => $this->class_name_cn. '详情',
 				'class' => $this->class_name.' '. $this->class_name.'-detail',
-				'keywords' => '关键词一,关键词二,关键词三',
-				'description' => '这个页面的主要内容',
 			);
 			
 			// 将需要显示的数据传到视图以备使用
@@ -149,7 +158,6 @@
 			$data = array(
 				'title' => $this->class_name_cn. '回收站',
 				'class' => $this->class_name.' '. $this->class_name.'-trash',
-				// 对于后台功能，一般不需要特别指定具体页面的keywords和description
 			);
 			
 			// 将需要显示的数据传到视图以备使用
@@ -180,7 +188,7 @@
 				'class' => $this->class_name.' '. $this->class_name.'-create',
 			);
 
-			// 检查操作权限
+			// 后台操作可能需要检查操作权限
 			/*
 			$role_allowed = array('editor', 'manager'); // 员工角色要求
 			$min_level = 0; // 员工最低权限
@@ -188,12 +196,13 @@
 			*/
 
 			// 待验证的表单项
+			// 验证规则 https://www.codeigniter.com/user_guide/libraries/form_validation.html#rule-reference
 			$this->form_validation->set_rules('title', '标题', 'trim|required');
 			$this->form_validation->set_rules('content', '内容', 'trim|required');
 			$this->form_validation->set_rules('excerpt', '摘要', 'trim');
 
 			// 需要存入数据库的信息
-			// 不建议直接用$this->input->post、$this->input->get等方法直接在此处赋值，向数组赋值前处理会保持最大的灵活性以应对图片上传等场景
+			// 不建议直接用$this->input->post/get/post_get等方法直接在此处赋值，向数组赋值前处理会保持最大的灵活性以应对图片上传等场景
 			$data_to_create = array(
 				'title' => $this->input->post('title'),
 				'content' => $this->input->post('content'),
@@ -217,7 +226,7 @@
 				'class' => $this->class_name.' '. $this->class_name.'-edit',
 			);
 
-			// 检查操作权限
+			// 后台操作可能需要检查操作权限
 			/*
 			$role_allowed = array('editor', 'manager'); // 员工角色要求
 			$min_level = 0; // 员工最低权限
@@ -260,7 +269,7 @@
 			// 将需要显示的数据传到视图以备使用
 			$data['data_to_display'] = $this->data_to_display;
 
-			// 检查操作权限
+			// 后台操作可能需要检查操作权限
 			/*
 			$role_allowed = array('editor', 'manager'); // 员工角色要求
 			$min_level = 0; // 员工最低权限
@@ -301,7 +310,7 @@
 			// 将需要显示的数据传到视图以备使用
 			$data['data_to_display'] = $this->data_to_display;
 
-			// 检查操作权限
+			// 后台操作可能需要检查操作权限
 			/*
 			$role_allowed = array('editor', 'manager'); // 员工角色要求
 			$min_level = 0; // 员工最低权限
@@ -316,7 +325,7 @@
 				// 'time_delete' => date('y-m-d H:i:s'), // 批量删除
 				'time_delete' => NULL, // 批量恢复
 				// 'name' => 'value', // 批量修改其它数据
-				// 'name' => 'value', // 多行可批量修改多个字段
+				// 'name' => 'value', // 多行可批量修改多个字段值
 			);
 
 			// Go Basic!
@@ -324,5 +333,5 @@
 		}
 	}
 
-/* End of file Class_name.php */
-/* Location: ./application/controllers/Class_name.php */
+/* End of file Template.php */
+/* Location: ./application/controllers/Template.php */

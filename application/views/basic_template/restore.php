@@ -85,8 +85,8 @@
 				<label for=url_cn class="col-sm-2 control-label">密码</label>
 				<div class=col-sm-10>
 					<input class=form-control name=password type=password size=6 pattern="\d{6}" placeholder="请输入您的登录密码" autofocus required>
-					<?php echo form_error('password') ?>
 				</div>
+				<?php echo form_error('password') ?>
 			</div>
 		</fieldset>
 

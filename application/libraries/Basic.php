@@ -42,7 +42,9 @@
 		}
 		
 		/**
-		 * 输出表单各输入项
+		 * 输出表单各字段项
+		 *
+		 * 集成度过高，除管理后台相关功能外不推荐使用此方法
 		 *
 		 * @param array $input 字段数据
 		 * @param string $type 表单类型；edit编辑，create创建
@@ -103,7 +105,7 @@
 		}
 
 		/**
-		 * 文件上传
+		 * TODO 文件上传
 		 *
 		 *
 		 *
@@ -116,6 +118,8 @@
 		
 		/**
 		 * 保存EXCEL文件中数据到数据库
+		 *
+		 * 集成了PHPExcel开源库
 		 *
 		 * @param string $file_url 文件路径
 		 */
@@ -153,30 +157,29 @@
 <?php
 			// 循环读取并写入每行数据到数据库
 			// 可以通过设置$i=2的初始值来跳过表头；无表头$i=1
-			for ($i = 2; $i <= count($data_to_process); $i++)
+			$data_to_process = $this->CI->data_to_process; // 获取EXCEL表中需要的列信息
+			for ($i = 2; $i <= $row_count; $i++)
 			{
-				// 跳过第一个单元格没有内容的行（视为空行）
+				// 跳过第一列没有内容的行（视为空行）
 				$first_cell = $sheet->getCell('A'.$i)->getValue();
 				if ( isset($first_cell) ):
 					$data_to_create = array(); // 保存当前行的数据
 					// 当前行每列的值
-					for ($column = 0; $column < $column_count; $column++):
+					for ($column = 0; $column < count($data_to_process); $column++):
 						$current_cell = $sheet->getCellByColumnAndRow($column,$i);
 						$tr[$column] = $current_cell->getValue();
-						// 按键值对保存每行
+						// 按键值对保存每行，检查是否遗漏了未填项
+						if ( empty($tr[$column]) && ( $data_to_process[$column][3] === TRUE) )exit($data_to_process[$column][1].'项不可留空，请完善原表后重试^_^。');
 						$data_to_create[$data_to_process[$column][0]] = $current_cell->getValue();
 					endfor;
-			
-					// 使用当前行数据在数据库中创建记录
-					$result = $this->CI->basic_model->create($data_to_create);
 
-					// 输出HTML
-					echo '<tr>';
-					foreach ($tr as $item):
-						echo '<td>'.$item.'</td>';
-					endforeach;
-					echo '	<td>'. ($result !== FALSE? '上传成功': '上传失败'). '</td>'; // 上传结果
-					echo '</tr>';
+					// 使用当前行数据在数据库中创建记录，并返回数据库中的行ID
+					$row_id = $this->CI->basic_model->create($data_to_create, TRUE);
+		
+					// 生成当前行数据为视图需要的数据
+					$item = $data_to_create;
+					$item[$this->CI->id_name] = $row_id;
+					$data['items'][] = $item;
 				endif;
 			}
 

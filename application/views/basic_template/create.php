@@ -43,9 +43,9 @@
 	<?php endif ?>
 
 	<?php
-		if (isset($error)) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
+		if ( isset($error) ) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
 		$attributes = array('class' => 'form-'.$this->class_name.'-create form-horizontal', 'role' => 'form');
-		echo form_open($this->class_name.'/create', $attributes);
+		echo form_open_multipart($this->class_name.'/create', $attributes);
 	?>
 		<fieldset>
 			<legend>请填写以下信息</legend>
@@ -54,55 +54,56 @@
 				<label for=name class="col-sm-2 control-label">名称</label>
 				<div class=col-sm-10>
 					<input class=form-control name=name type=text value="<?php echo set_value('name') ?>" placeholder="名称" required>
-					<?php echo form_error('name') ?>
 				</div>
+				<?php echo form_error('name') ?>
 			</div>
 			
 			<div class=form-group>
 				<label for=tag_price class="col-sm-2 control-label">参考价（万元）</label>
 				<div class=col-sm-10>
 					<input class=form-control name=tag_price type=number step=0.01 min=1.00 max=99999.99 value="<?php echo set_value('tag_price') ?>" placeholder="保留两位小数">
-					<?php echo form_error('tag_price') ?>
 				</div>
+				<?php echo form_error('tag_price') ?>
 			</div>
 
 			<div class=form-group>
 				<label for=price class="col-sm-2 control-label">商城价（万元）</label>
 				<div class=col-sm-10>
 					<input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo set_value('price') ?>" placeholder="保留两位小数" required>
-					<?php echo form_error('price') ?>
 				</div>
+				<?php echo form_error('price') ?>
 			</div>
 			
 			<div class=form-group>
 				<label for=userfile class="col-sm-2 control-label">主图</label>
 				<div class=col-sm-10>
 					<input class=form-control name=userfile type=file value="<?php echo set_value('userfile') ?>" placeholder="车版图片">
-					<?php echo form_error('userfile') ?>
 				</div>
+				<?php echo form_error('userfile') ?>
 			</div>
 
 			<div class=form-group>
 				<label for=description class="col-sm-2 control-label">详情</label>
 				<div class=col-sm-10>
 					<textarea class=form-control name=description rows=10 placeholder="详情" required><?php echo set_value('description') ?></textarea>
-					<?php echo form_error('description') ?>
 				</div>
+				<?php echo form_error('description') ?>
 			</div>
 
 			<div class=form-group>
 				<label for=delivery class="col-sm-2 control-label">库存状态</label>
 				<div class=col-sm-10>
 					<select class=form-control name=delivery required>
+						<option value="" <?php echo set_select('delivery', '') ?>>请选择</option>
 						<?php
 							$options = array('现货','期货');
 							foreach ($options as $option):
 						?>
-							<option value="<?php echo $option ?>" <?php echo set_select('delivery', $option) ?>><?php echo $option ?></option>
+						<option value="<?php echo $option ?>" <?php echo set_select('delivery', $option) ?>><?php echo $option ?></option>
 						<?php endforeach ?>
 					</select>
-					<?php echo form_error('delivery') ?>
 				</div>
+				<?php echo form_error('delivery') ?>
 			</div>
 
 		</fieldset>
