@@ -6,7 +6,7 @@
 	*
 	* @version 1.0.0
 	* @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	* @copyright SSEC <www.ssectec.com>
+	* @copyright ICBG <www.bingshankeji.com>
 	*/
 	class Curl
 	{
@@ -14,12 +14,12 @@
 		* 执行CURL
 		*
 		* @param string $url 待请求的URL
-		* @param array $params 待发送的CURL请求参数
-		* @param string $return 需返回的数据格式；默认为数组格式，可传入'object'以设置为以对象格式返回
 		* @param string $method 待发送的CURL请求类型；默认为get，可设为'post'
+		* @param array $params 待发送的CURL请求参数数组，当且以POST方式发送的时候需传入此数组
+		* @param string $return 需返回的数据格式；默认为数组格式，可传入'object'以设置为以对象格式返回
 		* @return object|array 返回的CURL请求结果
 		*/
-		public function go($url, $params, $return = 'object', $method = 'post')
+		public function go($url, $method = 'get', $params = NULL, $return = 'array')
 		{
 		    $curl = curl_init();
 		    curl_setopt($curl, CURLOPT_URL, $url);
