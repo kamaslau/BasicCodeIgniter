@@ -11,6 +11,7 @@ Release Date: Not Released
 
    -  Officially dropped any kind of support for anything under PHP 5.4.8.
    -  Updated Welcome view and HTML error templates with new styling.
+   -  Updated configurable directory paths to handle missing trailing ``DIRECTORY_SEPARATOR``s automatically.
 
 -  Core
 
@@ -36,6 +37,7 @@ Release Date: Not Released
 
    -  :doc:`Cache Library <libraries/caching>` changes include:
 
+      - Added 'apcu' driver.
       - Added UNIX socket connection support to the 'memcached' driver.
       - Added 'database' configuration option to the 'redis' driver, allowing to auto-select another database.
       - Changed the 'memcached' driver to ignore configurations that don't specify a hostname.
@@ -66,6 +68,10 @@ Release Date: Not Released
    -  :doc:`Database Forge <database/forge>`:
 
       - Added support for declaring date/time type fields default values as ``CURRENT_TIMESTAMP`` and similar.
+
+   -  :doc:`Query Builder <database/query_builder>`:
+
+      - Added methods ``having_in()``, ``or_having_in()``, ``not_having_in()``, ``or_not_having_in()``.
 
 -  Helpers
 
