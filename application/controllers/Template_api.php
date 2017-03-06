@@ -2,26 +2,51 @@
 	defined('BASEPATH') OR exit('此文件不可被直接访问');
 
 	/**
-	 * Template 类
+	 * API_Template 类
 	 *
-	 * 以我的XX列表、列表、详情、创建、单行编辑、单/多行编辑（删除、恢复）等功能提供了常见功能的示例代码
+	 * 以API服务形式返回数据列表、详情、创建、单行编辑、单/多行编辑（删除、恢复）等功能提供了常见功能的示例代码
 	 * CodeIgniter官方网站 https://www.codeigniter.com/user_guide/
 	 *
 	 * @version 1.0.0
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
 	 * @copyright ICBG <www.bingshankeji.com>
 	 */
-	class Template extends CI_Controller
+	class API_Template extends CI_Controller
 	{
 		/* 主要相关表名 */
 		public $table_name;
 
 		/* 主要相关表的主键名*/
 		public $id_name;
+		
+		/**
+		 * 可筛选字段名
+		 *
+		 * 可作为列表筛选条件的字段名数组
+		 */
+		protected $sorter_names = array(
+			'time_create',
+			'time_delete',
+			'time_edit',
+			// ...
+		);
 
 		public function __construct()
 		{
 			parent::__construct();
+			
+			// 根据timestamp和token验证签名
+			/*
+			$timestamp = $this->input->post('timestamp');
+			$sign = $this->input->post('sign');
+			$this->load->library('verify');
+			$is_valid = $this->verify->go($timestamp, $sign);
+			if ($is_valid !== TRUE):
+				$this->result['status'] = 444;
+				$this->result['content'] = '签名不正确或未签名';
+				exit;
+			endif;
+			*/
 			
 			// 向类属性赋值
 			$this->basic_model->table_name = 'table'; // 这里……
@@ -40,7 +65,11 @@
 		 */
 		public function __destruct()
 		{
-			// 统计业务逻辑运行时间起点
+			// 将请求参数一并返回以便调试
+			$this->result['param']['get'] = $this->input->get();
+			$this->result['param']['post'] = $this->input->post();
+
+			// 统计业务逻辑运行时间终点
 			$this->benchmark->mark('end');
 			// 计算并输出业务逻辑运行时间
 			$this->result['elapsed_time'] = $this->benchmark->elapsed_time('start', 'end'). ' s';
@@ -51,7 +80,7 @@
 		}
 
 		/**
-		 * 列表页
+		 * 0 列表页
 		 */
 		public function index()
 		{	
@@ -69,6 +98,13 @@
 			// 筛选条件
 			$condition = NULL;
 			//$condition['name'] = 'value';
+			
+			// （可选）限制可筛选的字段名
+			foreach ($this->sorter_names as $sorter):
+				if ( !empty($this->input->post_get($sorter)) ):
+					$condition[$sorter] = $this->input->post_get($sorter);
+				endif;
+			endforeach;
 			
 			// 排序条件
 			$order_by = NULL;
@@ -88,7 +124,7 @@
 		}
 
 		/**
-		 * 详情页
+		 * 1 详情页
 		 */
 		public function detail()
 		{
@@ -100,8 +136,8 @@
 				exit;
 			endif;
 
-			// 获取特定项；默认不获取已删除项
-			$item = $this->basic_model->select_by_id($id, FALSE);
+			// 获取特定项；默认可获取已删除项
+			$item = $this->basic_model->select_by_id($id);
 			if ( !empty($item) ):
 				$this->result['status'] = 200;
 				$this->result['content'] = $item;
@@ -114,7 +150,7 @@
 		}
 
 		/**
-		 * 创建
+		 * 2 创建
 		 */
 		public function create()
 		{
@@ -122,7 +158,7 @@
 		}
 
 		/**
-		 * 编辑单行
+		 * 3 编辑单行
 		 *
 		 * 可结合相关字段将相应数据行标记为已删除等状态
 		 */
@@ -132,5 +168,5 @@
 		}
 	}
 
-/* End of file Template.php */
-/* Location: ./application/controllers/Template.php */
+/* End of file API_Template.php */
+/* Location: ./application/controllers/API_Template.php */
