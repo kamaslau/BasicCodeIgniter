@@ -46,13 +46,14 @@
 		}
 
 		/**
-		* 登录
-		*
-		* 此处以员工登录为示例
-		* @param string $_POST['mobile']
-		* @param string $_POST['password']
-		* @return void
-		*/
+		 * 登录
+		 *
+		 * 此处以员工登录为示例
+		 *
+		 * @param string $_POST['mobile']
+		 * @param string $_POST['password']
+		 * @return void
+		 */
 		public function login()
 		{
 			if ($this->session->logged_in === TRUE) redirect(base_url());
@@ -115,15 +116,15 @@
 		}
 
 		/**
-		* 注册
-		*
-		* 一般不用于管理后台
-		*
-		* @param string $_POST['mobile']
-		* @param string $_POST['password']
-		* @param string $_POST['password2']
-		* @return void
-		*/
+		 * 注册
+		 *
+		 * 一般不用于管理后台
+		 *
+		 * @param string $_POST['mobile']
+		 * @param string $_POST['password']
+		 * @param string $_POST['password2']
+		 * @return void
+		 */
 		public function register()
 		{
 			if ($this->session->logged_in === TRUE) redirect(base_url());
@@ -187,15 +188,15 @@
 		}
 
 		/**
-		* 密码修改
-		*
-		* 用户登录后可修改密码
-		*
-		* @param string $_POST['password']
-		* @param string $_POST['password_new']
-		* @param string $_POST['password2']
-		* @return void
-		*/
+		 * 密码修改
+		 *
+		 * 用户登录后可修改密码
+		 *
+		 * @param string $_POST['password']
+		 * @param string $_POST['password_new']
+		 * @param string $_POST['password2']
+		 * @return void
+		 */
 		public function password_change()
 		{
 			// 若用户未登录，转到密码重置页
@@ -236,15 +237,15 @@
 		}
 
 		/**
-		* 密码重置
-		*
-		* 用户未登录时可重置密码
-		*
-		* @param string $_POST['password']
-		* @param string $_POST['password_new']
-		* @param string $_POST['password2']
-		* @return void
-		*/
+		 * 密码重置
+		 *
+		 * 用户未登录时可重置密码
+		 *
+		 * @param string $_POST['password']
+		 * @param string $_POST['password_new']
+		 * @param string $_POST['password2']
+		 * @return void
+		 */
 		public function password_reset()
 		{
 			// 若用户已登录，转到密码修改页
@@ -258,11 +259,11 @@
 		}
 
 		/**
-		* 退出账户
-		*
-		* @param void
-		* @return void
-		*/
+		 * 退出账户
+		 *
+		 * @param void
+		 * @return void
+		 */
 		public function logout()
 		{
 			// 清除当前SESSION

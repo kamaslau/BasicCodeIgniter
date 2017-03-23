@@ -1,4 +1,12 @@
 <?php
+	defined('BASEPATH') OR exit('No direct script access allowed');
+
+	// 检查当前设备信息
+	$user_agent = $_SERVER['HTTP_USER_AGENT'];
+	$is_wechat = strpos($user_agent, 'MicroMessenger')? TRUE: FALSE;
+	$is_ios = strpos($user_agent, 'iPhone')? TRUE: FALSE;
+	$is_android = strpos($user_agent, 'Android')? TRUE: FALSE;
+
 	// 生成SEO相关变量，一般为页面特定信息与在config/config.php中设置的站点通用信息拼接
 	$title = isset($title)? $title.' - '.SITE_NAME: SITE_NAME.' - '.SITE_SLOGAN;
 	$keywords = isset($keywords)? $keywords.',': NULL;
@@ -15,17 +23,14 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170121">
+		<meta name=version content="revision20170324">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
 
 		<?php
 			// 对于iOS和Android设备，放大1倍以适应普遍采用的高清分辨率
-			$user_agent = $_SERVER['HTTP_USER_AGENT'];
-			$is_ios = strpos($user_agent, 'iPhone')? TRUE: FALSE;
 			if ($is_ios):
-			//$is_android = strpos($user_agent, 'Android')? TRUE: FALSE;
 			//if ($is_ios || $is_android):
 		?>
 		<meta name=viewport content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">

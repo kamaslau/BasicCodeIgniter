@@ -53,7 +53,7 @@
 			<div class=form-group>
 				<label for=name class="col-sm-2 control-label">名称</label>
 				<div class=col-sm-10>
-					<input class=form-control name=name type=text value="<?php echo $edition['name'] ?>" placeholder="名称" required>
+					<input class=form-control name=name type=text value="<?php echo $item['name'] ?>" placeholder="名称" required>
 				</div>
 				<?php echo form_error('name') ?>
 			</div>
@@ -61,7 +61,7 @@
 			<div class=form-group>
 				<label for=tag_price class="col-sm-2 control-label">参考价（万元）</label>
 				<div class=col-sm-10>
-					<input class=form-control name=tag_price type=number step=0.01 min=1.00 max=99999.99 value="<?php echo $edition['tag_price'] ?>" placeholder="保留两位小数">
+					<input class=form-control name=tag_price type=number step=0.01 min=1.00 max=99999.99 value="<?php echo $item['tag_price'] ?>" placeholder="保留两位小数">
 				</div>
 				<?php echo form_error('tag_price') ?>
 			</div>
@@ -69,7 +69,7 @@
 			<div class=form-group>
 				<label for=price class="col-sm-2 control-label">商城价（万元）</label>
 				<div class=col-sm-10>
-					<input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo $edition['price'] ?>" placeholder="保留两位小数" required>
+					<input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo $item['price'] ?>" placeholder="保留两位小数" required>
 				</div>
 				<?php echo form_error('price') ?>
 			</div>
@@ -77,7 +77,7 @@
 			<div class=form-group>
 				<label for=userfile class="col-sm-2 control-label">主图</label>
 				<div class=col-sm-10>
-					<input class=form-control name=userfile type=file value="<?php echo $edition['userfile'] ?>" placeholder="车版图片">
+					<input class=form-control name=userfile type=file value="<?php echo $item['userfile'] ?>" placeholder="车版图片">
 				</div>
 				<?php echo form_error('userfile') ?>
 			</div>
@@ -85,7 +85,7 @@
 			<div class=form-group>
 				<label for=description class="col-sm-2 control-label">详情</label>
 				<div class=col-sm-10>
-					<textarea class=form-control name=description rows=10 placeholder="详情" required><?php echo $edition['description'] ?></textarea>
+					<textarea class=form-control name=description rows=10 placeholder="详情" required><?php echo $item['description'] ?></textarea>
 				</div>
 				<?php echo form_error('description') ?>
 			</div>
@@ -98,7 +98,7 @@
 							$options = array('现货','期货');
 							foreach ($options as $option):
 						?>
-						<option value="<?php echo $option ?>" <?php if ($option === $edition['delivery']) echo 'selected'; ?>><?php echo $option ?></option>
+						<option value="<?php echo $option ?>" <?php if ($option === $item['delivery']) echo 'selected'; ?>><?php echo $option ?></option>
 						<?php endforeach ?>
 					</select>
 				</div>
