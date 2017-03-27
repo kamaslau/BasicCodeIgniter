@@ -32,13 +32,13 @@
  * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
- * @since	Version 3.0.0
+ * @since	Version 2.0.3
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * PDO SQLSRV Database Adapter Class
+ * SQLSRV Database Adapter Class
  *
  * Note: _DB is an extender class that the app controller
  * creates dynamically based on whether the query builder
@@ -50,14 +50,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/user_guide/database/
  */
-class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
+class CI_DB_sqlsrv_driver extends CI_DB {
 
 	/**
-	 * Sub-driver
+	 * Database driver
 	 *
 	 * @var	string
 	 */
-	public $subdriver = 'sqlsrv';
+	public $dbdriver = 'sqlsrv';
+
+	/**
+	 * Scrollable flag
+	 *
+	 * Determines what cursor type to use when executing queries.
+	 *
+	 * FALSE or SQLSRV_CURSOR_FORWARD would increase performance,
+	 * but would disable num_rows() (and possibly insert_id())
+	 *
+	 * @var	mixed
+	 */
+	public $scrollable;
 
 	// --------------------------------------------------------------------
 
@@ -76,14 +88,12 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	 *
 	 * @var	bool
 	 */
-	protected $_quoted_identifier;
+	protected $_quoted_identifier = TRUE;
 
 	// --------------------------------------------------------------------
 
 	/**
 	 * Class constructor
-	 *
-	 * Builds the DSN if not already set.
 	 *
 	 * @param	array	$params
 	 * @return	void
@@ -92,51 +102,12 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	{
 		parent::__construct($params);
 
-		if (empty($this->dsn))
+		// This is only supported as of SQLSRV 3.0
+		if ($this->scrollable === NULL)
 		{
-			$this->dsn = 'sqlsrv:Server='.(empty($this->hostname) ? '127.0.0.1' : $this->hostname);
-
-			empty($this->port) OR $this->dsn .= ','.$this->port;
-			empty($this->database) OR $this->dsn .= ';Database='.$this->database;
-
-			// Some custom options
-
-			if (isset($this->QuotedId))
-			{
-				$this->dsn .= ';QuotedId='.$this->QuotedId;
-				$this->_quoted_identifier = (bool) $this->QuotedId;
-			}
-
-			if (isset($this->ConnectionPooling))
-			{
-				$this->dsn .= ';ConnectionPooling='.$this->ConnectionPooling;
-			}
-
-			if ($this->encrypt === TRUE)
-			{
-				$this->dsn .= ';Encrypt=1';
-			}
-
-			if (isset($this->TraceOn))
-			{
-				$this->dsn .= ';TraceOn='.$this->TraceOn;
-			}
-
-			if (isset($this->TrustServerCertificate))
-			{
-				$this->dsn .= ';TrustServerCertificate='.$this->TrustServerCertificate;
-			}
-
-			empty($this->APP) OR $this->dsn .= ';APP='.$this->APP;
-			empty($this->Failover_Partner) OR $this->dsn .= ';Failover_Partner='.$this->Failover_Partner;
-			empty($this->LoginTimeout) OR $this->dsn .= ';LoginTimeout='.$this->LoginTimeout;
-			empty($this->MultipleActiveResultSets) OR $this->dsn .= ';MultipleActiveResultSets='.$this->MultipleActiveResultSets;
-			empty($this->TraceFile) OR $this->dsn .= ';TraceFile='.$this->TraceFile;
-			empty($this->WSID) OR $this->dsn .= ';WSID='.$this->WSID;
-		}
-		elseif (preg_match('/QuotedId=(0|1)/', $this->dsn, $match))
-		{
-			$this->_quoted_identifier = (bool) $match[1];
+			$this->scrollable = defined('SQLSRV_CURSOR_CLIENT_BUFFERED')
+				? SQLSRV_CURSOR_CLIENT_BUFFERED
+				: FALSE;
 		}
 	}
 
@@ -145,28 +116,39 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	/**
 	 * Database connection
 	 *
-	 * @param	bool	$persistent
-	 * @return	object
+	 * @param	bool	$pooling
+	 * @return	resource
 	 */
-	public function db_connect($persistent = FALSE)
+	public function db_connect($pooling = FALSE)
 	{
-		if ( ! empty($this->char_set) && preg_match('/utf[^8]*8/i', $this->char_set))
+		$charset = in_array(strtolower($this->char_set), array('utf-8', 'utf8'), TRUE)
+			? 'UTF-8' : SQLSRV_ENC_CHAR;
+
+		$connection = array(
+			'UID'			=> empty($this->username) ? '' : $this->username,
+			'PWD'			=> empty($this->password) ? '' : $this->password,
+			'Database'		=> $this->database,
+			'ConnectionPooling'	=> ($pooling === TRUE) ? 1 : 0,
+			'CharacterSet'		=> $charset,
+			'Encrypt'		=> ($this->encrypt === TRUE) ? 1 : 0,
+			'ReturnDatesAsStrings'	=> 1
+		);
+
+		// If the username and password are both empty, assume this is a
+		// 'Windows Authentication Mode' connection.
+		if (empty($connection['UID']) && empty($connection['PWD']))
 		{
-			$this->options[PDO::SQLSRV_ENCODING_UTF8] = 1;
+			unset($connection['UID'], $connection['PWD']);
 		}
 
-		$this->conn_id = parent::db_connect($persistent);
-
-		if ( ! is_object($this->conn_id) OR is_bool($this->_quoted_identifier))
+		if (FALSE !== ($this->conn_id = sqlsrv_connect($this->hostname, $connection)))
 		{
-			return $this->conn_id;
+			// Determine how identifiers are escaped
+			$query = $this->query('SELECT CASE WHEN (@@OPTIONS | 256) = @@OPTIONS THEN 1 ELSE 0 END AS qi');
+			$query = $query->row_array();
+			$this->_quoted_identifier = empty($query) ? FALSE : (bool) $query['qi'];
+			$this->_escape_char = ($this->_quoted_identifier) ? '"' : array('[', ']');
 		}
-
-		// Determine how identifiers are escaped
-		$query = $this->query('SELECT CASE WHEN (@@OPTIONS | 256) = @@OPTIONS THEN 1 ELSE 0 END AS qi');
-		$query = $query->row_array();
-		$this->_quoted_identifier = empty($query) ? FALSE : (bool) $query['qi'];
-		$this->_escape_char = ($this->_quoted_identifier) ? '"' : array('[', ']');
 
 		return $this->conn_id;
 	}
@@ -174,12 +156,136 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Show table query
+	 * Select the database
+	 *
+	 * @param	string	$database
+	 * @return	bool
+	 */
+	public function db_select($database = '')
+	{
+		if ($database === '')
+		{
+			$database = $this->database;
+		}
+
+		if ($this->_execute('USE '.$this->escape_identifiers($database)))
+		{
+			$this->database = $database;
+			$this->data_cache = array();
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Execute the query
+	 *
+	 * @param	string	$sql	an SQL query
+	 * @return	resource
+	 */
+	protected function _execute($sql)
+	{
+		return ($this->scrollable === FALSE OR $this->is_write_type($sql))
+			? sqlsrv_query($this->conn_id, $sql)
+			: sqlsrv_query($this->conn_id, $sql, NULL, array('Scrollable' => $this->scrollable));
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Begin Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_begin()
+	{
+		return sqlsrv_begin_transaction($this->conn_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Commit Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_commit()
+	{
+		return sqlsrv_commit($this->conn_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Rollback Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_rollback()
+	{
+		return sqlsrv_rollback($this->conn_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Affected Rows
+	 *
+	 * @return	int
+	 */
+	public function affected_rows()
+	{
+		return sqlsrv_rows_affected($this->result_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Insert ID
+	 *
+	 * Returns the last id created in the Identity column.
+	 *
+	 * @return	string
+	 */
+	public function insert_id()
+	{
+		return $this->query('SELECT SCOPE_IDENTITY() AS insert_id')->row()->insert_id;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Database version number
+	 *
+	 * @return	string
+	 */
+	public function version()
+	{
+		if (isset($this->data_cache['version']))
+		{
+			return $this->data_cache['version'];
+		}
+
+		if ( ! $this->conn_id OR ($info = sqlsrv_server_info($this->conn_id)) === FALSE)
+		{
+			return FALSE;
+		}
+
+		return $this->data_cache['version'] = $info['SQLServerVersion'];
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * List table query
 	 *
 	 * Generates a platform-specific query string so that the table names can be fetched
 	 *
-	 * @param	bool	$prefix_limit
-	 * @return	string
+	 * @param	bool
+	 * @return	string	$prefix_limit
 	 */
 	protected function _list_tables($prefix_limit = FALSE)
 	{
@@ -190,7 +296,7 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 		if ($prefix_limit === TRUE && $this->dbprefix !== '')
 		{
 			$sql .= ' AND '.$this->escape_identifiers('name')." LIKE '".$this->escape_like_str($this->dbprefix)."%' "
-				.sprintf($this->_like_escape_str, $this->_like_escape_chr);
+				.sprintf($this->_escape_like_str, $this->_escape_like_chr);
 		}
 
 		return $sql.' ORDER BY '.$this->escape_identifiers('name');
@@ -199,7 +305,7 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Show column query
+	 * List column query
 	 *
 	 * Generates a platform-specific query string so that the column names can be fetched
 	 *
@@ -249,6 +355,44 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Error
+	 *
+	 * Returns an array containing code and message of the last
+	 * database error that has occurred.
+	 *
+	 * @return	array
+	 */
+	public function error()
+	{
+		$error = array('code' => '00000', 'message' => '');
+		$sqlsrv_errors = sqlsrv_errors(SQLSRV_ERR_ERRORS);
+
+		if ( ! is_array($sqlsrv_errors))
+		{
+			return $error;
+		}
+
+		$sqlsrv_error = array_shift($sqlsrv_errors);
+		if (isset($sqlsrv_error['SQLSTATE']))
+		{
+			$error['code'] = isset($sqlsrv_error['code']) ? $sqlsrv_error['SQLSTATE'].'/'.$sqlsrv_error['code'] : $sqlsrv_error['SQLSTATE'];
+		}
+		elseif (isset($sqlsrv_error['code']))
+		{
+			$error['code'] = $sqlsrv_error['code'];
+		}
+
+		if (isset($sqlsrv_error['message']))
+		{
+			$error['message'] = $sqlsrv_error['message'];
+		}
+
+		return $error;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Update statement
 	 *
 	 * Generates a platform-specific update string from the supplied data
@@ -262,6 +406,24 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 		$this->qb_limit = FALSE;
 		$this->qb_orderby = array();
 		return parent::_update($table, $values);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Truncate statement
+	 *
+	 * Generates a platform-specific truncate string from the supplied data
+	 *
+	 * If the database does not support the TRUNCATE statement,
+	 * then this method maps to 'DELETE FROM table'
+	 *
+	 * @param	string	$table
+	 * @return	string
+	 */
+	protected function _truncate($table)
+	{
+		return 'TRUNCATE TABLE '.$table;
 	}
 
 	// --------------------------------------------------------------------
@@ -364,6 +526,18 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 		}
 
 		return ($this->db_debug) ? $this->display_error('db_unsupported_feature') : FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Close DB Connection
+	 *
+	 * @return	void
+	 */
+	protected function _close()
+	{
+		sqlsrv_close($this->conn_id);
 	}
 
 }

@@ -32,13 +32,13 @@
  * @copyright	Copyright (c) 2014 - 2017, British Columbia Institute of Technology (http://bcit.ca/)
  * @license	http://opensource.org/licenses/MIT	MIT License
  * @link	https://codeigniter.com
- * @since	Version 3.0.0
+ * @since	Version 1.3.0
  * @filesource
  */
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * PDO SQLSRV Database Adapter Class
+ * MS SQL Database Adapter Class
  *
  * Note: _DB is an extender class that the app controller
  * creates dynamically based on whether the query builder
@@ -50,14 +50,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/user_guide/database/
  */
-class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
+class CI_DB_mssql_driver extends CI_DB {
 
 	/**
-	 * Sub-driver
+	 * Database driver
 	 *
 	 * @var	string
 	 */
-	public $subdriver = 'sqlsrv';
+	public $dbdriver = 'mssql';
 
 	// --------------------------------------------------------------------
 
@@ -76,14 +76,14 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	 *
 	 * @var	bool
 	 */
-	protected $_quoted_identifier;
+	protected $_quoted_identifier = TRUE;
 
 	// --------------------------------------------------------------------
 
 	/**
 	 * Class constructor
 	 *
-	 * Builds the DSN if not already set.
+	 * Appends the port number to the hostname, if needed.
 	 *
 	 * @param	array	$params
 	 * @return	void
@@ -92,74 +92,42 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	{
 		parent::__construct($params);
 
-		if (empty($this->dsn))
+		if ( ! empty($this->port))
 		{
-			$this->dsn = 'sqlsrv:Server='.(empty($this->hostname) ? '127.0.0.1' : $this->hostname);
-
-			empty($this->port) OR $this->dsn .= ','.$this->port;
-			empty($this->database) OR $this->dsn .= ';Database='.$this->database;
-
-			// Some custom options
-
-			if (isset($this->QuotedId))
-			{
-				$this->dsn .= ';QuotedId='.$this->QuotedId;
-				$this->_quoted_identifier = (bool) $this->QuotedId;
-			}
-
-			if (isset($this->ConnectionPooling))
-			{
-				$this->dsn .= ';ConnectionPooling='.$this->ConnectionPooling;
-			}
-
-			if ($this->encrypt === TRUE)
-			{
-				$this->dsn .= ';Encrypt=1';
-			}
-
-			if (isset($this->TraceOn))
-			{
-				$this->dsn .= ';TraceOn='.$this->TraceOn;
-			}
-
-			if (isset($this->TrustServerCertificate))
-			{
-				$this->dsn .= ';TrustServerCertificate='.$this->TrustServerCertificate;
-			}
-
-			empty($this->APP) OR $this->dsn .= ';APP='.$this->APP;
-			empty($this->Failover_Partner) OR $this->dsn .= ';Failover_Partner='.$this->Failover_Partner;
-			empty($this->LoginTimeout) OR $this->dsn .= ';LoginTimeout='.$this->LoginTimeout;
-			empty($this->MultipleActiveResultSets) OR $this->dsn .= ';MultipleActiveResultSets='.$this->MultipleActiveResultSets;
-			empty($this->TraceFile) OR $this->dsn .= ';TraceFile='.$this->TraceFile;
-			empty($this->WSID) OR $this->dsn .= ';WSID='.$this->WSID;
-		}
-		elseif (preg_match('/QuotedId=(0|1)/', $this->dsn, $match))
-		{
-			$this->_quoted_identifier = (bool) $match[1];
+			$this->hostname .= (DIRECTORY_SEPARATOR === '\\' ? ',' : ':').$this->port;
 		}
 	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	 * Database connection
+	 * Non-persistent database connection
 	 *
 	 * @param	bool	$persistent
-	 * @return	object
+	 * @return	resource
 	 */
 	public function db_connect($persistent = FALSE)
 	{
-		if ( ! empty($this->char_set) && preg_match('/utf[^8]*8/i', $this->char_set))
+		ini_set('mssql.charset', $this->char_set);
+		$this->conn_id = ($persistent)
+				? mssql_pconnect($this->hostname, $this->username, $this->password)
+				: mssql_connect($this->hostname, $this->username, $this->password);
+
+		if ( ! $this->conn_id)
 		{
-			$this->options[PDO::SQLSRV_ENCODING_UTF8] = 1;
+			return FALSE;
 		}
 
-		$this->conn_id = parent::db_connect($persistent);
+		// ----------------------------------------------------------------
 
-		if ( ! is_object($this->conn_id) OR is_bool($this->_quoted_identifier))
+		// Select the DB... assuming a database name is specified in the config file
+		if ($this->database !== '' && ! $this->db_select())
 		{
-			return $this->conn_id;
+			log_message('error', 'Unable to select database: '.$this->database);
+
+			return ($this->db_debug === TRUE)
+				? $this->display_error('db_unable_to_select', $this->database)
+				: FALSE;
 		}
 
 		// Determine how identifiers are escaped
@@ -174,7 +142,127 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Show table query
+	 * Select the database
+	 *
+	 * @param	string	$database
+	 * @return	bool
+	 */
+	public function db_select($database = '')
+	{
+		if ($database === '')
+		{
+			$database = $this->database;
+		}
+
+		// Note: Escaping is required in the event that the DB name
+		// contains reserved characters.
+		if (mssql_select_db('['.$database.']', $this->conn_id))
+		{
+			$this->database = $database;
+			$this->data_cache = array();
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Execute the query
+	 *
+	 * @param	string	$sql	an SQL query
+	 * @return	mixed	resource if rows are returned, bool otherwise
+	 */
+	protected function _execute($sql)
+	{
+		return mssql_query($sql, $this->conn_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Begin Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_begin()
+	{
+		return $this->simple_query('BEGIN TRAN');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Commit Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_commit()
+	{
+		return $this->simple_query('COMMIT TRAN');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Rollback Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_rollback()
+	{
+		return $this->simple_query('ROLLBACK TRAN');
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Affected Rows
+	 *
+	 * @return	int
+	 */
+	public function affected_rows()
+	{
+		return mssql_rows_affected($this->conn_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Insert ID
+	 *
+	 * Returns the last id created in the Identity column.
+	 *
+	 * @return	string
+	 */
+	public function insert_id()
+	{
+		$query = version_compare($this->version(), '8', '>=')
+			? 'SELECT SCOPE_IDENTITY() AS last_id'
+			: 'SELECT @@IDENTITY AS last_id';
+
+		$query = $this->query($query);
+		$query = $query->row();
+		return $query->last_id;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Version number query string
+	 *
+	 * @return	string
+	 */
+	protected function _version()
+	{
+		return "SELECT SERVERPROPERTY('ProductVersion') AS ver";
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * List table query
 	 *
 	 * Generates a platform-specific query string so that the table names can be fetched
 	 *
@@ -187,7 +275,7 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 			.' FROM '.$this->escape_identifiers('sysobjects')
 			.' WHERE '.$this->escape_identifiers('type')." = 'U'";
 
-		if ($prefix_limit === TRUE && $this->dbprefix !== '')
+		if ($prefix_limit !== FALSE && $this->dbprefix !== '')
 		{
 			$sql .= ' AND '.$this->escape_identifiers('name')." LIKE '".$this->escape_like_str($this->dbprefix)."%' "
 				.sprintf($this->_like_escape_str, $this->_like_escape_chr);
@@ -199,7 +287,7 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Show column query
+	 * List column query
 	 *
 	 * Generates a platform-specific query string so that the column names can be fetched
 	 *
@@ -249,6 +337,33 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Error
+	 *
+	 * Returns an array containing code and message of the last
+	 * database error that has occurred.
+	 *
+	 * @return	array
+	 */
+	public function error()
+	{
+		// We need this because the error info is discarded by the
+		// server the first time you request it, and query() already
+		// calls error() once for logging purposes when a query fails.
+		static $error = array('code' => 0, 'message' => NULL);
+
+		$message = mssql_get_last_message();
+		if ( ! empty($message))
+		{
+			$error['code']    = $this->query('SELECT @@ERROR AS code')->row()->code;
+			$error['message'] = $message;
+		}
+
+		return $error;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
 	 * Update statement
 	 *
 	 * Generates a platform-specific update string from the supplied data
@@ -262,6 +377,24 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 		$this->qb_limit = FALSE;
 		$this->qb_orderby = array();
 		return parent::_update($table, $values);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Truncate statement
+	 *
+	 * Generates a platform-specific truncate string from the supplied data
+	 *
+	 * If the database does not support the TRUNCATE statement,
+	 * then this method maps to 'DELETE FROM table'
+	 *
+	 * @param	string	$table
+	 * @return	string
+	 */
+	protected function _truncate($table)
+	{
+		return 'TRUNCATE TABLE '.$table;
 	}
 
 	// --------------------------------------------------------------------
@@ -296,19 +429,11 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 	 */
 	protected function _limit($sql)
 	{
-		// As of SQL Server 2012 (11.0.*) OFFSET is supported
-		if (version_compare($this->version(), '11', '>='))
-		{
-			// SQL Server OFFSET-FETCH can be used only with the ORDER BY clause
-			empty($this->qb_orderby) && $sql .= ' ORDER BY 1';
-
-			return $sql.' OFFSET '.(int) $this->qb_offset.' ROWS FETCH NEXT '.$this->qb_limit.' ROWS ONLY';
-		}
-
 		$limit = $this->qb_offset + $this->qb_limit;
 
-		// An ORDER BY clause is required for ROW_NUMBER() to work
-		if ($this->qb_offset && ! empty($this->qb_orderby))
+		// As of SQL Server 2005 (9.0.*) ROW_NUMBER() is supported,
+		// however an ORDER BY clause is required for it to work
+		if (version_compare($this->version(), '9', '>=') && $this->qb_offset && ! empty($this->qb_orderby))
 		{
 			$orderby = $this->_compile_order_by();
 
@@ -364,6 +489,18 @@ class CI_DB_pdo_sqlsrv_driver extends CI_DB_pdo_driver {
 		}
 
 		return ($this->db_debug) ? $this->display_error('db_unsupported_feature') : FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Close DB Connection
+	 *
+	 * @return	void
+	 */
+	protected function _close()
+	{
+		mssql_close($this->conn_id);
 	}
 
 }

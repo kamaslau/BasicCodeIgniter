@@ -35,6 +35,9 @@
 		{
 			parent::__construct();
 			
+			// 统计业务逻辑运行时间起点
+			$this->benchmark->mark('start');
+			
 			// 根据timestamp和token验证签名
 			/*
 			$timestamp = $this->input->post('timestamp');

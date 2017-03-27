@@ -38,7 +38,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * PDO Firebird Database Adapter Class
+ * Firebird/Interbase Database Adapter Class
  *
  * Note: _DB is an extender class that the app controller
  * creates dynamically based on whether the query builder
@@ -50,14 +50,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/user_guide/database/
  */
-class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
+class CI_DB_ibase_driver extends CI_DB {
 
 	/**
-	 * Sub-driver
+	 * Database driver
 	 *
 	 * @var	string
 	 */
-	public $subdriver = 'firebird';
+	public $dbdriver = 'ibase';
 
 	// --------------------------------------------------------------------
 
@@ -68,46 +68,152 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 	 */
 	protected $_random_keyword = array('RAND()', 'RAND()');
 
+	/**
+	 * IBase Transaction status flag
+	 *
+	 * @var	resource
+	 */
+	protected $_ibase_trans;
+
 	// --------------------------------------------------------------------
 
 	/**
-	 * Class constructor
+	 * Non-persistent database connection
 	 *
-	 * Builds the DSN if not already set.
-	 *
-	 * @param	array	$params
-	 * @return	void
+	 * @param	bool	$persistent
+	 * @return	resource
 	 */
-	public function __construct($params)
+	public function db_connect($persistent = FALSE)
 	{
-		parent::__construct($params);
-
-		if (empty($this->dsn))
-		{
-			$this->dsn = 'firebird:';
-
-			if ( ! empty($this->database))
-			{
-				$this->dsn .= 'dbname='.$this->database;
-			}
-			elseif ( ! empty($this->hostname))
-			{
-				$this->dsn .= 'dbname='.$this->hostname;
-			}
-
-			empty($this->char_set) OR $this->dsn .= ';charset='.$this->char_set;
-			empty($this->role) OR $this->dsn .= ';role='.$this->role;
-		}
-		elseif ( ! empty($this->char_set) && strpos($this->dsn, 'charset=', 9) === FALSE)
-		{
-			$this->dsn .= ';charset='.$this->char_set;
-		}
+		return ($persistent === TRUE)
+			? ibase_pconnect($this->hostname.':'.$this->database, $this->username, $this->password, $this->char_set)
+			: ibase_connect($this->hostname.':'.$this->database, $this->username, $this->password, $this->char_set);
 	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	 * Show table query
+	 * Database version number
+	 *
+	 * @return	string
+	 */
+	public function version()
+	{
+		if (isset($this->data_cache['version']))
+		{
+			return $this->data_cache['version'];
+		}
+
+		if (($service = ibase_service_attach($this->hostname, $this->username, $this->password)))
+		{
+			$this->data_cache['version'] = ibase_server_info($service, IBASE_SVC_SERVER_VERSION);
+
+			// Don't keep the service open
+			ibase_service_detach($service);
+			return $this->data_cache['version'];
+		}
+
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Execute the query
+	 *
+	 * @param	string	$sql	an SQL query
+	 * @return	resource
+	 */
+	protected function _execute($sql)
+	{
+		return ibase_query(isset($this->_ibase_trans) ? $this->_ibase_trans : $this->conn_id, $sql);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Begin Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_begin()
+	{
+		if (($trans_handle = ibase_trans($this->conn_id)) === FALSE)
+		{
+			return FALSE;
+		}
+
+		$this->_ibase_trans = $trans_handle;
+		return TRUE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Commit Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_commit()
+	{
+		if (ibase_commit($this->_ibase_trans))
+		{
+			$this->_ibase_trans = NULL;
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Rollback Transaction
+	 *
+	 * @return	bool
+	 */
+	protected function _trans_rollback()
+	{
+		if (ibase_rollback($this->_ibase_trans))
+		{
+			$this->_ibase_trans = NULL;
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Affected Rows
+	 *
+	 * @return	int
+	 */
+	public function affected_rows()
+	{
+		return ibase_affected_rows($this->conn_id);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Insert ID
+	 *
+	 * @param	string	$generator_name
+	 * @param	int	$inc_by
+	 * @return	int
+	 */
+	public function insert_id($generator_name, $inc_by = 0)
+	{
+		//If a generator hasn't been used before it will return 0
+		return ibase_gen_id('"'.$generator_name.'"', $inc_by);
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * List table query
 	 *
 	 * Generates a platform-specific query string so that the table names can be fetched
 	 *
@@ -116,11 +222,11 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 	 */
 	protected function _list_tables($prefix_limit = FALSE)
 	{
-		$sql = 'SELECT "RDB$RELATION_NAME" FROM "RDB$RELATIONS" WHERE "RDB$RELATION_NAME" NOT LIKE \'RDB$%\' AND "RDB$RELATION_NAME" NOT LIKE \'MON$%\'';
+		$sql = 'SELECT TRIM("RDB$RELATION_NAME") AS TABLE_NAME FROM "RDB$RELATIONS" WHERE "RDB$RELATION_NAME" NOT LIKE \'RDB$%\' AND "RDB$RELATION_NAME" NOT LIKE \'MON$%\'';
 
-		if ($prefix_limit === TRUE && $this->dbprefix !== '')
+		if ($prefix_limit !== FALSE && $this->dbprefix !== '')
 		{
-			return $sql.' AND "RDB$RELATION_NAME" LIKE \''.$this->escape_like_str($this->dbprefix)."%' "
+			return $sql.' AND TRIM("RDB$RELATION_NAME") AS TABLE_NAME LIKE \''.$this->escape_like_str($this->dbprefix)."%' "
 				.sprintf($this->_like_escape_str, $this->_like_escape_chr);
 		}
 
@@ -139,7 +245,7 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 	 */
 	protected function _list_columns($table = '')
 	{
-		return 'SELECT "RDB$FIELD_NAME" FROM "RDB$RELATION_FIELDS" WHERE "RDB$RELATION_NAME" = '.$this->escape($table);
+		return 'SELECT TRIM("RDB$FIELD_NAME") AS COLUMN_NAME FROM "RDB$RELATION_FIELDS" WHERE "RDB$RELATION_NAME" = '.$this->escape($table);
 	}
 
 	// --------------------------------------------------------------------
@@ -180,6 +286,21 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 		return (($query = $this->query($sql)) !== FALSE)
 			? $query->result_object()
 			: FALSE;
+	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Error
+	 *
+	 * Returns an array containing code and message of the last
+	 * database error that has occurred.
+	 *
+	 * @return	array
+	 */
+	public function error()
+	{
+		return array('code' => ibase_errcode(), 'message' => ibase_errmsg());
 	}
 
 	// --------------------------------------------------------------------
@@ -249,15 +370,15 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 		if (stripos($this->version(), 'firebird') !== FALSE)
 		{
 			$select = 'FIRST '.$this->qb_limit
-				.($this->qb_offset > 0 ? ' SKIP '.$this->qb_offset : '');
+				.($this->qb_offset ? ' SKIP '.$this->qb_offset : '');
 		}
 		else
 		{
 			$select = 'ROWS '
-				.($this->qb_offset > 0 ? $this->qb_offset.' TO '.($this->qb_limit + $this->qb_offset) : $this->qb_limit);
+				.($this->qb_offset ? $this->qb_offset.' TO '.($this->qb_limit + $this->qb_offset) : $this->qb_limit);
 		}
 
-		return preg_replace('`SELECT`i', 'SELECT '.$select, $sql);
+		return preg_replace('`SELECT`i', 'SELECT '.$select, $sql, 1);
 	}
 
 	// --------------------------------------------------------------------
@@ -276,4 +397,17 @@ class CI_DB_pdo_firebird_driver extends CI_DB_pdo_driver {
 	{
 		return ($this->db_debug) ? $this->display_error('db_unsupported_feature') : FALSE;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Close DB Connection
+	 *
+	 * @return	void
+	 */
+	protected function _close()
+	{
+		ibase_close($this->conn_id);
+	}
+
 }
