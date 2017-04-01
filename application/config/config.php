@@ -6,13 +6,13 @@ define('SITE_NAME', 'Go Basic!'); // 站点名称
 define('SITE_SLOGAN', '快一点，简单一点。'); // 站点广告语
 define('SITE_KEYWORDS', 'Basic,PHP,开发框架,开源,CodeIgniter,CI,GitHub'); // 站点关键词
 define('SITE_DESCRIPTION', 'Basic是一个开源的PHP开发框架，源自CI最新稳定版'); // 站点描述
-define('ICP_NUMBER', '鲁ICP备15027187号-1'); // ICP备案号码，没有请留空
+define('ICP_NUMBER', NULL); // ICP备案号码，没有请留空
 
-define('BASE_URL', 'https://'. $_SERVER['SERVER_NAME']); // 可对外使用的站点URL, 自动判断协议（HTTP/HTTPS等等）；在本地测试时须替换为类似“localhost/BasicCodeigniter”形式
-//define('IMAGES_URL', '//images.xx.com/'); // （可选）非样式图片存储的根目录所在URL，可用于配合又拍云等第三方存储
+define('BASE_URL', 'https://'. $_SERVER['SERVER_NAME']); // 可对外使用的站点URL；在本地测试时须替换为类似“localhost/BasicCodeigniter”形式
+//define('IMAGES_URL', 'https://images.xx.com/'); // （可选）非样式图片存储的根目录所在URL，可用于配合又拍云等第三方存储
 define('COOKIE_DOMAIN', '.domain.com'); // cookie存储路径；方便起见可让所有子域共享，若需分离可自行配置
 define('SESSION_COOKIE_NAME', 'ci_sessions_web'); // 用于cookie存储的session名（设置此值后，前后台session互不影响）
-define('SESSION_TABLE', 'ci_sessions'); // 用于session存储的数据库表名
+define('SESSION_TABLE', 'ci_sessions_web'); // 用于session存储的数据库表名
 define('SESSION_PERIOD', 2592000); // session有效期秒数，此处设为30天，即60秒*60分*24小时*30天
 define('ENCRYPTION_KEY', ''); // 秘钥用于加密相关功能，可为空
 

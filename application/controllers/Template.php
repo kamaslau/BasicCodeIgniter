@@ -42,7 +42,7 @@
 			$this->class_name = strtolower(__CLASS__);
 			$this->class_name_cn = '类名'; // 改这里……
 			$this->table_name = 'table'; // 和这里……
-			$this->id_name = 'table_id';  // 还有这里，OK，这就可以了
+			$this->id_name = 'table_id'; // 还有这里，OK，这就可以了
 			$this->view_root = $this->class_name;
 
 			// 设置需要自动在视图文件中生成显示的字段
@@ -190,8 +190,8 @@
 
 			// 后台操作可能需要检查操作权限
 			/*
-			$role_allowed = array('editor', 'manager'); // 员工角色要求
-			$min_level = 0; // 员工最低权限
+			$role_allowed = array('经理', '管理员'); // 操作者角色要求
+			$min_level = 1; // 操作者最低权限
 			$this->basic->permission_check($role_allowed, $min_level);
 			*/
 
@@ -228,8 +228,8 @@
 
 			// 后台操作可能需要检查操作权限
 			/*
-			$role_allowed = array('editor', 'manager'); // 员工角色要求
-			$min_level = 0; // 员工最低权限
+			$role_allowed = array('经理', '管理员'); // 操作者角色要求
+			$min_level = 1; // 操作者最低权限
 			$this->basic->permission_check($role_allowed, $min_level);
 			*/
 
@@ -271,8 +271,8 @@
 
 			// 后台操作可能需要检查操作权限
 			/*
-			$role_allowed = array('editor', 'manager'); // 员工角色要求
-			$min_level = 0; // 员工最低权限
+			$role_allowed = array('经理', '管理员'); // 操作者角色要求
+			$min_level = 1; // 操作者最低权限
 			$this->basic->permission_check($role_allowed, $min_level);
 			*/
 
@@ -312,8 +312,8 @@
 
 			// 后台操作可能需要检查操作权限
 			/*
-			$role_allowed = array('editor', 'manager'); // 员工角色要求
-			$min_level = 0; // 员工最低权限
+			$role_allowed = array('经理', '管理员'); // 操作者角色要求
+			$min_level = 1; // 操作者最低权限
 			$this->basic->permission_check($role_allowed, $min_level);
 			*/
 

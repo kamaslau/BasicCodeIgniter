@@ -6,22 +6,17 @@
 @charset "utf-8";
 @viewport{width:device-width;}
 
-* {box-sizing:border-box;}
-body {color:#111;background-color:#fff;font:1em/1.5 "微软雅黑",verdana,sans-serif;}
-figure {line-height:1;}
-img {width:100%;max-width:100%;}
+body {color:#111;background-color:#fff;}
+.container {padding:0;/* 去掉BootStrap默认的左右内边距 */}
+
 a {color:#333;}
 	a:hover {color:#999;}
 
-.horizontal {overflow:hidden;}
-	.horizontal li,.horizontal .li {float:left;display:inline;}
-
-#totop {position:fixed;right:1em;bottom:1em;}
 
 /* 宽度在640像素以上的设备 */
 @media only screen and (min-width:641px)
 {
-	.container {width:95%;margin:0 auto;}
+	
 }
 
 /* 宽度在960像素以上的设备 */

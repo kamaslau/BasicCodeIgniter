@@ -23,7 +23,7 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170324">
+		<meta name=version content="revision20170401">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
@@ -43,12 +43,12 @@
 			<script src="//cdn.key2all.com/js/html5.js"></script>
 			<script src="//cdn.key2all.com/js/css3-mediaqueries.js"></script>
 		<![endif]-->
-		<script src="//cdn.key2all.com/js/jquery/new.js"></script>
+
+		<script src="https://cdn.key2all.com/js/jquery/new.js"></script>
 		<!--<script src="<?php echo base_url() ?>js/xx.js"></script>-->
 
-		<link rel=stylesheet media=all href="//cdn.key2all.com/css/normalize.css">
-		<link rel=stylesheet media=all href="//cdn.key2all.com/css/reset.css">
-		<link rel=stylesheet media=all href="//cdn.key2all.com/font-awesome/css/font-awesome.min.css">
+		<link rel=stylesheet media=all href="https//cdn.key2all.com/css/reset.css">
+		<link rel=stylesheet media=all href="https//cdn.key2all.com/font-awesome/css/font-awesome.min.css">
 		<link rel=stylesheet media=all href="/css/style.css">
 
 		<link rel="shortcut icon" href="//images.guangchecheng.com/logos/logo_32x32.png">
