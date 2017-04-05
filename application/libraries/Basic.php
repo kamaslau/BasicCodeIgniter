@@ -397,7 +397,7 @@
 				$this->CI->load->view($this->view_root.'result', $data);
 
 			endif;
-			
+
 			// 载入页尾视图
 			$this->CI->load->view('templates/footer', $data);
 		}

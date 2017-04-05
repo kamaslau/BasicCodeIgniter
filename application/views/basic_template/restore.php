@@ -31,7 +31,7 @@
 	// 需要特定角色和权限进行该操作
 	$current_role = $this->session->role; // 当前用户角色
 	$current_level = $this->session->level; // 当前用户权限
-	$role_allowed = array('管理员');
+	$role_allowed = array('经理', '管理员');
 	$level_allowed = 1;
 	if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
 	?>
@@ -75,7 +75,7 @@
 	</div>
 
 	<?php
-		if (isset($error)) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
+		if ( isset($error) ) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
 		$attributes = array('class' => 'form-'.$this->class_name.'-restore form-horizontal', 'role' => 'form');
 		echo form_open($this->class_name.'/restore', $attributes);
 	?>

@@ -31,7 +31,7 @@
 	// 需要特定角色和权限进行该操作
 	$current_role = $this->session->role; // 当前用户角色
 	$current_level = $this->session->level; // 当前用户权限
-	$role_allowed = array('管理员');
+	$role_allowed = array('经理', '管理员');
 	$level_allowed = 1;
 	if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
 	?>
@@ -48,8 +48,6 @@
 		echo form_open_multipart($this->class_name.'/edit?id='.$item[$this->id_name], $attributes);
 	?>
 		<fieldset>
-			<legend>请填写以下信息</legend>
-			
 			<div class=form-group>
 				<label for=name class="col-sm-2 control-label">名称</label>
 				<div class=col-sm-10>

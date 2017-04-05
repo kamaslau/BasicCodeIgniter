@@ -247,7 +247,7 @@
 			);
 
 			// Go Basic!
-			$this->basic->edit($data, $data_to_edit);
+			$this->basic->edit($data, $data_to_edit, $view_file_name = NULL); // 可以自定义视图文件名
 		}
 
 		/**
