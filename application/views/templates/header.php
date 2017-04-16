@@ -23,10 +23,11 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170401">
+		<meta name=version content="revision20170416">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
+		<meta name=robots content="index, follow">
 
 		<?php
 			// 对于iOS和Android设备，放大1倍以适应普遍采用的高清分辨率
@@ -51,8 +52,8 @@
 		<link rel=stylesheet media=all href="https//cdn.key2all.com/font-awesome/css/font-awesome.min.css">
 		<link rel=stylesheet media=all href="/css/style.css">
 
-		<link rel="shortcut icon" href="//images.guangchecheng.com/logos/logo_32x32.png">
-		<link rel=apple-touch-icon href="//images.guangchecheng.com/logos/logo_120x120.png">
+		<link rel="shortcut icon" href="//images.bandaodian.com/logos/logo_32x32.png">
+		<link rel=apple-touch-icon href="//images.bandaodian.com/logos/logo_120x120.png">
 
 		<link rel=canonical href="<?php echo current_url() ?>">
 
@@ -62,6 +63,7 @@
 	// 将head内容立即输出，让用户浏览器立即开始请求head中各项资源，提高页面加载速度
 	ob_flush();flush();
 ?>
+
 <!-- 内容开始 -->
 <?php
 	/**

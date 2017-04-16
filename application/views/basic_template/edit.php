@@ -31,14 +31,14 @@
 	// 需要特定角色和权限进行该操作
 	$current_role = $this->session->role; // 当前用户角色
 	$current_level = $this->session->level; // 当前用户权限
-	$role_allowed = array('经理', '管理员');
+	$role_allowed = array('管理员', '经理');
 	$level_allowed = 1;
 	if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
 	?>
 	<div class=btn-group role=group>
-		<a type=button class="btn btn-default" title="所有<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name) ?>"><i class="fa fa-list fa-fw" aria-hidden=true></i> 所有<?php echo $this->class_name_cn ?></a>
-	  	<a type=button class="btn btn-default" title="<?php echo $this->class_name_cn ?>回收站" href="<?php echo base_url($this->class_name.'/trash') ?>"><i class="fa fa-trash fa-fw" aria-hidden=true></i> 回收站</a>
-		<a type=button class="btn btn-default" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
+		<a class="btn btn-default" title="所有<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name) ?>"><i class="fa fa-list fa-fw" aria-hidden=true></i> 所有<?php echo $this->class_name_cn ?></a>
+	  	<a class="btn btn-default" title="<?php echo $this->class_name_cn ?>回收站" href="<?php echo base_url($this->class_name.'/trash') ?>"><i class="fa fa-trash fa-fw" aria-hidden=true></i> 回收站</a>
+		<a class="btn btn-default" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
 	</div>
 	<?php endif ?>
 
@@ -52,40 +52,40 @@
 				<label for=name class="col-sm-2 control-label">名称</label>
 				<div class=col-sm-10>
 					<input class=form-control name=name type=text value="<?php echo $item['name'] ?>" placeholder="名称" required>
+					<?php echo form_error('name') ?>
 				</div>
-				<?php echo form_error('name') ?>
 			</div>
 			
 			<div class=form-group>
 				<label for=tag_price class="col-sm-2 control-label">参考价（万元）</label>
 				<div class=col-sm-10>
 					<input class=form-control name=tag_price type=number step=0.01 min=1.00 max=99999.99 value="<?php echo $item['tag_price'] ?>" placeholder="保留两位小数">
+					<?php echo form_error('tag_price') ?>
 				</div>
-				<?php echo form_error('tag_price') ?>
 			</div>
 
 			<div class=form-group>
 				<label for=price class="col-sm-2 control-label">商城价（万元）</label>
 				<div class=col-sm-10>
 					<input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo $item['price'] ?>" placeholder="保留两位小数" required>
+					<?php echo form_error('price') ?>
 				</div>
-				<?php echo form_error('price') ?>
 			</div>
 			
 			<div class=form-group>
 				<label for=userfile class="col-sm-2 control-label">主图</label>
 				<div class=col-sm-10>
 					<input class=form-control name=userfile type=file value="<?php echo $item['userfile'] ?>" placeholder="车版图片">
+					<?php echo form_error('userfile') ?>
 				</div>
-				<?php echo form_error('userfile') ?>
 			</div>
 
 			<div class=form-group>
 				<label for=description class="col-sm-2 control-label">详情</label>
 				<div class=col-sm-10>
 					<textarea class=form-control name=description rows=10 placeholder="详情" required><?php echo $item['description'] ?></textarea>
+					<?php echo form_error('description') ?>
 				</div>
-				<?php echo form_error('description') ?>
 			</div>
 
 			<div class=form-group>
@@ -99,8 +99,8 @@
 						<option value="<?php echo $option ?>" <?php if ($option === $item['delivery']) echo 'selected'; ?>><?php echo $option ?></option>
 						<?php endforeach ?>
 					</select>
+					<?php echo form_error('delivery') ?>
 				</div>
-				<?php echo form_error('delivery') ?>
 			</div>
 
 		</fieldset>

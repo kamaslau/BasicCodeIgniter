@@ -40,9 +40,73 @@
 			$this->CI->basic_model->table_name = $configs['table_name']; // 表名
 			$this->CI->basic_model->id_name = $configs['id_name']; // 主键名
 		}
+
+		/**
+		 * 错误提示页面
+		 *
+		 * @param int $code 错误代码
+		 * @param string $content 错误提示文本
+		 * @return void
+		 */
+		public function error($code, $content)
+		{
+			$data = array(
+				'title' => $code,
+				'class' => 'error '.$code,
+				'content' => $content,
+			);
+
+			$this->CI->load->view('templates/header', $data);
+			$this->CI->load->view('error/'.$code, $data);
+			$this->CI->load->view('templates/footer', $data);
+		}
+
+		/**
+		 * 根据以空格分隔的以空格分隔的多个ID值获取相应数据
+		 *
+		 * @params string $ids_string 以空格分隔的多个ID值
+		 * @params string $table_name 数据库表名
+		 * @params string $id_name 数据库表主键名
+		 */
+		public function get_by_ids($ids_string, $table_name, $id_name)
+		{
+			$this->CI->basic_model->table_name = $table_name;
+			$this->CI->basic_model->id_name = $id_name;
+
+			// 返回的数据为数组格式
+			$data_to_return = array();
+			
+			// 拆分出需获取的各ID为数组值
+			$ids = explode(' ', $ids_string);
+
+			// 根据ID获取相应数据
+			foreach ($ids as $id):
+				$data_to_return[] = $this->CI->basic_model->select_by_id($id);
+			endforeach;
+
+			return $data_to_return;
+		}
 		
 		/**
-		 * 输出表单各字段项
+		 * 根据ID值获取相应数据
+		 *
+		 * @params string $id ID值
+		 * @params string $table_name 数据库表名，默认为当前类属性相应值
+		 * @params string $id_name 数据库表主键名，默认为当前类属性相应值
+		 */
+		public function get_by_id($id, $table_name, $id_name)
+		{
+			$this->CI->basic_model->table_name = $table_name;
+			$this->CI->basic_model->id_name = $id_name;
+
+			// 根据ID获取相应数据
+			$data_to_return = $this->CI->basic_model->select_by_id($id);
+
+			return $data_to_return;
+		}
+
+		/**
+		 * @DEPRECATED 输出表单各字段项
 		 *
 		 * 集成度过高，除管理后台相关功能外不推荐使用此方法
 		 *
@@ -183,26 +247,6 @@
 				endif;
 			}
 
-			$this->CI->load->view('templates/footer', $data);
-		}
-
-		/**
-		 * 调用错误提示页面
-		 *
-		 * @param int $code 错误代码
-		 * @param string $content 错误提示文本
-		 * @return void
-		 */
-		public function error($code, $content)
-		{
-			$data = array(
-				'title' => $code,
-				'class' => $code,
-				'content' => $content
-			);
-
-			$this->CI->load->view('templates/header', $data); // 载入视图文件，下同
-			$this->CI->load->view('error/'.$code, $data);
 			$this->CI->load->view('templates/footer', $data);
 		}
 
@@ -397,7 +441,7 @@
 				$this->CI->load->view($this->view_root.'result', $data);
 
 			endif;
-
+			
 			// 载入页尾视图
 			$this->CI->load->view('templates/footer', $data);
 		}
