@@ -324,13 +324,10 @@
 		 */
 		public function detail($data, $title_name = NULL, $position = 'after')
 		{
-			$id = $this->CI->input->get_post('id')? $this->CI->input->get_post('id'): NULL;
-
 			// 检查是否已传入必要参数
-			if (empty($id)):
-				$this->error(404, '网址不完整');
-				exit;
-			endif;
+			$id = $this->CI->input->get_post('id')? $this->CI->input->get_post('id'): NULL;
+			if ( empty($id) )
+				redirect(base_url('error/code_404'));
 
 			// 获取项目
 			$data['item'] = $this->CI->basic_model->select_by_id($id);
@@ -407,13 +404,10 @@
 		 */
 		public function edit($data, $data_to_edit, $view_file_name = NULL)
 		{
-			$id = $this->CI->input->get_post('id')? $this->CI->input->get_post('id'): $data['id'];
-
 			// 检查是否已传入必要参数
-			if ( empty($id) ):
-				$this->error(404, '网址不完整');
-				exit;
-			endif;
+			$id = $this->CI->input->get_post('id')? $this->CI->input->get_post('id'): NULL;
+			if ( empty($id) )
+				redirect(base_url('error/code_404'));
 
 			// 获取待编辑信息
 			$data['item'] = $this->CI->basic_model->select_by_id($id);

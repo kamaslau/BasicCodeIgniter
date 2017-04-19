@@ -20,10 +20,12 @@
 	}
 </style>
 
-<ol id=breadcrumb class="breadcrumb container">
-	<li><a href="<?php echo base_url() ?>">首页</a></li>
-	<li class=active><?php echo $this->class_name_cn ?></li>
-</ol>
+<div id=breadcrumb>
+	<ol class="breadcrumb container">
+		<li><a href="<?php echo base_url() ?>">首页</a></li>
+		<li class=active><?php echo $this->class_name_cn ?></li>
+	</ol>
+</div>
 
 <div id=content class=container>
 	<?php

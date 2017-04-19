@@ -20,11 +20,13 @@
 	}
 </style>
 
-<ol id=breadcrumb class="breadcrumb container">
-	<li><a href="<?php echo base_url() ?>">首页</a></li>
-	<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
-	<li class=active><?php echo $title ?></li>
-</ol>
+<div id=breadcrumb>
+	<ol class="breadcrumb container">
+		<li><a href="<?php echo base_url() ?>">首页</a></li>
+		<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
+		<li class=active><?php echo $title ?></li>
+	</ol>
+</div>
 
 <div id=content class=container>
 	<?php
@@ -106,8 +108,8 @@
 		</fieldset>
 
 		<div class=form-group>
-		    <div class="col-sm-offset-2 col-sm-10">
-				<button class="btn btn-primary" type=submit>保存</button>
+		    <div class="col-xs-12 col-sm-offset-2 col-sm-2">
+				<button class="btn btn-primary btn-lg btn-block" type=submit>保存</button>
 		    </div>
 		</div>
 	</form>

@@ -1,6 +1,5 @@
 <style>
 
-
 	/* 宽度在768像素以上的设备 */
 	@media only screen and (min-width:769px)
 	{
@@ -20,11 +19,13 @@
 	}
 </style>
 
-<ol id=breadcrumb class="breadcrumb container">
-	<li><a href="<?php echo base_url() ?>">首页</a></li>
-	<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
-	<li class=active><?php echo $title ?></li>
-</ol>
+<div id=breadcrumb>
+	<ol class="breadcrumb container">
+		<li><a href="<?php echo base_url() ?>">首页</a></li>
+		<li><a href="<?php echo base_url($this->class_name) ?>"><?php echo $this->class_name_cn ?></a></li>
+		<li class=active><?php echo $title ?></li>
+	</ol>
+</div>
 
 <div id=content class=container>
 	<?php
@@ -81,18 +82,19 @@
 	?>
 		<fieldset>
 			<input name=ids type=hidden value="<?php echo implode('|', $ids) ?>">
+
 			<div class=form-group>
 				<label for=url_cn class="col-sm-2 control-label">密码</label>
 				<div class=col-sm-10>
-					<input class=form-control name=password type=password size=6 pattern="\d{6}" placeholder="请输入您的登录密码" autofocus required>
+					<input class=form-control name=password type=password placeholder="请输入您的登录密码" autofocus required>
 				</div>
 				<?php echo form_error('password') ?>
 			</div>
 		</fieldset>
 
 		<div class=form-group>
-		    <div class="col-sm-offset-2 col-sm-10">
-				<button class="btn btn-danger" type=submit>删除</button>
+		    <div class="col-xs-12 col-sm-offset-2 col-sm-2">
+				<button class="btn btn-danger btn-lg btn-block" type=submit>删除</button>
 		    </div>
 		</div>
 	</form>
