@@ -260,16 +260,14 @@
 		public function permission_check($role_allowed, $min_level)
 		{
 			// 目前管理员角色和级别
-			$current_role = $this->session->role;
-			$current_level = $this->session->level;
+			$current_role = $this->CI->session->role;
+			$current_level = $this->CI->session->level;
 
-			// 执行此操作的角色及权限要求
-			if ( ! in_array($current_role, $role_allowed) || ! $current_level < $min_level):
-				$data['content'] = '抱歉，您的员工角色不符或权限不足。';
-				$this->CI->load->view('templates/header', $data);
-				$this->CI->load->view($this->view_root.'result', $data);
-				$this->CI->load->view('templates/footer', $data);
-				exit;
+			// 检查执行此操作的角色及权限要求
+			if ( ! in_array($current_role, $role_allowed)):
+				redirect( base_url('error/permission_role') );
+			elseif ( $current_level < $min_level):
+				redirect( base_url('error/permission_level') );
 			endif;
 		}
 
