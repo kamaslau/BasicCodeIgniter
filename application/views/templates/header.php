@@ -23,11 +23,11 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170419">
+		<meta name=version content="revision20170421">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
-		<meta name=robots content="index, follow">
+		<!--<meta name=robots content="noindex, nofollow">-->
 
 		<?php
 			// 对于iOS和Android设备，放大1倍以适应普遍采用的高清分辨率

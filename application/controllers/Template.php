@@ -134,6 +134,11 @@
 		 */
 		public function detail()
 		{
+			// 检查是否已传入必要参数
+			$id = $this->input->get_post('id')? $this->input->get_post('id'): NULL;
+			if ( empty($id) )
+				redirect(base_url('error/code_404'));
+
 			// 页面信息
 			$data = array(
 				'title' => $this->class_name_cn. '详情',
@@ -149,8 +154,6 @@
 
 		/**
 		 * 回收站
-		 *
-		 * 一般为后台功能
 		 */
 		public function trash()
 		{
@@ -195,6 +198,13 @@
 				'title' => '创建'.$this->class_name_cn,
 				'class' => $this->class_name.' '. $this->class_name.'-create',
 			);
+
+			// (可选) 检查是否已传入必要参数，例如创建某项目所属的页面
+			$id = $this->input->get_post('project_id')? $this->input->get_post('project_id'): NULL;
+			if ( empty($id) )
+				redirect(base_url('error/code_404'));
+			//（可选）获取项目数据
+			$data['project'] = $this->basic->get_by_id($id, 'project', 'project_id');
 
 			// 待验证的表单项
 			// 验证规则 https://www.codeigniter.com/user_guide/libraries/form_validation.html#rule-reference
