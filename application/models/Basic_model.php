@@ -82,16 +82,25 @@
 		 * 统计数量
 		 *
 		 * @param array $condition 需要统计的行的条件
+		 * @param boolean $include_deleted 是否计算被标记为已删除状态的行
 		 * @return int 满足条件的行的数量
 		 */
-		public function count($condition = NULL)
+		public function count($condition = NULL, $include_deleted = FALSE)
 		{
 			// 若存在统计条件，则按条件统计数量
 			if ($condition !== NULL):
-				foreach($condition as $field => $value):
-					$this->db->where($field, $value);
+				foreach($condition as $name => $value):
+					if ($value === 'IS NOT NULL'):
+						$this->db->where("$name IS NOT NULL");
+					else:
+						$this->db->where($name, $value);
+					endif;
 				endforeach;
 			endif;
+
+			// 默认不计算被标记为已删除状态的行
+			if ($include_deleted === TRUE)
+				$this->db->where("`time_delete` IS NOT NULL");
 
 			return $this->db->count_all_results($this->table_name);
 		}

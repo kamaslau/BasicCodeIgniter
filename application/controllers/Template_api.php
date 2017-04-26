@@ -169,6 +169,40 @@
 		{
 			
 		}
+
+		/**
+		 * 9 计数
+		 */
+		public function count()
+		{
+			// （可选）遍历筛选条件
+			foreach ($this->sorter_names as $sorter):
+				if ( !empty($this->input->post_get($sorter)) ):
+					// 对时间范围做特定处理
+					if ($sorter === 'start_time'):
+						$condition['time_create >='] = $this->input->post_get($sorter);
+					elseif ($sorter === 'end_time'):
+						$condition['time_create <='] = $this->input->post_get($sorter);
+					else:
+						$condition[$sorter] = $this->input->post_get($sorter);
+					endif;
+
+				endif;
+			endforeach;
+
+			// 获取列表；默认不获取已删除项
+			$count = $this->basic_model->count($condition);
+
+			if ($count !== FALSE):
+				$this->result['status'] = 200;
+				$this->result['content']['count'] = $count;
+
+			else:
+				$this->result['status'] = 400;
+				$this->result['content'] = NULL;
+
+			endif;
+		}
 	}
 
 /* End of file API_Template.php */
