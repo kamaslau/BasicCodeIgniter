@@ -74,9 +74,7 @@
 		<dt>最后操作时间</dt>
 		<dd>
 			<?php echo $item['time_edit'] ?>
-			<?php if ( !empty($item['operator_id']) ): ?>
 			<a href="<?php echo base_url('stuff/detail?id='.$item['operator_id']) ?>" target=new>查看最后操作者</a>
-			<?php endif ?>
 		</dd>
 		<?php endif ?>
 	</dl>
