@@ -70,6 +70,7 @@
 		 */
 		public function get_by_ids($ids_string, $table_name, $id_name)
 		{
+			// 设置数据库参数
 			$this->CI->basic_model->table_name = $table_name;
 			$this->CI->basic_model->id_name = $id_name;
 
@@ -83,6 +84,10 @@
 			foreach ($ids as $id):
 				$data_to_return[] = $this->CI->basic_model->select_by_id($id);
 			endforeach;
+			
+			// 还原原有数据库参数
+			$this->CI->basic_model->table_name = $this->CI->table_name;
+			$this->CI->basic_model->id_name = $this->CI->id_name;
 
 			return $data_to_return;
 		}
@@ -96,11 +101,16 @@
 		 */
 		public function get_by_id($id, $table_name, $id_name)
 		{
+			// 设置数据库参数
 			$this->CI->basic_model->table_name = $table_name;
 			$this->CI->basic_model->id_name = $id_name;
 
 			// 根据ID获取相应数据
 			$data_to_return = $this->CI->basic_model->select_by_id($id);
+			
+			// 还原原有数据库参数
+			$this->CI->basic_model->table_name = $this->CI->table_name;
+			$this->CI->basic_model->id_name = $this->CI->id_name;
 
 			return $data_to_return;
 		}

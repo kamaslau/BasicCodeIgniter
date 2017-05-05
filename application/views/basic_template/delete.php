@@ -84,7 +84,7 @@
 			<input name=ids type=hidden value="<?php echo implode('|', $ids) ?>">
 
 			<div class=form-group>
-				<label for=url_cn class="col-sm-2 control-label">密码</label>
+				<label for=password class="col-sm-2 control-label">密码</label>
 				<div class=col-sm-10>
 					<input class=form-control name=password type=password placeholder="请输入您的登录密码" autofocus required>
 				</div>
