@@ -19,11 +19,11 @@
 	<head>
 		<meta charset=utf-8>
 		<meta http-equiv=x-dns-prefetch-control content=on>
-		<!--<link rel=dns-prefetch href="http://cdn.key2all.com">-->
+		<!--<link rel=dns-prefetch href="https://cdn.key2all.com">-->
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170504">
+		<meta name=version content="revision20170512">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
@@ -46,10 +46,11 @@
 		<![endif]-->
 
 		<script src="https://cdn.key2all.com/js/jquery/new.js"></script>
-		<!--<script src="<?php echo base_url() ?>js/xx.js"></script>-->
+		<!--<script defer src="/js/xx.js"></script>-->
+		<!--<script asnyc src="/js/xx.js"></script>-->
 
-		<link rel=stylesheet media=all href="https//cdn.key2all.com/css/reset.css">
-		<link rel=stylesheet media=all href="https//cdn.key2all.com/font-awesome/css/font-awesome.min.css">
+		<link rel=stylesheet media=all href="//cdn.key2all.com/css/reset.css">
+		<link rel=stylesheet media=all href="//cdn.key2all.com/font-awesome/css/font-awesome.min.css">
 		<link rel=stylesheet media=all href="/css/style.css">
 
 		<link rel="shortcut icon" href="//images.bandaodian.com/logos/logo_32x32.png">

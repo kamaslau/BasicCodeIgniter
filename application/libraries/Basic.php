@@ -114,86 +114,12 @@
 
 			return $data_to_return;
 		}
-
-		/**
-		 * @DEPRECATED 输出表单各字段项
-		 *
-		 * 集成度过高，除管理后台相关功能外不推荐使用此方法
-		 *
-		 * @param array $input 字段数据
-		 * @param string $type 表单类型；edit编辑，create创建
-		 * @param array $item 需要编辑/修改的数据
-		 */
-		public function generate_input($input, $type = 'edit', $item = NULL)
-		{
-			?>
-		<div class=form-group>
-		<?php echo '<label for='. $input[0]. ' class="col-sm-2 control-label">'. $input['1']. (( $input[3] === FALSE )? '（选填）': NULL). '</label>' ?>
-			<div class=col-sm-10>
-		<?php
-			// 生成输入字段
-			$input_type = array('text', 'number', 'email', 'tel', 'date', 'datetime', 'password', 'color');
-			if ( in_array($input[5], $input_type) ):
-				$input_html = '<input class=form-control name='. $input[0].' type='. $input[5];
-				$input_html .= ( isset($input[6]) )? ' '.$input[6]: NULL;
-				$input_html .= ( isset($input[4]) )? ' placeholder="'.$input[4].'"': NULL;
-				$input_html .= ( $input[3] === TRUE )? ' required': NULL;
-				
-				if ($type === 'edit'):
-					$input_html .= ' value="'. $item[$input[0]] .'"';
-				else:
-					$input_html .= ' value="'. set_value($input[0]) .'"';
-				endif;
-				$input_html .= '>';
-
-			elseif ($input[5] === 'select'):
-				$input_html = '<select class=form-control name='. $input[0]. (( $input[3] === TRUE )? ' required': NULL). '>';
-				foreach ($input[7] as $option):
-					if ($type === 'edit'):
-						$selected = ($option === $item[$input[0]])? ' selected': NULL;
-						$input_html .= '<option value="'.$option.'"'.$selected.'>'.$option.'</option>';
-					else:
-						$input_html .= '<option value="'.$option.'">'.$option.'</option>';
-					endif;
-				endforeach;
-				$input_html .= '</select>';
-
-			elseif ($input[5] === 'textarea'):
-				$input_html = '<textarea class=form-control name='. $input[0]. (( $input[3] === TRUE )? ' required': NULL);
-				if ($type === 'edit'):
-					$input_html .= ' value="'. $item[$input[0]] .'"';
-				else:
-					$input_html .= ' value="'. set_value($input[0]) .'"';
-				endif;
-				$input_html .= '>';
-				$input_html .= '</textarea>';
-
-			endif;
-
-			echo $input_html;
-			echo form_error($input[0]);
-		?>
-			</div>
-		</div>
-		<?php
-		}
-
-		/**
-		 * TODO 文件上传
-		 *
-		 *
-		 *
-		 *
-		 */
-		public function upload()
-		{
-
-		}
 		
 		/**
 		 * 保存EXCEL文件中数据到数据库
 		 *
 		 * 集成了PHPExcel开源库
+		 * TODO 将PHPexcel分离为一个独立的库
 		 *
 		 * @param string $file_url 文件路径
 		 */
