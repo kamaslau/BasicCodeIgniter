@@ -105,6 +105,18 @@
 				</div>
 			</div>
 
+			<div class=form-group>
+				<label for=private class="col-sm-2 control-label">需登录</label>
+				<div class=col-sm-10>
+					<label class=radio-inline>
+						<input type=radio name=private value="是" required <?php if ($item['private'] === '1') echo 'checked'; ?>> 是
+					</label>
+					<label class=radio-inline>
+						<input type=radio name=private value="否" required <?php if ($item['private'] === '0') echo 'checked'; ?>> 否
+					</label>
+					<?php echo form_error('private') ?>
+				</div>
+			</div>
 		</fieldset>
 
 		<div class=form-group>
@@ -113,4 +125,5 @@
 		    </div>
 		</div>
 	</form>
+
 </div>
