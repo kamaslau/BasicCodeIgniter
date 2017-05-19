@@ -176,7 +176,7 @@
 			//$condition['name'] = 'value';
 			
 			// 排序条件
-			$order_by = NULL;
+			$order_by['time_delete'] = 'DESC';
 			//$order_by['name'] = 'value';
 			
 			// Go Basic！
@@ -295,7 +295,7 @@
 
 			// 需要存入数据库的信息
 			$data_to_edit = array(
-				'time_delete' => date('y-m-d H:i:s'), // 批量删除
+				'time_delete' => date('Y-m-d H:i:s'), // 批量删除
 				// 'time_delete' => NULL, // 批量恢复
 				// 'name' => 'value', // 批量修改其它数据
 				// 'name' => 'value', // 多行可批量修改多个字段

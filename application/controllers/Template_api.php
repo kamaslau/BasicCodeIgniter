@@ -81,9 +81,43 @@
 			$output_json = json_encode($this->result);
 			echo $output_json;
 		}
+		
+		/**
+		 * 0 计数
+		 */
+		public function count()
+		{
+			// （可选）遍历筛选条件
+			foreach ($this->sorter_names as $sorter):
+				if ( !empty($this->input->post_get($sorter)) ):
+					// 对时间范围做特定处理
+					if ($sorter === 'start_time'):
+						$condition['time_create >='] = $this->input->post_get($sorter);
+					elseif ($sorter === 'end_time'):
+						$condition['time_create <='] = $this->input->post_get($sorter);
+					else:
+						$condition[$sorter] = $this->input->post_get($sorter);
+					endif;
+
+				endif;
+			endforeach;
+
+			// 获取列表；默认不获取已删除项
+			$count = $this->basic_model->count($condition);
+
+			if ($count !== FALSE):
+				$this->result['status'] = 200;
+				$this->result['content']['count'] = $count;
+
+			else:
+				$this->result['status'] = 400;
+				$this->result['content'] = NULL;
+
+			endif;
+		}
 
 		/**
-		 * 0 列表页
+		 * 1 列表页
 		 */
 		public function index()
 		{	
@@ -127,7 +161,7 @@
 		}
 
 		/**
-		 * 1 详情页
+		 * 2 详情页
 		 */
 		public function detail()
 		{
@@ -153,7 +187,7 @@
 		}
 
 		/**
-		 * 2 创建
+		 * 3 创建
 		 */
 		public function create()
 		{
@@ -161,47 +195,13 @@
 		}
 
 		/**
-		 * 3 编辑单行
+		 * 4 编辑单行
 		 *
 		 * 可结合相关字段将相应数据行标记为已删除等状态
 		 */
 		public function edit()
 		{
 			
-		}
-
-		/**
-		 * 9 计数
-		 */
-		public function count()
-		{
-			// （可选）遍历筛选条件
-			foreach ($this->sorter_names as $sorter):
-				if ( !empty($this->input->post_get($sorter)) ):
-					// 对时间范围做特定处理
-					if ($sorter === 'start_time'):
-						$condition['time_create >='] = $this->input->post_get($sorter);
-					elseif ($sorter === 'end_time'):
-						$condition['time_create <='] = $this->input->post_get($sorter);
-					else:
-						$condition[$sorter] = $this->input->post_get($sorter);
-					endif;
-
-				endif;
-			endforeach;
-
-			// 获取列表；默认不获取已删除项
-			$count = $this->basic_model->count($condition);
-
-			if ($count !== FALSE):
-				$this->result['status'] = 200;
-				$this->result['content']['count'] = $count;
-
-			else:
-				$this->result['status'] = 400;
-				$this->result['content'] = NULL;
-
-			endif;
 		}
 	}
 
