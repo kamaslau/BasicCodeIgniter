@@ -72,16 +72,21 @@
 			$this->result['param']['get'] = $this->input->get();
 			$this->result['param']['post'] = $this->input->post();
 
+			// 返回服务器端时间信息
+			$this->result['timestamp'] = time();
+			$this->result['datetime'] = date('Y-m-d H:i:s');
+			$this->result['timezone'] = date_default_timezone_get();
+
 			// 统计业务逻辑运行时间终点
 			$this->benchmark->mark('end');
-			// 计算并输出业务逻辑运行时间
-			$this->result['elapsed_time'] = $this->benchmark->elapsed_time('start', 'end'). ' s';
+			// 计算并输出业务逻辑运行时间（秒）
+			$this->result['elapsed_time'] = $this->benchmark->elapsed_time('start', 'end');
 
 			header("Content-type:application/json;charset=utf-8");
 			$output_json = json_encode($this->result);
 			echo $output_json;
 		}
-		
+
 		/**
 		 * 0 计数
 		 */
