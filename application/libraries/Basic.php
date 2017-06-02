@@ -309,6 +309,8 @@
 		{
 			// 若表单提交不成功
 			if ($this->CI->form_validation->run() === FALSE):
+				$data['error'] = validation_errors();
+
 				$this->CI->load->view('templates/header', $data);
 				$this->CI->load->view($this->view_root.'create', $data);
 				$this->CI->load->view('templates/footer', $data);
@@ -350,6 +352,8 @@
 
 			// 验证表单值格式
 			if ($this->CI->form_validation->run() === FALSE):
+				$data['error'] = validation_errors();
+
 				$this->CI->load->view('templates/header', $data);
 				if ($view_file_name === NULL):
 					$this->CI->load->view($this->view_root.'edit', $data);
@@ -396,6 +400,8 @@
 
 			// 验证表单值格式
 			if ($this->CI->form_validation->run() === FALSE):
+				$data['error'] = validation_errors();
+
 				$data['ids'] = $ids;
 				foreach ($ids as $id):
 					$data['items'][] = $this->CI->basic_model->select_by_id($id);

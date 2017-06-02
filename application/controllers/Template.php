@@ -220,7 +220,6 @@
 			$this->form_validation->set_rules('project_id', '所属项目ID', 'trim|required|is_natural_no_zero');
 			$this->form_validation->set_rules('user_id', '指定用户ID', 'trim|is_natural_no_zero');
 			$this->form_validation->set_rules('code', '序号', 'trim|alpha_numeric|required');
-			
 
 			// 需要存入数据库的信息
 			// 不建议直接用$this->input->post/get/post_get等方法直接在此处赋值，向数组赋值前处理会保持最大的灵活性以应对图片上传等场景

@@ -50,6 +50,8 @@
 		echo form_open_multipart($this->class_name.'/edit?id='.$item[$this->id_name], $attributes);
 	?>
 		<fieldset>
+			<legend>基本信息</legend>
+
 			<div class=form-group>
 				<label for=name class="col-sm-2 control-label">名称</label>
 				<div class=col-sm-10>
@@ -95,12 +97,14 @@
 				<div class=col-sm-10>
 					<select class=form-control name=delivery required>
 						<?php
+							$input_name = 'delivery';
 							$options = array('现货','期货');
 							foreach ($options as $option):
 						?>
-						<option value="<?php echo $option ?>" <?php if ($option === $item['delivery']) echo 'selected'; ?>><?php echo $option ?></option>
+						<option value="<?php echo $option ?>" <?php if ($option === $item[$input_name]) echo 'selected'; ?>><?php echo $option ?></option>
 						<?php endforeach ?>
 					</select>
+
 					<?php echo form_error('delivery') ?>
 				</div>
 			</div>
@@ -114,6 +118,7 @@
 					<label class=radio-inline>
 						<input type=radio name=private value="否" required <?php if ($item['private'] === '0') echo 'checked'; ?>> 否
 					</label>
+
 					<?php echo form_error('private') ?>
 				</div>
 			</div>
