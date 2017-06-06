@@ -43,7 +43,15 @@
 		);
 
 		/**
-		 * 编辑单行时必要的字段名
+		 * 可被编辑的字段名
+		 */
+		protected $names_edit_allowed = array(
+			'nickname', 'lastname', 'firstname', 'gender', 'dob', 'avatar',
+			'mobile', 'email', 'wechat_union_id', 'address_id',
+		);
+
+		/**
+		 * 完整编辑单行时必要的字段名
 		 */
 		protected $names_edit_required = array(
 			'id',
@@ -51,11 +59,18 @@
 			'tel_public', 'tel_protected_biz', 'tel_protected_order',
 			'freight', 'freight_free_subtotal', 'min_order_subtotal',
 		);
-		
+
 		/**
-		 * 编辑多行时必要的字段名
+		 * 编辑单行特定字段时必要的字段名
 		 */
-		protected $names_bulk_required = array(
+		protected $names_edit_certain_required = array(
+			'id', 'name', 'value',
+		);
+
+		/**
+		 * 编辑多行特定字段时必要的字段名
+		 */
+		protected $names_edit_bulk_required = array(
 			'ids', 'operation', 'operator_type', 'operator_id', 'password',
 		);
 
@@ -65,13 +80,12 @@
 
 			// 设置主要数据库信息
 			$this->table_name = 'biz'; // 这里……
-			$this->id_name = 'biz_id';  // 还有这里，OK，这就可以了
-			$this->names_to_return[] = 'biz_id';
+			$this->id_name = 'biz_id'; // 这里……
+			$this->names_to_return[] = 'biz_id'; // 还有这里，OK，这就可以了
 
 			// 主要数据库信息到基础模型类
 			$this->basic_model->table_name = $this->table_name;
 			$this->basic_model->id_name = $this->id_name;
-		}
 
 			// （可选）某些用于此类的自定义函数
 		    function function_name($parameter)
@@ -130,7 +144,7 @@
 				if ( empty( ${$param} ) ):
 					$this->result['status'] = 400;
 					$this->result['content']['error']['message'] = '必要的请求参数未全部传入';
-					exit;
+					exit();
 				endif;
 			endforeach;
 
@@ -139,9 +153,8 @@
 			//$condition['name'] = 'value';
 			// （可选）遍历筛选条件
 			foreach ($this->names_to_sort as $sorter):
-				if ( !empty($this->input->post($sorter)) ):
+				if ( !empty($this->input->post($sorter)) )
 					$condition[$sorter] = $this->input->post($sorter);
-				endif;
 			endforeach;
 			
 			// 排序条件
@@ -199,13 +212,12 @@
 		public function create()
 		{
 			// 操作可能需要检查客户端及设备信息
-			$type_allowed = array('admin', 'biz'); // 客户端类型
-			//$platform_allowed = array('ios', 'android'); // 客户端平台
-			//$min_version = 0.0.1; // 版本要求
-			//$this->client_check($type_allowed, $platform_allowed, $min_version);
-			$this->client_check($type_allowed);
+			$type_allowed = array('admin', 'biz', 'client'); // 客户端类型
+			$platform_allowed = array('ios', 'android', 'weapp', 'web'); // 客户端平台
+			$min_version = '0.0.1'; // 最低版本要求
+			$this->client_check($type_allowed, $platform_allowed, $min_version);
 
-			// 操作可能需要检查操作权限
+			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
 			//$min_level = 10; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
@@ -221,9 +233,10 @@
 				endif;
 			endforeach;
 
-			// 验证规则 https://www.codeigniter.com/user_guide/libraries/form_validation.html#rule-reference
+			// 初始化并配置表单验证库
 			$this->load->library('form_validation');
 			$this->form_validation->set_error_delimiters('', '');
+			// 验证规则 https://www.codeigniter.com/user_guide/libraries/form_validation.html#rule-reference
 			$this->form_validation->set_rules('name', '商家全称', 'trim|required|max_length[30]|is_unique[biz.name]');
 			$this->form_validation->set_rules('brief_name', '商家简称', 'trim|required|max_length[10]|is_unique[biz.brief_name]');
 			$this->form_validation->set_rules('url_name', '店铺URL', 'trim|max_length[20]|alpha_dash|is_unique[biz.url_name]');
@@ -276,13 +289,12 @@
 		public function edit()
 		{
 			// 操作可能需要检查客户端及设备信息
-			$type_allowed = array('admin', 'biz'); // 客户端类型
-			//$platform_allowed = array('ios', 'android'); // 客户端平台
-			//$min_version = 0.0.1; // 版本要求
-			//$this->client_check($type_allowed, $platform_allowed, $min_version);
-			$this->client_check($type_allowed);
+			$type_allowed = array('admin', 'biz', 'client'); // 客户端类型
+			$platform_allowed = array('ios', 'android', 'weapp', 'web'); // 客户端平台
+			$min_version = '0.0.1'; // 最低版本要求
+			$this->client_check($type_allowed, $platform_allowed, $min_version);
 
-			// 操作可能需要检查操作权限
+			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
 			//$min_level = 10; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
@@ -298,6 +310,7 @@
 				endif;
 			endforeach;
 
+			// 初始化并配置表单验证库
 			$this->load->library('form_validation');
 			$this->form_validation->set_error_delimiters('', '');
 			if ($this->app_type === '管理员'):
@@ -357,28 +370,94 @@
 				endif;
 			endif;
 		} // end edit
-
+		
 		/**
-		 * 5 编辑多行数据
+		 * 5 编辑单行数据特定字段
 		 *
-		 * 批量编辑多行数据
+		 * 修改单行数据的单一字段值
 		 */
-		public function bulk()
+		public function edit_certain()
 		{
 			// 操作可能需要检查客户端及设备信息
-			$type_allowed = array('admin'); // 客户端类型
-			//$platform_allowed = array('ios', 'android'); // 客户端平台
-			//$min_version = 0.0.1; // 版本要求
-			//$this->client_check($type_allowed, $platform_allowed, $min_version);
-			$this->client_check($type_allowed);
+			$type_allowed = array('admin', 'biz', 'client'); // 客户端类型
+			$platform_allowed = array('ios', 'android', 'weapp', 'web'); // 客户端平台
+			$min_version = '0.0.1'; // 最低版本要求
+			$this->client_check($type_allowed, $platform_allowed, $min_version);
 
-			// 操作可能需要检查操作权限
+			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
 			//$min_level = 10; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
 
 			// 检查必要参数是否已传入
-			$required_params = $this->names_bulk_required;
+			$required_params = $this->names_edit_certain_required;
+			foreach ($required_params as $param):
+				${$param} = $this->input->post($param);
+				if ( empty( ${$param} ) ):
+					$this->result['status'] = 400;
+					$this->result['content']['error']['message'] = '必要的请求参数未全部传入';
+					exit();
+				endif;
+			endforeach;
+			
+			// 检查目标字段是否可编辑
+			if ( ! in_array($name, $this->names_edit_allowed) ):
+				$this->result['status'] = 431;
+				$this->result['content']['error']['message'] = '该字段不可被修改';
+				exit();
+			endif;
+			
+			// 初始化并配置表单验证库
+			$this->load->library('form_validation');
+			$this->form_validation->set_error_delimiters('', '');
+			
+			
+			
+			// 若表单提交不成功
+			if ($this->form_validation->run() === FALSE):
+				$this->result['status'] = 401;
+				$this->result['content']['error']['message'] = '请检查请求参数格式：'.validation_errors();
+
+			else:
+				// 需要创建的数据；逐一赋值需特别处理的字段
+				$data_to_edit[$name] = $this->input->post($value);
+
+				// 获取ID
+				$id = $this->input->post('id');
+				$result = $this->basic_model->edit($id, $data_to_edit);
+
+				if ($result !== FALSE):
+					$this->result['status'] = 200;
+					$this->result['content'] = '编辑'.$this->class_name_cn.'成功';
+
+				else:
+					$this->result['status'] = 434;
+					$this->result['content']['error']['message'] = '编辑'.$this->class_name_cn.'失败';
+
+				endif;
+			endif;
+		}
+
+		/**
+		 * 6 编辑多行数据特定字段
+		 *
+		 * 修改多行数据的单一字段值
+		 */
+		public function edit_bulk()
+		{
+			// 操作可能需要检查客户端及设备信息
+			$type_allowed = array('admin', 'biz', 'client'); // 客户端类型
+			$platform_allowed = array('ios', 'android', 'weapp', 'web'); // 客户端平台
+			$min_version = '0.0.1'; // 最低版本要求
+			$this->client_check($type_allowed, $platform_allowed, $min_version);
+
+			// 管理类客户端操作可能需要检查操作权限
+			//$role_allowed = array('管理员', '经理'); // 角色要求
+			//$min_level = 10; // 级别要求
+			//$this->permission_check($role_allowed, $min_level);
+
+			// 检查必要参数是否已传入
+			$required_params = $this->names_edit_bulk_required;
 			foreach ($required_params as $param):
 				${$param} = $this->input->post($param);
 				if ( empty( ${$param} ) ):

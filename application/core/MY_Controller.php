@@ -13,23 +13,25 @@
 	class MY_Controller extends CI_Controller
 	{
 		// 初始化返回结果
-		/*
 		public $result = array(
-			'status' => null,
-			'content' => array(
-				'error' => array(
-					'message' => '',
-				),
-			),
+			'status' => null, // 请求响应状态
+			'content' => null, // 返回内容
+			'param' => array(
+				'get' => array(), // GET请求参数
+				'post' => array(), // POST请求参数
+			), // 接收到的请求参数
+			'timestamp' => null, // 返回时时间戳
+			'datetime' => null, // 返回时可读日期
+			'timezone' => null, // 服务器本地市区
+			'elapsed_time' => null, // 处理业务请求时间
 		);
-		*/
 
 		/* 主要相关表名 */
 		public $table_name;
 
 		/* 主要相关表的主键名*/
 		public $id_name;
-		
+
 		// 客户端类型
 		protected $app_type;
 
@@ -54,7 +56,7 @@
 
 			// 统计业务逻辑运行时间起点
 			$this->benchmark->mark('start');
-			
+
 			// 若无任何通过POST方式传入的请求参数，提示并退出
 			if ( empty($_POST) ):
 				$this->result['status'] = 000;
@@ -70,7 +72,9 @@
 			$this->device_number = $this->input->post('device_number');
 
 			// 签名有效性检查
-			$this->sign_check();
+			// 测试环境可跳过签名检查
+			if ( ENVIRONMENT !== 'development' && $this->input->post('skip_sign') !== 'please' )
+				$this->sign_check();
 	    }
 
 		public function __destruct()
@@ -107,11 +111,11 @@
 			$this->sign_check_string();
 		}
 
-		// 检查签名是否存在
+		// 检查签名是否传入
 		public function sign_check_exits()
 		{
 			$this->sign = $this->input->post('sign');
-			
+
 			if ( empty($this->sign) ):
 				$this->result['status'] = 444;
 				$this->result['content']['error']['message'] = '未传入签名';
