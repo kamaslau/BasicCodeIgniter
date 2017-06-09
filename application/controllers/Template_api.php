@@ -410,8 +410,25 @@
 			// 初始化并配置表单验证库
 			$this->load->library('form_validation');
 			$this->form_validation->set_error_delimiters('', '');
-			
-			
+			// 动态设置待验证字段名及字段值
+			$data_to_validate["{$name}"] = $value;
+			$this->form_validation->set_data($data_to_validate);
+			$this->form_validation->set_rules('name', '商家全称', 'trim|required|max_length[30]|is_unique[biz.name]');
+			$this->form_validation->set_rules('brief_name', '商家简称', 'trim|required|max_length[10]|is_unique[biz.brief_name]');
+			$this->form_validation->set_rules('url_name', '店铺URL', 'trim|max_length[20]|alpha_dash|is_unique[biz.url_name]');
+			$this->form_validation->set_rules('slogan', '说明', 'trim|max_length[20]');
+			$this->form_validation->set_rules('description', '简介', 'trim|max_length[200]');
+			$this->form_validation->set_rules('notification', '公告', 'trim|max_length[100]');
+			$this->form_validation->set_rules('tel_public', '消费者联系电话', 'trim|required|min_length[11]|max_length[13]|is_unique[biz.tel_public]');
+			$this->form_validation->set_rules('tel_protected_biz', '商务联系电话', 'trim|required|is_natural|exact_length[11]|is_unique[biz.tel_protected_biz]');
+			$this->form_validation->set_rules('tel_protected_order', '订单通知电话', 'trim|required|is_natural|exact_length[11]|is_unique[biz.tel_protected_order]');
+			$this->form_validation->set_rules('freight', '每笔订单运费', 'trim|required|decimal|greater_than_equal_to[0.00]|less_than_equal_to[99.99]');
+			$this->form_validation->set_rules('freight_free_subtotal', '免邮费起始金额', 'trim|required|decimal|greater_than_equal_to[0.00]|less_than_equal_to[99.99]');
+			$this->form_validation->set_rules('min_order_subtotal', '订单最低金额', 'trim|required|decimal|greater_than_equal_to[0.00]|less_than_equal_to[99.99]');
+			$this->form_validation->set_rules('delivery_time_start', '配送起始时间', 'trim|is_natural|greater_than_equal_to[0]|less_than_equal_to[23]');
+			$this->form_validation->set_rules('delivery_time_end', '配送结束时间', 'trim|is_natural_no_zero|greater_than_equal_to[0]|less_than_equal_to[23]');
+			$this->form_validation->set_rules('longitude', '经度', 'trim|decimal');
+			$this->form_validation->set_rules('latitude', '纬度', 'trim|decimal');
 			
 			// 若表单提交不成功
 			if ($this->form_validation->run() === FALSE):
@@ -436,7 +453,7 @@
 
 				endif;
 			endif;
-		}
+		} // end edit_certain
 
 		/**
 		 * 6 编辑多行数据特定字段
@@ -524,7 +541,7 @@
 					$this->result['content'] = '全部操作成功';
 
 			endif;
-		} // end bulk
+		} // end edit_bulk
 
 	}
 
