@@ -101,7 +101,7 @@
 			
 			// Go Basic！
 			$this->basic->index($data, $condition, $order_by);
-		}
+		} // end mine
 
 		/**
 		 * 列表页
@@ -127,7 +127,7 @@
 			
 			// Go Basic！
 			$this->basic->index($data, $condition, $order_by);
-		}
+		} // end index
 
 		/**
 		 * 详情页
@@ -150,7 +150,7 @@
 			
 			// Go Basic！
 			$this->basic->detail($data, 'title'); // 当传入第二个参数时，将使用相应的字段值与上方传入的$data['title']进行拼接；如想直接使用该字段作为页面的title，则$data['title']设为NULL即可；拼接的位置等更多功能可见model/basic_model.php
-		}
+		} // end detail
 
 		/**
 		 * 回收站
@@ -181,7 +181,7 @@
 			
 			// Go Basic！
 			$this->basic->trash($data, $condition, $order_by);
-		}
+		} // end trash
 
 		/**
 		 * 创建
@@ -231,7 +231,7 @@
 
 			// Go Basic!
 			$this->basic->create($data, $data_to_create);
-		}
+		} // end create
 
 		/**
 		 * 编辑单行
@@ -263,7 +263,7 @@
 
 			// Go Basic!
 			$this->basic->edit($data, $data_to_edit, $view_file_name = NULL); // 可以自定义视图文件名
-		}
+		} // end edit
 
 		/**
 		 * 删除单行或多行项目
@@ -302,7 +302,7 @@
 
 			// Go Basic!
 			$this->basic->bulk($data, $data_to_edit, $op_name, $op_view);
-		}
+		} // end delete
 		
 		/**
 		 * 恢复单行或多行项目
@@ -341,7 +341,8 @@
 
 			// Go Basic!
 			$this->basic->bulk($data, $data_to_edit, $op_name, $op_view);
-		}
+		} // end restore
+
 	}
 
 /* End of file Template.php */

@@ -126,8 +126,8 @@
 				$this->result['content']['count'] = $count;
 
 			else:
-				$this->result['status'] = 400;
-				$this->result['content'] = NULL;
+				$this->result['status'] = 414;
+				$this->result['content']['error']['message'] = '没有符合条件的数据';
 
 			endif;
 		} // end count
@@ -172,7 +172,7 @@
 
 			else:
 				$this->result['status'] = 414;
-				$this->result['content']['error']['message'] = NULL;
+				$this->result['content']['error']['message'] = '没有符合条件的数据';
 			
 			endif;
 		} // end index
@@ -201,7 +201,7 @@
 
 			else:
 				$this->result['status'] = 414;
-				$this->result['content']['error']['message'] = NULL;
+				$this->result['content']['error']['message'] = '没有符合条件的数据';
 
 			endif;
 		} // end detail
