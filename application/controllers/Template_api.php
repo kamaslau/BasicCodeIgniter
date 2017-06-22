@@ -19,7 +19,7 @@
 		protected $names_to_sort = array(
 			'fee_delivery', 'min_order_subtotal', 'delivery_time_start', 'delivery_time_end', 'longitude', 'latitude', 'status',
 
-			'time_create', 'time_delete', 'time_edit',
+			'time_create', 'time_delete', 'time_edit', 'creator_id', 'operator_id',
 		);
 
 		/**
@@ -31,12 +31,14 @@
 			'freight', 'freight_free_subtotal', 'min_order_subtotal',
 			'delivery_time_start', 'delivery_time_end',
 			'longitude', 'latitude',
+			'creator_id', 'operator_id',
 		);
 
 		/**
 		 * 创建时必要的字段名
 		 */
 		protected $names_create_required = array(
+			'user_id',
 			'name', 'brief_name',
 			'tel_public', 'tel_protected_biz', 'tel_protected_order',
 			'freight', 'freight_free_subtotal', 'min_order_subtotal',
@@ -54,7 +56,7 @@
 		 * 完整编辑单行时必要的字段名
 		 */
 		protected $names_edit_required = array(
-			'id',
+			'user_id', 'id',
 			'name', 'brief_name',
 			'tel_public', 'tel_protected_biz', 'tel_protected_order',
 			'freight', 'freight_free_subtotal', 'min_order_subtotal',
@@ -64,14 +66,16 @@
 		 * 编辑单行特定字段时必要的字段名
 		 */
 		protected $names_edit_certain_required = array(
-			'id', 'name', 'value',
+			'user_id', 'id',
+			'name', 'value',
 		);
 
 		/**
 		 * 编辑多行特定字段时必要的字段名
 		 */
 		protected $names_edit_bulk_required = array(
-			'ids', 'operation', 'operator_type', 'operator_id', 'password',
+			'user_id', 'ids',
+			'operation', 'password',
 		);
 
 		public function __construct()
@@ -263,10 +267,13 @@
 			else:
 				// 需要创建的数据；逐一赋值需特别处理的字段
 				$data_to_create = array(
-					'url_name' => strtolower($this->input->post('url_name')),
+					'creator_id' => $user_id,
+					//'name' => $this->input->post('name')),
 				);
 				// 自动生成无需特别处理的数据
-				$data_need_no_prepare = array('name', 'brief_name', 'slogan', 'description', 'notification', 'tel_public', 'tel_protected_biz', 'tel_protected_order', 'freight', 'freight_free_subtotal', 'min_order_subtotal', 'delivery_time_start', 'delivery_time_end', 'longitude', 'latitude');
+				$data_need_no_prepare = array(
+					'name', 'brief_name', 'slogan', 'description', 'notification', 'tel_public', 'tel_protected_biz', 'tel_protected_order', 'freight', 'freight_free_subtotal', 'min_order_subtotal', 'delivery_time_start', 'delivery_time_end', 'longitude', 'latitude'
+				);
 				foreach ($data_need_no_prepare as $name)
 					$data_to_create[$name] = $this->input->post($name);
 
@@ -339,12 +346,15 @@
 				$this->result['content']['error']['message'] = '请检查请求参数格式：'.validation_errors();
 
 			else:
-				// 需要创建的数据；逐一赋值需特别处理的字段
+				// 需要编辑的数据；逐一赋值需特别处理的字段
 				$data_to_edit = array(
-					'url_name' => strtolower($this->input->post('url_name')),
+					'operator_id' => $user_id,
+					//'name' => $this->input->post('name')),
 				);
 				// 自动生成无需特别处理的数据
-				$data_need_no_prepare = array('name', 'brief_name', 'slogan', 'description', 'notification', 'tel_public', 'tel_protected_biz', 'tel_protected_order', 'freight', 'freight_free_subtotal', 'min_order_subtotal', 'delivery_time_start', 'delivery_time_end', 'longitude', 'latitude');
+				$data_need_no_prepare = array(
+					'name', 'brief_name', 'slogan', 'description', 'notification', 'tel_public', 'tel_protected_biz', 'tel_protected_order', 'freight', 'freight_free_subtotal', 'min_order_subtotal', 'delivery_time_start', 'delivery_time_end', 'longitude', 'latitude'
+				);
 				foreach ($data_need_no_prepare as $name)
 					$data_to_edit[$name] = $this->input->post($name);
 
@@ -436,7 +446,8 @@
 				$this->result['content']['error']['message'] = '请检查请求参数格式：'.validation_errors();
 
 			else:
-				// 需要创建的数据；逐一赋值需特别处理的字段
+				// 需要编辑的数据
+				$data_to_edit['operator_id'] = $user_id;
 				$data_to_edit[$name] = $this->input->post($value);
 
 				// 获取ID
@@ -504,8 +515,8 @@
 				exit();
 
 			else:
-				// 需要创建的数据；逐一赋值需特别处理的字段
-				$data_to_edit = array();
+				// 需要编辑的数据；逐一赋值需特别处理的字段
+				$data_to_edit['operator_id'] = $user_id;
 				// 自动生成无需特别处理的数据
 				$data_need_no_prepare = array('operator_id');
 				foreach ($data_need_no_prepare as $name)

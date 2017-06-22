@@ -20,6 +20,7 @@ Release Date: Not Released
    -  Removed previously deprecated :doc:`Routing Class <general/routing>` methods ``fetch_directory()``, ``fetch_class()`` and ``fetch_method()`` (use the respective class properties instead).
    -  Removed previously deprecated :doc:`Config Library <libraries/config>` method ``system_url()`` (encourages insecure practices).
    -  Changed :doc:`URI Library <libraries/uri>` to ignore the ``$config['url_suffix']``, ``$config['permitted_uri_chars']`` configuration settings for CLI requests.
+   -  Changed :doc:`Loader <libraries/loader>` method ``model()`` to always check if the loaded class extends ``CI_Model``.
 
    -  :doc:`Input Library <libraries/input>` changes include:
 
@@ -50,6 +51,8 @@ Release Date: Not Released
       - Removed previously deprecated method ``prep_for_form()`` / rule *prep_for_form*.
       - Changed method ``set_rules()`` to throw a ``BadMethodCallException`` when its first parameter is not an array and the ``$rules`` one is unused.
       - Added rule **valid_mac**, which replicates PHP's native ``filter_var()`` with ``FILTER_VALIDATE_MAC``.
+      - Added ability to validate entire arrays at once, if ``is_array`` is within the list of rules.
+      - Added ability to fetch processed data via a second parameter to ``run()``.
 
    -  :doc:`HTML Table Library <libraries/table>` changes include:
 
@@ -58,6 +61,7 @@ Release Date: Not Released
    -  :doc:`Email Library <libraries/email>` changes include:
 
       - Changed the default value of the **validate** option to ``TRUE``.
+      - Changed the ``send()`` method to always return ``TRUE`` when sending multiple batches of emails.
 
 -  :doc:`Database <database/index>` changes include:
 
@@ -73,6 +77,7 @@ Release Date: Not Released
    -  :doc:`Query Builder <database/query_builder>`:
 
       - Added methods ``having_in()``, ``or_having_in()``, ``not_having_in()``, ``or_not_having_in()``.
+      - Updated logic to allow dots in alias names.
 
 -  Helpers
 
