@@ -177,7 +177,7 @@
 			else:
 				$this->result['status'] = 414;
 				$this->result['content']['error']['message'] = '没有符合条件的数据';
-			
+
 			endif;
 		} // end index
 

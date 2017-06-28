@@ -23,27 +23,14 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170619">
+		<meta name=version content="revision20170628">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
 		<!--<meta name=robots content="noindex, nofollow">-->
 
-		<?php
-			// 对于iOS和Android设备，放大1倍以适应普遍采用的高清分辨率
-			if ($is_ios):
-			//if ($is_ios || $is_android):
-		?>
-		<meta name=viewport content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=0">
-		<?php else: ?>
 		<meta name=viewport content="width=device-width">
-		<?php endif ?>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-		<!--[if (lt IE 9) & (!IEMobile)]>
-			<script src="//cdn.key2all.com/js/html5.js"></script>
-			<script src="//cdn.key2all.com/js/css3-mediaqueries.js"></script>
-		<![endif]-->
 
 		<script src="https://cdn.key2all.com/js/jquery/new.js"></script>
 		<!--<script defer src="/js/xx.js"></script>-->
@@ -59,6 +46,7 @@
 		<link rel=canonical href="<?php echo current_url() ?>">
 
 		<meta name=format-detection content="telephone=yes, address=no, email=no">
+		<meta name=apple-itunes-app content="app-id=xxxxxxxxxx">
 	</head>
 <?php
 	// 将head内容立即输出，让用户浏览器立即开始请求head中各项资源，提高页面加载速度
@@ -74,6 +62,10 @@
 	if ($this->input->get('from') != 'app'):
 ?>
 	<body<?php echo (isset($class))? ' class="'.$class.'"': NULL; ?>>
+		<noscript>
+			<p>您的浏览器功能加载出现问题，请刷新浏览器重试；如果仍然出现此提示，请考虑更换浏览器。</p>
+		</noscript>
+
 		<header id=header role=banner>
 			<div class=container>
 				<h1>
