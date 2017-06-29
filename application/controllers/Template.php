@@ -124,7 +124,7 @@
 			// 排序条件
 			$order_by = NULL;
 			//$order_by['name'] = 'value';
-			
+
 			// Go Basic！
 			$this->basic->index($data, $condition, $order_by);
 		} // end index
@@ -144,10 +144,10 @@
 				'title' => $this->class_name_cn. '详情',
 				'class' => $this->class_name.' '. $this->class_name.'-detail',
 			);
-			
+
 			// 将需要显示的数据传到视图以备使用
 			$data['data_to_display'] = $this->data_to_display;
-			
+
 			// Go Basic！
 			$this->basic->detail($data, 'title'); // 当传入第二个参数时，将使用相应的字段值与上方传入的$data['title']进行拼接；如想直接使用该字段作为页面的title，则$data['title']设为NULL即可；拼接的位置等更多功能可见model/basic_model.php
 		} // end detail
