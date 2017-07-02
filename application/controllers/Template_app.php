@@ -2,7 +2,7 @@
 	defined('BASEPATH') OR exit('此文件不可被直接访问');
 
 	/**
-	 * Template 类
+	 * APP_Template 类
 	 *
 	 * 以我的XX列表、列表、详情、创建、单行编辑、单/多行编辑（删除、恢复）等功能提供了常见功能的示例代码
 	 * CodeIgniter官方网站 https://www.codeigniter.com/user_guide/
@@ -11,7 +11,7 @@
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
 	 * @copyright ICBG <www.bingshankeji.com>
 	 */
-	class Template extends CI_Controller
+	class APP_Template extends CI_Controller
 	{
 		/* 类名称小写，应用于多处动态生成内容 */
 		public $class_name;
@@ -113,20 +113,33 @@
 				'title' => $this->class_name_cn. '列表',
 				'class' => $this->class_name.' '. $this->class_name.'-index',
 			);
-			
-			// 将需要显示的数据传到视图以备使用
-			$data['data_to_display'] = $this->data_to_display;
-			
+
 			// 筛选条件
 			$condition = NULL;
 			//$condition['name'] = 'value';
-			
+
 			// 排序条件
 			$order_by = NULL;
 			//$order_by['name'] = 'value';
 
-			// Go Basic！
-			$this->basic->index($data, $condition, $order_by);
+			// 从API服务器获取相应列表信息
+			$params = $condition;
+			$url = api_url($this->class_name. '/index');
+			$result = $this->curl->go($url, $params, 'array');
+			if ($result['status'] === 200):
+				$data['items'] = $result['content'];
+			else:
+				// 若未成功获取信息，则转到错误页
+				redirect( base_url('error/code_404') );
+			endif;
+
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
+			
+			// 输出视图
+			$this->load->view('templates/header', $data);
+			$this->load->view($this->view_root.'/index', $data);
+			$this->load->view('templates/footer', $data);
 		} // end index
 
 		/**
@@ -136,20 +149,34 @@
 		{
 			// 检查是否已传入必要参数
 			$id = $this->input->get_post('id')? $this->input->get_post('id'): NULL;
-			if ( empty($id) )
-				redirect(base_url('error/code_404'));
+			if ( empty($id) ):
+				$params['id'] = $id;
+			else:
+				redirect( base_url('error/code_404') );
+			endif;
+
+			// 从API服务器获取相应详情信息
+			$url = api_url($this->class_name. '/detail');
+			$result = $this->curl->go($url, $params, 'array');
+			if ($result['status'] === 200):
+				$data['item'] = $result['content'];
+			else:
+				// 若未成功获取信息，则转到错误页
+				redirect( base_url('error/code_404') );
+			endif;
 
 			// 页面信息
-			$data = array(
-				'title' => $this->class_name_cn. '详情',
-				'class' => $this->class_name.' '. $this->class_name.'-detail',
-			);
+			$data['title'] = $data['item']['name'];
+			$data['class'] = $this->class_name.' '. $this->class_name.'-detail';
+			$data['keywords'] = $this->class_name.','. $data['item']['name'];
 
 			// 将需要显示的数据传到视图以备使用
 			$data['data_to_display'] = $this->data_to_display;
 
-			// Go Basic！
-			$this->basic->detail($data, 'title'); // 当传入第二个参数时，将使用相应的字段值与上方传入的$data['title']进行拼接；如想直接使用该字段作为页面的title，则$data['title']设为NULL即可；拼接的位置等更多功能可见model/basic_model.php
+			// 输出视图
+			$this->load->view('templates/header', $data);
+			$this->load->view($this->view_root.'/detail', $data);
+			$this->load->view('templates/footer', $data);
 		} // end detail
 
 		/**
@@ -168,19 +195,32 @@
 				'class' => $this->class_name.' '. $this->class_name.'-trash',
 			);
 
-			// 将需要显示的数据传到视图以备使用
-			$data['data_to_display'] = $this->data_to_display;
-			
 			// 筛选条件
-			$condition = NULL;
+			$condition['time_delete'] = 'IS NOT NULL';
 			//$condition['name'] = 'value';
-			
+
 			// 排序条件
 			$order_by['time_delete'] = 'DESC';
 			//$order_by['name'] = 'value';
-			
-			// Go Basic！
-			$this->basic->trash($data, $condition, $order_by);
+
+			// 从API服务器获取相应列表信息
+			$params = $condition;
+			$url = api_url($this->class_name. '/index');
+			$result = $this->curl->go($url, $params, 'array');
+			if ($result['status'] === 200):
+				$data['items'] = $result['content'];
+			else:
+				// 若未成功获取信息，则转到错误页
+				redirect( base_url('error/code_404') );
+			endif;
+
+			// 将需要显示的数据传到视图以备使用
+			$data['data_to_display'] = $this->data_to_display;
+
+			// 输出视图
+			$this->load->view('templates/header', $data);
+			$this->load->view($this->view_root.'/trash', $data);
+			$this->load->view('templates/footer', $data);
 		} // end trash
 
 		/**
@@ -345,5 +385,5 @@
 
 	}
 
-/* End of file Template.php */
-/* Location: ./application/controllers/Template.php */
+/* End of file APP_Template.php */
+/* Location: ./application/controllers/APP_Template.php */

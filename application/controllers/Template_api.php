@@ -223,7 +223,7 @@
 
 			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
-			//$min_level = 10; // 级别要求
+			//$min_level = 30; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
 
 			// 检查必要参数是否已传入
@@ -303,7 +303,7 @@
 
 			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
-			//$min_level = 10; // 级别要求
+			//$min_level = 30; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
 
 			// 检查必要参数是否已传入
@@ -396,7 +396,7 @@
 
 			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
-			//$min_level = 10; // 级别要求
+			//$min_level = 30; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
 
 			// 检查必要参数是否已传入
@@ -493,7 +493,7 @@
 
 			// 管理类客户端操作可能需要检查操作权限
 			//$role_allowed = array('管理员', '经理'); // 角色要求
-			//$min_level = 10; // 级别要求
+			//$min_level = 30; // 级别要求
 			//$this->permission_check($role_allowed, $min_level);
 
 			// 检查必要参数是否已传入
