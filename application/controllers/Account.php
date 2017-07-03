@@ -32,23 +32,15 @@
 			// 向类属性赋值
 			$this->class_name = strtolower(__CLASS__);
 			$this->class_name_cn = '账户'; // 改这里……
-			$this->table_name = 'stuff'; // 和这里……
-			$this->id_name = 'stuff_id';  // 还有这里，OK，这就可以了
+			$this->table_name = 'user'; // 和这里……
+			$this->id_name = 'user_id';  // 还有这里，OK，这就可以了
 			$this->view_root = $this->class_name;
-
-			// 设置并调用Basic核心库
-			$basic_configs = array(
-				'table_name' => $this->table_name,
-				'id_name' => $this->id_name,
-				'view_root' => $this->view_root
-			);
-			$this->load->library('basic', $basic_configs);
 		}
 
 		/**
-		 * 登录
+		 * 密码登录
 		 *
-		 * 此处以员工登录为示例
+		 * 使用手机号及密码进行账户登录
 		 *
 		 * @param string $_POST['mobile']
 		 * @param string $_POST['password']
@@ -60,12 +52,12 @@
 
 			// 页面信息
 			$data = array(
-				'title' => '登录',
-				'class' => $this->class_name.' '. $this->class_name.'-login',
+				'title' => '密码登录',
+				'class' => $this->class_name.' login',
 			);
 
-			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural|exact_length[11]');
-			$this->form_validation->set_rules('password', '密码', 'trim|required|is_natural|exact_length[6]');
+			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural_no_zero|exact_length[11]');
+			$this->form_validation->set_rules('password', '密码', 'trim|required|min_length[6]|max_length[20]');
 
 			if ($this->form_validation->run() === FALSE):
 				$this->load->view('templates/header', $data);
@@ -82,17 +74,17 @@
 				// 成功登录
 				if ( ! empty($result)):
 					// 获取用户信息
-					$data['stuff'] = $result;
+					$data['user'] = $result;
 
 					// 将信息键值对写入session
-					foreach ($data['stuff'] as $key => $value):
+					foreach ($data['user'] as $key => $value):
 						$user_data[$key] = $value;
 					endforeach;
 					$user_data['logged_in'] = TRUE; // 标记登录状态，便于快速判断是否已登录
 					$this->session->set_userdata($user_data);
 
 					// 将管理员手机号写入cookie并保存1个月
-					$this->input->set_cookie('mobile', $data['stuff']['mobile'], 60*60*24*30, COOKIE_DOMAIN);
+					$this->input->set_cookie('mobile', $data['user']['mobile'], 60*60*24*30, COOKIE_DOMAIN);
 					// 转到首页
 					redirect(base_url());
 
@@ -116,9 +108,9 @@
 		}
 
 		/**
-		 * 注册
+		 * 密码注册
 		 *
-		 * 一般不用于管理后台
+		 * 使用手机号及密码进行登录
 		 *
 		 * @param string $_POST['mobile']
 		 * @param string $_POST['password']
@@ -131,8 +123,8 @@
 
 			// 页面信息
 			$data = array(
-				'title' => '注册',
-				'class' => $this->class_name.' '. $this->class_name.'-register',
+				'title' => '密码注册',
+				'class' => $this->class_name.' register',
 			);
 
 			$this->form_validation->set_rules('mobile', '手机号', 'trim|required|is_natural|exact_length[11]');
@@ -162,17 +154,17 @@
 				// 成功创建
 				if ( ! empty($result)):
 					// 获取用户信息
-					$data['stuff'] = $this->basic_model->select_by_id($result);
+					$data['user'] = $this->basic_model->select_by_id($result);
 
 					// 将信息键值对写入session
-					foreach ($data['stuff'] as $key => $value):
+					foreach ($data['user'] as $key => $value):
 						$user_data[$key] = $value;
 					endforeach;
 					$user_data['logged_in'] = TRUE; // 标记登录状态，便于快速判断是否已登录
 					$this->session->set_userdata($user_data);
 
 					// 将管理员手机号写入cookie并保存1个月
-					$this->input->set_cookie('mobile', $data['stuff']['mobile'], 60*60*24*30, COOKIE_DOMAIN);
+					$this->input->set_cookie('mobile', $data['user']['mobile'], 60*60*24*30, COOKIE_DOMAIN);
 					// 转到首页
 					redirect(base_url());
 
@@ -192,8 +184,8 @@
 		 *
 		 * 用户登录后可修改密码
 		 *
+		 * @param string $_POST['old_password']
 		 * @param string $_POST['password']
-		 * @param string $_POST['password_new']
 		 * @param string $_POST['password2']
 		 * @return void
 		 */
@@ -205,31 +197,32 @@
 			// 页面信息
 			$data = array(
 				'title' => '修改密码',
-				'class' => $this->class_name.' '. $this->class_name.'-password-change',
-				'id' => $this->session->stuff_id,
+				'class' => $this->class_name.' password-change',
+				'id' => $this->session->user_id,
 			);
 			$data1 = array(
-				'user_id' => $this->session->stuff_id,
+				'user_id' => $this->session->user_id,
 				'password' => sha1($this->input->post('password'))
 			);
 			var_dump($data1);
 
 			// 待验证的表单项
-			$this->form_validation->set_rules('password', '原密码', 'trim|required|is_natural|exact_length[6]');
-			$this->form_validation->set_rules('password_new', '新密码', 'trim|required|is_natural|exact_length[6]');
+			$this->form_validation->set_rules('old_password', '原密码', 'trim|required|is_natural|exact_length[6]');
+			$this->form_validation->set_rules('password', '新密码', 'trim|required|is_natural|exact_length[6]');
 			$this->form_validation->set_rules('password2', '确认密码', 'trim|required|matches[password_new]');
 
-			if ($this->input->post('password') === $this->input->post('password_new')):
+			if ($this->input->post('old_password') === $this->input->post('password')):
 				$data['error'] = '新密码需要不同于原密码';
+
 				$this->load->view('templates/header', $data);
 				$this->load->view($this->view_root.'/password_change', $data);
 				$this->load->view('templates/footer', $data);
-				exit;
+				exit();
 			endif;
 
 			// 需要存入数据库的信息
 			$data_to_edit = array(
-				'password' => sha1($this->input->post('password_new'))
+				'password' => sha1($this->input->post('password'))
 			);
 
 			// Go Basic!
@@ -237,7 +230,7 @@
 		}
 
 		/**
-		 * 密码重置
+		 * TODO 密码重置
 		 *
 		 * 用户未登录时可重置密码
 		 *
@@ -253,8 +246,8 @@
 
 			// 页面信息
 			$data = array(
-				'title' => '重置密码',
-				'class' => $this->class_name.' '. $this->class_name.'-password-reset',
+				'title' => '密码重置',
+				'class' => $this->class_name.' password-reset',
 			);
 		}
 
@@ -270,7 +263,7 @@
 			$this->session->sess_destroy();
 
 			// 转到登录页
-			redirect(base_url('login'));
+			redirect( base_url('login') );
 		}
 	}
 

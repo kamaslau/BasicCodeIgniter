@@ -70,6 +70,23 @@
 		/**
 		 * 404
 		 */
+		public function code_400()
+		{
+			// 页面信息
+			$data = array(
+				'title' => '400',
+				'class' => 'error error-400',
+				'content' => '必要的请求参数未全部传入。',
+			);
+
+			$this->load->view('templates/header', $data);
+			$this->load->view($this->view_root.'/400', $data);
+			$this->load->view('templates/footer', $data);
+		}
+		
+		/**
+		 * 404
+		 */
 		public function code_404()
 		{
 			// 页面信息

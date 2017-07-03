@@ -82,14 +82,15 @@
 		echo form_open($this->class_name.'/restore', $attributes);
 	?>
 		<fieldset>
-			<input name=ids type=hidden value="<?php echo implode('|', $ids) ?>">
+			<input name=user_id type=hidden value="<?php echo $this->session->user_id ?>">
+			<input name=ids type=hidden value="<?php echo implode(',', $ids) ?>">
 
 			<div class=form-group>
 				<label for=password class="col-sm-2 control-label">密码</label>
 				<div class=col-sm-10>
 					<input class=form-control name=password type=password placeholder="请输入您的登录密码" autofocus required>
+					<?php echo form_error('password') ?>
 				</div>
-				<?php echo form_error('password') ?>
 			</div>
 		</fieldset>
 

@@ -56,7 +56,7 @@
 			$ids_value = '';
 			for ($i=0; $i<count($ids); $i++):
 				$ids_value .= $ids[$i][$this->id_name];
-				if ($i < (count($ids) - 1)) $ids_value .= '|';
+				if ($i < (count($ids) - 1)) $ids_value .= ',';
 			endfor;
 			?>
 			<input name="ids[]" type=checkbox value="<?php echo $ids_value ?>">

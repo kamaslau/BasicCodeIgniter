@@ -69,9 +69,7 @@
 		<dt>创建时间</dt>
 		<dd>
 			<?php echo $item['time_create'] ?>
-			<?php if ( !empty($item['creator_id']) ): ?>
 			<a href="<?php echo base_url('stuff/detail?id='.$item['creator_id']) ?>" target=new>查看创建者</a>
-			<?php endif ?>
 		</dd>
 
 		<?php if ( ! empty($item['time_delete']) ): ?>

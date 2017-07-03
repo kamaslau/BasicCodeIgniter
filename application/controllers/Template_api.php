@@ -2,7 +2,7 @@
 	defined('BASEPATH') OR exit('此文件不可被直接访问');
 
 	/**
-	 * API_Template 类
+	 * Template_API 类
 	 *
 	 * 以API服务形式返回数据列表、详情、创建、单行编辑、单/多行编辑（删除、恢复）等功能提供了常见功能的示例代码
 	 * CodeIgniter官方网站 https://www.codeigniter.com/user_guide/
@@ -11,7 +11,7 @@
 	 * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
 	 * @copyright ICBG <www.bingshankeji.com>
 	 */
-	class API_Template extends MY_Controller
+	class Template_API extends MY_Controller
 	{
 		/**
 		 * 可作为列表筛选条件的字段名；可在具体方法中根据需要删除不需要的字段并转换为字符串进行应用，下同
@@ -280,11 +280,11 @@
 				$result = $this->basic_model->create($data_to_create);
 				if ($result !== FALSE):
 					$this->result['status'] = 200;
-					$this->result['content'] = '创建'.$this->class_name_cn.'成功';
+					$this->result['content'] = $this->class_name_cn.'创建成功';
 
 				else:
 					$this->result['status'] = 424;
-					$this->result['content']['error']['message'] = '创建'.$this->class_name_cn.'失败';
+					$this->result['content']['error']['message'] = $this->class_name_cn.'创建失败';
 
 				endif;
 			endif;
@@ -371,11 +371,11 @@
 
 				if ($result !== FALSE):
 					$this->result['status'] = 200;
-					$this->result['content'] = '编辑'.$this->class_name_cn.'成功';
+					$this->result['content'] = $this->class_name_cn.'编辑成功';
 
 				else:
 					$this->result['status'] = 434;
-					$this->result['content']['error']['message'] = '编辑'.$this->class_name_cn.'失败';
+					$this->result['content']['error']['message'] = $this->class_name_cn.'编辑失败';
 
 				endif;
 			endif;
@@ -403,7 +403,7 @@
 			$required_params = $this->names_edit_certain_required;
 			foreach ($required_params as $param):
 				${$param} = $this->input->post($param);
-				if ( empty( ${$param} ) ):
+				if ( $param !== 'value' && empty( ${$param} ) ): // value 可以为空；必要字段会在字段验证中另行检查
 					$this->result['status'] = 400;
 					$this->result['content']['error']['message'] = '必要的请求参数未全部传入';
 					exit();
@@ -416,11 +416,12 @@
 				$this->result['content']['error']['message'] = '该字段不可被修改';
 				exit();
 			endif;
-			
+
 			// 根据客户端类型检查是否可编辑
 			/*
 			$names_limited = array(
-				'biz' => array('name1', 'name2', 'name3', 'name4')
+				'biz' => array('name1', 'name2', 'name3', 'name4'),
+				'admin' => array('name1', 'name2', 'name3', 'name4'),
 			);
 			if ( in_array($name, $names_limited[$this->app_type]) ):
 				$this->result['status'] = 432;
@@ -428,7 +429,7 @@
 				exit();
 			endif;
 			*/
-			
+
 			// 初始化并配置表单验证库
 			$this->load->library('form_validation');
 			$this->form_validation->set_error_delimiters('', '');
@@ -455,12 +456,12 @@
 			// 若表单提交不成功
 			if ($this->form_validation->run() === FALSE):
 				$this->result['status'] = 401;
-				$this->result['content']['error']['message'] = '请检查请求参数格式：'.validation_errors();
+				$this->result['content']['error']['message'] = validation_errors();
 
 			else:
 				// 需要编辑的数据
 				$data_to_edit['operator_id'] = $user_id;
-				$data_to_edit[$name] = $this->input->post($value);
+				$data_to_edit[$name] = $value;
 
 				// 获取ID
 				$id = $this->input->post('id');
@@ -468,11 +469,11 @@
 
 				if ($result !== FALSE):
 					$this->result['status'] = 200;
-					$this->result['content'] = '编辑'.$this->class_name_cn.'成功';
+					$this->result['content'] = $this->class_name_cn.'编辑成功';
 
 				else:
 					$this->result['status'] = 434;
-					$this->result['content']['error']['message'] = '编辑'.$this->class_name_cn.'失败';
+					$this->result['content']['error']['message'] = $this->class_name_cn.'编辑失败';
 
 				endif;
 			endif;
@@ -512,13 +513,13 @@
 			$this->form_validation->set_error_delimiters('', '');
 			$this->form_validation->set_rules('ids', '待操作数据ID们', 'trim|required|regex_match[/^(\d|\d,?)+$/]'); // 仅允许非零整数和半角逗号
 			$this->form_validation->set_rules('operation', '待执行操作', 'trim|required|in_list[delete,restore]');
-			$this->form_validation->set_rules('operator_id', '操作者ID', 'trim|required|is_natural_no_zero');
 			$this->form_validation->set_rules('password', '密码', 'trim|required|min_length[6]|max_length[20]');
+			$this->form_validation->set_rules('user_id', '操作者ID', 'trim|required|is_natural_no_zero');
 
 			// 验证表单值格式
 			if ($this->form_validation->run() === FALSE):
 				$this->result['status'] = 401;
-				$this->result['content']['error']['message'] = '请检查请求参数格式：'.validation_errors();
+				$this->result['content']['error']['message'] = validation_errors();
 				exit();
 
 			elseif ($this->operator_check() !== TRUE):
@@ -566,7 +567,7 @@
 			endif;
 		} // end edit_bulk
 
-	}
+	} // end class Template_API
 
-/* End of file API_Template.php */
-/* Location: ./application/controllers/API_Template.php */
+/* End of file Template_API.php */
+/* Location: ./application/controllers/Template_API.php */
