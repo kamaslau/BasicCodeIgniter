@@ -562,7 +562,7 @@
 
 				// 添加全部操作成功后的提示
 				if ($this->result['status'] = 200)
-					$this->result['content'] = '全部操作成功';
+					$this->result['content']['message'] = '全部操作成功';
 
 			endif;
 		} // end edit_bulk
