@@ -23,7 +23,7 @@
 		<title><?php echo $title ?></title>
 		<meta name=description content="<?php echo $description ?>">
 		<meta name=keywords content="<?php echo $keywords ?>">
-		<meta name=version content="revision20170703">
+		<meta name=version content="revision20170704">
 		<meta name=author content="作者">
 		<meta name=copyright content="版权信息">
 		<meta name=contact content="联系方式">
@@ -75,7 +75,7 @@
 				<a id=nav-switch class=nav-icon href="#header">
 					<i class="fa fa-bars" aria-hidden=true></i>
 				</a>
-				<a class=nav-icon href="<?php echo base_url('order') ?>">
+				<a class=nav-icon href="<?php echo base_url('mine') ?>">
 					<span class="fa-stack fa-lg">
 					  <i class="fa fa-circle-thin fa-stack-2x"></i>
 					  <i class="fa fa-user fa-stack-1x"></i>

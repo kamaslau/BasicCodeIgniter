@@ -1,6 +1,19 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// 允许响应指定URL的跨域请求
+$origin = isset($_SERVER['HTTP_ORIGIN'])? $_SERVER['HTTP_ORIGIN']: NULL;
+$allow_origin = array(
+    'http://biz.domain.com',
+    'http://www.domain.com',
+	'http://admin.domain.com',
+);
+if ( in_array($origin, $allow_origin) ):
+    header('Access-Control-Allow-Origin:'.$origin);
+    header('Access-Control-Allow-Methods:POST,GET');
+	header('Access-Control-Allow-Credentials:TRUE'); // 允许将Cookie包含在请求中
+endif;
+
 // 需要自定义的常量
 define('SITE_NAME', 'Go Basic!'); // 站点名称
 define('SITE_SLOGAN', '快一点，简单一点。'); // 站点广告语
