@@ -77,7 +77,7 @@
 	</div>
 
 	<?php
-		if ( isset($error) ) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
+		if ( !empty($error) ) echo '<div class="alert alert-warning" role=alert>'.$error.'</div>';
 		$attributes = array('class' => 'form-'.$this->class_name.'-restore form-horizontal', 'role' => 'form');
 		echo form_open($this->class_name.'/restore', $attributes);
 	?>
@@ -89,7 +89,6 @@
 				<label for=password class="col-sm-2 control-label">密码</label>
 				<div class=col-sm-10>
 					<input class=form-control name=password type=password placeholder="请输入您的登录密码" autofocus required>
-					<?php echo form_error('password') ?>
 				</div>
 			</div>
 		</fieldset>
