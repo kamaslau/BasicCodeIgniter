@@ -52,7 +52,7 @@
 		<fieldset>
 			<legend>基本信息</legend>
 			
-			<input name=user_id type=hidden value="<?php echo $this->session->user_id ?>">
+			<input name=id type=hidden value="<?php echo $item[$this->id_name] ?>">
 
 			<div class=form-group>
 				<label for=name class="col-sm-2 control-label">名称</label>

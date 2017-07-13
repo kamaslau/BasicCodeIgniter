@@ -50,7 +50,7 @@
 		echo form_open_multipart($this->class_name.'/edit?id='.$item[$this->id_name], $attributes);
 	?>
 		<fieldset>
-			<input name=user_id type=hidden value="<?php echo $this->session->user_id ?>">
+			<input name=id type=hidden value="<?php echo $item[$this->id_name] ?>">
 			<input name=name type=hidden value="<?php echo $name ?>">
 
 			<div class=form-group>

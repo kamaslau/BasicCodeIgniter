@@ -82,7 +82,6 @@
 		echo form_open($this->class_name.'/delete', $attributes);
 	?>
 		<fieldset>
-			<input name=user_id type=hidden value="<?php echo $this->session->user_id ?>">
 			<input name=ids type=hidden value="<?php echo implode(',', $ids) ?>">
 
 			<div class=form-group>
