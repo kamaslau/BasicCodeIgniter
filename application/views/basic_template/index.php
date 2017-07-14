@@ -1,8 +1,8 @@
 <style>
 
 
-	/* 宽度在768像素以上的设备 */
-	@media only screen and (min-width:769px)
+	/* 宽度在750像素以上的设备 */
+	@media only screen and (min-width:751px)
 	{
 
 	}
@@ -49,46 +49,58 @@
 	</blockquote>
 
 	<?php else: ?>
-	<table class="table table-condensed table-responsive table-striped sortable">
-		<thead>
-			<tr>
-				<th><?php echo $this->class_name_cn ?>ID</th>
-				<?php
-					$thead = array_values($data_to_display);
-					foreach ($thead as $th):
-						echo '<th>' .$th. '</th>';
-					endforeach;
-				?>
-				<th>操作</th>
-			</tr>
-		</thead>
+	<form method=post target=_blank>
+		<fieldset>
+			<div class=btn-group role=group>
+				<button formaction="<?php echo base_url($this->class_name.'/delete') ?>" type=submit class="btn btn-default">删除</button>
+			</div>
+		</fieldset>
 
-		<tbody>
-		<?php foreach ($items as $item): ?>
-			<tr>
-				<td><?php echo $item[$this->id_name] ?></td>
-				<?php
-					$tr = array_keys($data_to_display);
-					foreach ($tr as $td):
-						echo '<td>' .$item[$td]. '</td>';
-					endforeach;
-				?>
-				<td>
-					<ul class=list-unstyled>
-						<li><a title="查看" href="<?php echo base_url($this->view_root.'/detail?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-eye"></i> 查看</a></li>
-						<?php
-						// 需要特定角色和权限进行该操作
-						if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
-						?>
-						<li><a title="编辑" href="<?php echo base_url($this->class_name.'/edit?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-edit"></i> 编辑</a></li>
-						<li><a title="删除" href="<?php echo base_url($this->class_name.'/delete?ids='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-trash"></i> 删除</a></li>
-						<?php endif ?>
-					</ul>
-				</td>
-			</tr>
-		<?php endforeach ?>
-		</tbody>
-	</table>
+		<table class="table table-condensed table-responsive table-striped sortable">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th><?php echo $this->class_name_cn ?>ID</th>
+					<?php
+						$thead = array_values($data_to_display);
+						foreach ($thead as $th):
+							echo '<th>' .$th. '</th>';
+						endforeach;
+					?>
+					<th>操作</th>
+				</tr>
+			</thead>
 
+			<tbody>
+			<?php foreach ($items as $item): ?>
+				<tr>
+					<td>
+						<input name="ids" class=form-control type=checkbox value="<?php echo $item[$this->id_name] ?>">
+					</td>
+					<td><?php echo $item[$this->id_name] ?></td>
+					<?php
+						$tr = array_keys($data_to_display);
+						foreach ($tr as $td):
+							echo '<td>' .$item[$td]. '</td>';
+						endforeach;
+					?>
+					<td>
+						<ul class=list-unstyled>
+							<li><a title="查看" href="<?php echo base_url($this->view_root.'/detail?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-eye"></i> 查看</a></li>
+							<?php
+							// 需要特定角色和权限进行该操作
+							if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
+							?>
+							<li><a title="编辑" href="<?php echo base_url($this->class_name.'/edit?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-edit"></i> 编辑</a></li>
+							<li><a title="删除" href="<?php echo base_url($this->class_name.'/delete?ids='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-trash"></i> 删除</a></li>
+							<?php endif ?>
+						</ul>
+					</td>
+				</tr>
+			<?php endforeach ?>
+			</tbody>
+		</table>
+
+	</form>
 	<?php endif ?>
 </div>

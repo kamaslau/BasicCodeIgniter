@@ -1,8 +1,8 @@
 <style>
 
 
-	/* 宽度在768像素以上的设备 */
-	@media only screen and (min-width:769px)
+	/* 宽度在750像素以上的设备 */
+	@media only screen and (min-width:751px)
 	{
 
 	}
@@ -51,20 +51,11 @@
 
 	<?php else: ?>
 	<form method=post target=_blank>
-		<div class=form-group>
-			<?php
-			$ids_value = '';
-			for ($i=0; $i<count($ids); $i++):
-				$ids_value .= $ids[$i][$this->id_name];
-				if ($i < (count($ids) - 1)) $ids_value .= ',';
-			endfor;
-			?>
-			<input name="ids[]" type=checkbox value="<?php echo $ids_value ?>">
-			<label>全选</label>
-		</div>
-		<div class=btn-group role=group>
-			<button formaction="<?php echo base_url($this->class_name.'/restore') ?>" type=submit class="btn btn-default">恢复</button>
-		</div>
+		<fieldset>
+			<div class=btn-group role=group>
+				<button formaction="<?php echo base_url($this->class_name.'/restore') ?>" type=submit class="btn btn-default">恢复</button>
+			</div>
+		</fieldset>
 
 		<table class="table table-condensed table-hover table-responsive table-striped sortable">
 			<thead>
@@ -85,7 +76,7 @@
 			<?php foreach ($items as $item): ?>
 				<tr>
 					<td>
-						<input name="ids[]" type=checkbox value="<?php echo $item[$this->id_name] ?>">
+						<input name="ids" class=form-control type=checkbox value="<?php echo $item[$this->id_name] ?>">
 					</td>
 					<td><?php echo $item[$this->id_name] ?></td>
 					<?php
@@ -110,7 +101,7 @@
 			<?php endforeach ?>
 			</tbody>
 		</table>
-	
+
 	</form>
 	<?php endif ?>
 </div>
