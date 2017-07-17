@@ -97,6 +97,7 @@
 				<button class="btn btn-danger btn-lg btn-block" type=submit>删除</button>
 		    </div>
 		</div>
+
 	</form>
 
 </div>

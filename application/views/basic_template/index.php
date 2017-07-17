@@ -75,7 +75,7 @@
 			<?php foreach ($items as $item): ?>
 				<tr>
 					<td>
-						<input name="ids" class=form-control type=checkbox value="<?php echo $item[$this->id_name] ?>">
+						<input name=ids[] class=form-control type=checkbox value="<?php echo $item[$this->id_name] ?>">
 					</td>
 					<td><?php echo $item[$this->id_name] ?></td>
 					<?php
@@ -86,13 +86,13 @@
 					?>
 					<td>
 						<ul class=list-unstyled>
-							<li><a title="查看" href="<?php echo base_url($this->view_root.'/detail?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-eye"></i> 查看</a></li>
+							<li><a title="查看" href="<?php echo base_url($this->view_root.'/detail?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-fw fa-eye"></i> 查看</a></li>
 							<?php
 							// 需要特定角色和权限进行该操作
 							if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
 							?>
-							<li><a title="编辑" href="<?php echo base_url($this->class_name.'/edit?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-edit"></i> 编辑</a></li>
-							<li><a title="删除" href="<?php echo base_url($this->class_name.'/delete?ids='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-trash"></i> 删除</a></li>
+							<li><a title="编辑" href="<?php echo base_url($this->class_name.'/edit?id='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-fw fa-edit"></i> 编辑</a></li>
+							<li><a title="删除" href="<?php echo base_url($this->class_name.'/delete?ids='.$item[$this->id_name]) ?>" target=_blank><i class="fa fa-fw fa-trash"></i> 删除</a></li>
 							<?php endif ?>
 						</ul>
 					</td>

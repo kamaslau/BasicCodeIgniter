@@ -30,7 +30,9 @@
 
 <div id=content class=container>
 	<h2><?php echo $title ?></h2>
+	<?php if ( !empty($content) ): ?>
 	<section><?php echo $content ?></section>
+	<?php endif ?>
 	
 	<a class="btn btn-primary" title="<?php echo $this->class_name_cn ?>列表" href="<?php echo base_url($this->class_name) ?>">返回<?php echo $this->class_name_cn ?>列表</a>
 </div>

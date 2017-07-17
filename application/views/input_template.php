@@ -23,9 +23,7 @@
 <input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo set_value('price') ?>" placeholder="保留两位小数" required>
 
 // 下拉列表
-<?php
-	$input_name = 'delivery';
-?>
+<?php $input_name = 'delivery' ?>
 <select class=form-control name="<?php echo $input_name ?>" required>
 	<option value="" <?php echo set_select($input_name, '') ?>>请选择</option>
 	<?php
@@ -61,9 +59,7 @@
 <input class=form-control name=price type=number step=0.01 min=0.00 max=99999.99 value="<?php echo $item['price'] ?>" placeholder="保留两位小数" required>
 
 // 下拉列表
-<?php
-	$input_name = 'delivery';
-?>
+<?php $input_name = 'delivery' ?>
 <select class=form-control name="<?php echo $input_name ?>" required>
 	<?php
 		$options = array('现货', '期货',);
