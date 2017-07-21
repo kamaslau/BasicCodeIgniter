@@ -28,4 +28,8 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-workspace
 *.sublime-project
 /tests/tests/
+<<<<<<< HEAD
+>>>>>>> bcit-ci/develop
+=======
+/tests/results/
 >>>>>>> bcit-ci/develop
