@@ -61,6 +61,7 @@
 // 下拉列表
 <?php $input_name = 'delivery' ?>
 <select class=form-control name="<?php echo $input_name ?>" required>
+	<option value="" <?php if ( empty($item[$input_name]) ) echo 'selected'; ?>>请选择</option>
 	<?php
 		$options = array('现货', '期货',);
 		foreach ($options as $option):
