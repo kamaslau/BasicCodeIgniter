@@ -42,8 +42,12 @@
 		<a class="btn btn-default" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
 	</div>
 	<?php endif ?>
-	
-	<ul class=list-unstyled>
+
+	<?php if ( empty($item) ): ?>
+	<p><?php echo $error ?></p>
+
+	<?php else: ?>
+	<ul class="list-unstyled row">
 		<?php
 		// 需要特定角色和权限进行该操作
 		if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
@@ -85,4 +89,6 @@
 		</dd>
 		<?php endif ?>
 	</dl>
+
+	<?php endif ?>
 </div>

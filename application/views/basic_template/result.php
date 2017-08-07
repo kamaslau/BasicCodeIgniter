@@ -41,7 +41,7 @@
 	
 		<?php if ($operation === 'create'): ?>
 		<li class="col-xs-12 col-sm-6 col-sm-3"><a class="btn btn-primary btn-lg" title="继续创建" href="<?php echo base_url($this->class_name.'/create') ?>">继续创建</a></li>
-		<?php elseif ($operation !== 'edit_bulk'): ?>
+		<?php elseif ($operation === 'edit'): ?>
 		<li class="col-xs-12 col-sm-6 col-sm-3"><a class="btn btn-primary btn-lg" title="查看<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/detail?id='.$id) ?>">确认一下</a></li>
 		<?php endif ?>
 	<?php endif ?>
