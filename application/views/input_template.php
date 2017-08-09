@@ -6,6 +6,9 @@
 	</div>
 </div>
 
+// 提示文本
+<p class=help-block>以※符号标示的为必填项</p>
+
 // 仅显示文本
 <p class="form-control-static">email@example.com</p>
 
