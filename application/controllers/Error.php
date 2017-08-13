@@ -26,9 +26,6 @@
 
 		/* 视图文件所在目录名 */
 		public $view_root;
-		
-		/* 需要显示的字段 */
-		public $data_to_display;
 
 		public function __construct()
 		{
@@ -36,7 +33,7 @@
 			
 			// 向类属性赋值
 			$this->class_name = strtolower(__CLASS__);
-			$this->class_name_cn = '类名'; // 改这里……
+			$this->class_name_cn = '错误'; // 改这里……
 			$this->table_name = 'table'; // 和这里……
 			$this->id_name = 'table_id'; // 还有这里，OK，这就可以了
 			$this->view_root = $this->class_name;
@@ -98,6 +95,23 @@
 
 			$this->load->view('templates/header', $data);
 			$this->load->view($this->view_root.'/404', $data);
+			$this->load->view('templates/footer', $data);
+		}
+		
+		/**
+		 * 权限 所有权不符
+		 */
+		public function not_yours()
+		{
+			// 页面信息
+			$data = array(
+				'title' => '权限问题 - 所有权不符',
+				'class' => 'error error-role',
+				'content' => '您无法操作该项。',
+			);
+
+			$this->load->view('templates/header', $data);
+			$this->load->view($this->view_root.'/not_yours', $data);
 			$this->load->view('templates/footer', $data);
 		}
 		
