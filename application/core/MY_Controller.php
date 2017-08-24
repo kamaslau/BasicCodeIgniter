@@ -2,7 +2,7 @@
 	defined('BASEPATH') OR exit('此文件不可被直接访问');
 	
 	/**
-	 * MY_Controller 基础控制器类
+	 * TODO 需根据进来商城项目进行更新 MY_Controller 基础控制器类
 	 *
 	 * 针对API服务，对Controller类进行了扩展
 	 *

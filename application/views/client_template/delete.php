@@ -34,7 +34,6 @@
 	<div class=btn-group role=group>
 		<a class="btn btn-default" title="所有<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name) ?>"><i class="fa fa-list fa-fw" aria-hidden=true></i> 所有<?php echo $this->class_name_cn ?></a>
 	  	<a class="btn btn-default" title="<?php echo $this->class_name_cn ?>回收站" href="<?php echo base_url($this->class_name.'/trash') ?>"><i class="fa fa-trash fa-fw" aria-hidden=true></i> 回收站</a>
-		<a class="btn btn-default" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
 	</div>
 
 	<table class="table table-striped table-condensed table-responsive">
@@ -76,13 +75,6 @@
 	?>
 		<fieldset>
 			<input name=ids type=hidden value="<?php echo implode(',', $ids) ?>">
-
-			<div class=form-group>
-				<label for=password class="col-sm-2 control-label">密码</label>
-				<div class=col-sm-10>
-					<input class=form-control name=password type=password placeholder="请输入您的登录密码" autofocus required>
-				</div>
-			</div>
 		</fieldset>
 
 		<div class=form-group>
