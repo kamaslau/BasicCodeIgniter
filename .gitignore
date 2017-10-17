@@ -1,12 +1,18 @@
 
+<<<<<<< HEAD
 user_guide_src/source/changelog.rst
+=======
+application/cache/*
+!application/cache/index.html
+>>>>>>> bcit-ci/develop
 
 <<<<<<< HEAD
 user_guide_src/source/installation/upgrade_210.rst
 =======
 application/logs/*
 !application/logs/index.html
-!application/logs/.htaccess
+
+!application/*/.htaccess
 
 composer.lock
 
@@ -29,6 +35,10 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> bcit-ci/develop
+=======
+/tests/results/
 >>>>>>> bcit-ci/develop
 =======
 /tests/results/
