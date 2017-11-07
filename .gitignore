@@ -43,3 +43,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 =======
 /tests/results/
 >>>>>>> bcit-ci/develop
+
+contributing.md

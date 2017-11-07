@@ -14,8 +14,8 @@ a {color:#333;}
 
 noscript {color:#032f62;background-color:#dbedff;padding:16px;border:1px solid rgba(27,31,35,0.15);}
 
-/* 宽度在640像素以上的设备 */
-@media only screen and (min-width:641px)
+/* 宽度在750像素以上的设备 */
+@media only screen and (min-width:751px)
 {
 	
 }
