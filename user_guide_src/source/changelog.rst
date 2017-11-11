@@ -89,7 +89,6 @@ Release Date: Not Released
    -  Removed previously deprecated :doc:`Security Helper <helpers/security_helper>` function ``do_hash()`` (use PHP's native ``hash()`` instead).
    -  Removed previously deprecated :doc:`File Helper <helpers/file_helper>` function ``read_file()`` (use PHP's native ``file_get_contents()`` instead).
    -  Added new function :php:func:`ordinal_format()` to :doc:`Inflector Helper <helpers/inflector_helper>`.
-   -  Added 'img_alt' option to :php:func`create_captcha()` :doc:`CAPTCHA Helper <helpers/captcha_helper>` with a default value of 'captcha'.
 
    -  :doc:`Download Helper <helpers/download_helper>` changes include:
 
@@ -113,6 +112,12 @@ Release Date: Not Released
       - Removed previously deprecated function ``form_prep()`` (use :php:func:`html_escape()` instead).
       - Removed the second (out of three) parameter from the :php:func:`form_upload()` function (it was never used).
 
+   -  :doc:`CAPTCHA Helper <helpers/captcha_helper>` changes include:
+
+      - Added 'img_alt' option with a default value of 'captcha'.
+      - Added ability to generate ``data:image/png;base64`` URIs instead of writing image files to disk.
+      - Updated to always create PNG images instead of JPEG.
+
 
 Version 3.1.7
 =============
@@ -121,8 +126,9 @@ Release Date: Not Released
 
 -  General Changes
 
-   -  Updated :doc:`Form Validation Library <libraries/form_validation>` rule ``valid_email`` to use ``INTL_IDNA_VARIANT_UCS46`` for non-ASCII domain names.
-   -  Updated :doc:`Email Library <libraries/email>` to use ``INTL_IDNA_VARIANT_UCS46`` for non-ASCII domain names.
+   -  Updated :doc:`Form Validation Library <libraries/form_validation>` rule ``valid_email`` to use ``INTL_IDNA_VARIANT_UTS46`` for non-ASCII domain names.
+   -  Updated :doc:`Email Library <libraries/email>` to use ``INTL_IDNA_VARIANT_UTS46`` for non-ASCII domain names.
+   -  Deprecated usage of :doc:`CAPTCHA Helper <helpers/captcha_helper>` function :php:func:`create_captcha()` with parameters other than ``$data``.
 
 Bug fixes for 3.1.7
 -------------------
