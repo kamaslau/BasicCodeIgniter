@@ -31,21 +31,6 @@
 </div>
 
 <div id=content class=container>
-	<?php
-	// 需要特定角色和权限进行该操作
-	$current_role = $this->session->role; // 当前用户角色
-	$current_level = $this->session->level; // 当前用户级别
-	$role_allowed = array('管理员', '经理');
-	$level_allowed = 30;
-	if ( in_array($current_role, $role_allowed) && ($current_level >= $level_allowed) ):
-	?>
-	<div class=btn-group role=group>
-		<a class="btn btn-default" title="所有<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name) ?>"><i class="fa fa-list fa-fw" aria-hidden=true></i> 所有<?php echo $this->class_name_cn ?></a>
-	  	<a class="btn btn-default" title="<?php echo $this->class_name_cn ?>回收站" href="<?php echo base_url($this->class_name.'/trash') ?>"><i class="fa fa-trash fa-fw" aria-hidden=true></i> 回收站</a>
-		<a class="btn btn-default" title="创建<?php echo $this->class_name_cn ?>" href="<?php echo base_url($this->class_name.'/create') ?>"><i class="fa fa-plus fa-fw" aria-hidden=true></i> 创建<?php echo $this->class_name_cn ?></a>
-	</div>
-	<?php endif ?>
-
 	<table class="table table-striped table-condensed table-responsive">
 		<thead>
 			<tr>
