@@ -75,8 +75,8 @@
 
                 <a href="<?php echo base_url($this->class_name.'/detail?id='.$item[$this->id_name]) ?>">
                     <p><?php echo $this->class_name_cn ?>ID <?php echo $item[$this->id_name] ?></p>
-                    <p>名称 <?php echo $item['name'] ?></p>
-                    <p><?php echo $item['province'].$item['city'].$item['county'] ?></p>
+                    <p><?php echo $item['name'] ?></p>
+                    <p><?php echo trim($item['province']. ''.$item['city']. ''.$item['county']) ?></p>
                 </a>
 
                 <div class=item-actions>

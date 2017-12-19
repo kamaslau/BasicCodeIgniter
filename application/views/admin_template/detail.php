@@ -49,7 +49,7 @@
 		    <ul id=item-actions class=list-unstyled>
 				<li><a title="编辑" href="<?php echo base_url($this->class_name.'/edit?id='.$item[$this->id_name]) ?>">编辑</a></li>
 		    </ul>
-	<?php endif ?>
+			<?php endif ?>
 
 	<dl id=list-info class=dl-horizontal>
 		<dt><?php echo $this->class_name_cn ?>ID</dt>
