@@ -23,6 +23,9 @@
 		 */
 		public $id_name;
 
+		public $limit = NULL;
+		public $offset = NULL;
+
 		/**
 		 * 构造函数
          *
@@ -30,8 +33,8 @@
 		 */
 		public function __construct()
 		{
-			parent::__construct();
-		}
+			// CI_Model类无构造函数，无需继承
+		} // end __construct
 
 		/**
 		 * 返回符合单一条件的数据（单行）
@@ -108,8 +111,17 @@
 		 */
 		public function select($condition = NULL, $order_by = NULL, $return_ids = FALSE, $allow_deleted = TRUE)
 		{
-			$limit = $this->input->get_post('limit')? $this->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
-			$offset = $this->input->get_post('offset')? $this->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
+            // 需要从数据库获取的数据行数
+            if ($this->limit === NULL && !empty($this->input->get_post('limit'))):
+                $this->limit = $this->input->get_post('limit');
+            endif;
+
+            // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
+            if ($this->offset === NULL && !empty($this->input->get_post('offset'))):
+                $this->offset = $this->input->get_post('offset');
+            endif;
+
+            $this->db->limit($this->limit, $this->offset);
 
 			// 拆分筛选条件（若有）
 			if ($condition !== NULL):
@@ -134,11 +146,9 @@
 				endforeach;
 			endif;
 
-            $this->db->limit($limit, $offset);
-
 			// 默认可返回已删除项
             if ($allow_deleted === FALSE || (isset($condition['time_delete']) && $condition['time_delete'] === 'NULL'))
-                $this->db->where("`time_delete` IS NULL");
+                $this->db->where("time_delete IS NULL");
 
             $query = $this->db->get($this->table_name);
 
@@ -235,9 +245,17 @@
 		 */
 		public function select_trash($condition = NULL, $order_by = NULL, $return_ids = FALSE)
 		{
-			$limit = $this->input->get_post('limit')? $this->input->get_post('limit'): NULL; // 需要从数据库获取的数据行数
-			$offset = $this->input->get_post('offset')? $this->input->get_post('offset'): NULL; // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
+            // 需要从数据库获取的数据行数
+            if ($this->limit === NULL && !empty($this->input->get_post('limit'))):
+                $this->limit = $this->input->get_post('limit');
+            endif;
 
+            // 需要从数据库获取的数据起始行数（与$limit配合可用于分页等功能）
+            if ($this->offset === NULL && !empty($this->input->get_post('offset'))):
+                $this->offset = $this->input->get_post('offset');
+            endif;
+
+            $this->db->limit($this->limit, $this->offset);
 			// 拆分筛选条件（若有）
 			if ($condition !== NULL):
 				foreach ($condition as $column_name => $value):
@@ -257,8 +275,7 @@
 
 			if ($return_ids === TRUE) $this->db->select($this->id_name);
 
-			$this->db->where('time_delete !=', NULL)
-					->limit($limit, $offset);
+			$this->db->where('time_delete IS NOT NULL');
 
             $query = $this->db->get($this->table_name);
 
