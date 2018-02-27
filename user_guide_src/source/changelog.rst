@@ -12,6 +12,7 @@ Release Date: Not Released
    -  Officially dropped any kind of support for anything under PHP 5.4.8.
    -  Updated Welcome view and HTML error templates with new styling.
    -  Updated configurable directory paths to handle missing trailing ``DIRECTORY_SEPARATOR`` automatically.
+   -  Added support for HTTP status codes 103, 207, 308, 421 and 451 to :doc:`common function <general/common_functions>` :php:func:`set_status_header()`.
 
 -  Core
 
@@ -63,6 +64,12 @@ Release Date: Not Released
 
       - Changed the default value of the **validate** option to ``TRUE``.
       - Changed the ``send()`` method to always return ``TRUE`` when sending multiple batches of emails.
+
+
+   -  :doc:`Image Manipulation Library <libraries/image_lib>` changes include:
+
+      - Added option to change the output filename via the ``new_name`` option when rendering images with ``dynamic_output``.
+      - Updated to serve multibyte filenames when rendering images with ``dynamic_output``, if possible.
 
 -  :doc:`Database <database/index>` changes include:
 
