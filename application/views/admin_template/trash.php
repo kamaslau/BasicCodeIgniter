@@ -59,7 +59,7 @@
         <?php if (count($items) > 1): ?>
         <div id=bulk_action class=action_bottom>
             <span id=bulk_selector data-bulk-selector=off>
-                <i class="fa fa-circle-o" aria-hidden=true></i>全选
+                <i class="far fa-circle"></i>全选
             </span>
             <ul class=horizontal>
                 <li>

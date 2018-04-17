@@ -50,7 +50,7 @@
     <div id=primary_actions class=action_bottom>
         <?php if (count($items) > 1): ?>
         <span id=enter_bulk>
-            <i class="fa fa-pencil-square-o" aria-hidden=true></i>批量
+            <i class="far fa-edit"></i>批量
         </span>
         <?php endif ?>
 
@@ -72,7 +72,7 @@
         <?php if (count($items) > 1): ?>
         <div id=bulk_action class=action_bottom>
             <span id="bulk_selector" data-bulk-selector=off>
-                <i class="fa fa-circle-o" aria-hidden=true></i>全选
+                <i class="far fa-circle"></i>全选
             </span>
             <span id=exit_bulk>取消</span>
             <ul class=horizontal>
