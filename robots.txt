@@ -1,0 +1,5 @@
+# robots.txt generated at http://tool.chinaz.com/robots/
+# 测试环境中需要屏蔽所有搜索引擎对本站点的索引
+
+Crawl-delay: 60
+Disallow: /
