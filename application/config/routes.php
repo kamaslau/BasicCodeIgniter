@@ -53,54 +53,38 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /* Home 首页 */
 $route['home'] = 'home/index'; // 首页
 
-/* Account 账号 */
-$route['login'] = 'account/login'; // 登录
-$route['register'] = 'account/register'; // 注册
-$route['logout'] = 'account/logout'; // 退出当前账号
-$route['email_reset'] = 'account/email_reset'; // 换绑Email（仅限登录后）
-$route['mobile_reset'] = 'account/mobile_reset'; // 换绑手机号（仅限登录后）
+/* Account 账户 */
+$route['login'] = 'account/login'; // 密码登录
+$route['login_sms'] = 'account/login_sms'; // 短信登录/注册
+$route['login_wechat'] = 'account/login_wechat'; // 微信登录
+$route['register'] = 'account/register'; // 邮箱注册
+$route['password_set'] = 'account/password_set'; // 设置密码（仅限登录后）
 $route['password_reset'] = 'account/password_reset'; // 重置密码（仅限登录前）
 $route['password_change'] = 'account/password_change'; // 修改密码（仅限登录后）
-$route['account/edit'] = 'account/edit'; // 编辑账户资料
-$route['mine'] = 'account/mine'; // 个人中心（仅限登录后）
+$route['email_reset'] = 'account/email_reset'; // 换绑Email（仅限登录后）
+$route['mobile_reset'] = 'account/mobile_reset'; // 换绑手机号（仅限登录后）
+$route['logout'] = 'account/logout'; // 退出当前账号
 
 /* 以下按控制器类名称字母降序排列 */
 
 /* Article 文章 */
-$route['article/detail'] = 'article/detail'; // 详情
-$route['article/edit'] = 'article/edit'; // 编辑
-$route['article/create'] = 'article/create'; // 创建
-$route['article/delete'] = 'article/delete'; // 删除
-$route['article/restore'] = 'article/restore'; // 恢复
-$route['article/trash'] = 'article/trash'; // 回收站
-$route['article'] = 'article/index'; // 列表
-
-/* Brand 品牌 */
-$route['brand/detail'] = 'brand/detail'; // 详情
-$route['brand/edit'] = 'brand/edit'; // 编辑
-$route['brand/create'] = 'brand/create'; // 创建
-$route['brand/delete'] = 'brand/delete'; // 删除
-$route['brand/restore'] = 'brand/restore'; // 恢复
-$route['brand/trash'] = 'brand/trash'; // 回收站
-$route['brand'] = 'brand/index'; // 列表
-
-/* Item 产品 */
-$route['item/detail'] = 'item/detail'; // 详情
-$route['item/edit'] = 'item/edit'; // 编辑
-$route['item/create'] = 'item/create'; // 创建
-$route['item/delete'] = 'item/delete'; // 删除
-$route['item/restore'] = 'item/restore'; // 恢复
-$route['item/trash'] = 'item/trash'; // 回收站
-$route['item'] = 'item/index'; // 列表
+$route['contact-us'] = 'article/detail/contact-us'; // 联系我们
+$route['about-us'] = 'article/detail/about-us'; // 关于我们
+$route['policy-privacy'] = 'article/detail/policy-privacy'; // 协议-隐私协议
+$route['policy-service-user'] = 'article/detail/policy-service-user'; // 协议-用户服务协议
+$route['article/detail'] = 'article/detail';
+$route['article/(:any)'] = 'article/detail/$1';
+$route['article'] = 'article/index';
 
 /* Order 订单 */
 $route['order/mine'] = 'order/mine'; // 我的
-$route['order/detail'] = 'order/detail'; // 详情
+$route['order/(:any)'] = 'order/detail/$1'; // 详情
 $route['order'] = 'order/index'; // 列表
 
 /* User 用户（无社交功能的前台一般可删除该组） */
-$route['user/detail'] = 'user/detail'; // 用户详情
-$route['user'] = 'user/index'; // 用户列表
+$route['mine'] = 'user/mine'; // 个人中心（仅限登录后）
+$route['user/(:any)'] = 'user/detail/$1'; // 详情
+$route['user'] = 'user/index'; // 列表
 
 $route['default_controller'] = 'home/index';
 $route['404_override'] = '';

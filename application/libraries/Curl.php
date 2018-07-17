@@ -1,13 +1,15 @@
 <?php
 	defined('BASEPATH') OR exit('此文件不可被直接访问');
 
-	/**
-	* Curl类
-	*
-	* @version 1.0.0
-	* @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	* @copyright ICBG <www.bingshankeji.com>
-	*/
+    /**
+     * Curl 类
+     *
+     * 微信相关功能
+     *
+     * @version 1.0.0
+     * @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
+     * @copyright Kamas <www.kamaslau.com>
+     */
 	class Curl
 	{
 		/**
@@ -30,6 +32,16 @@
 			
 			// 需要通过POST方式发送的数据
 			if ($method === 'post'):
+                // 引用原始CodeIgniter对象
+                $this->CI =& get_instance();
+
+                // 发送当前应用类型
+			    $params['app_type'] = $this->CI->app_type;
+
+			    // 若未传入商家ID，则发送当前商家ID（若有）
+                if ( ! isset($params['biz_id']))
+                    $params['biz_id'] = $this->CI->session->biz_id;
+
 				curl_setopt($curl, CURLOPT_POST, count($params));
 				curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
 			endif;
@@ -51,8 +63,9 @@
 			endif;
 
 			return $result;
-		}
-	}
+		} // end go
+		
+	} // end class Curl
 	
 /* End of file Curl.php */
 /* Location: ./application/libraries/Curl.php */

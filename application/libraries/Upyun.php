@@ -3,11 +3,12 @@
 
 	/**
 	* 又拍云类
+    *
 	* http://docs.upyun.com/api/rest_api/
 	*
 	* @version 1.0.0
 	* @author Kamas 'Iceberg' Lau <kamaslau@outlook.com>
-	* @copyright SSEC <www.ssectec.com>
+	* @copyright Kamas <www.kamaslau.com>
 	*/
 	class Upyun
 	{

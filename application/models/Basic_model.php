@@ -147,9 +147,10 @@
 			endif;
 
 			// 默认可返回已删除项
-            if ($allow_deleted === FALSE || (isset($condition['time_delete']) && $condition['time_delete'] === 'NULL'))
+            if ($allow_deleted === FALSE && !isset($condition['time_delete']))
                 $this->db->where("time_delete IS NULL");
 
+            // 获取数据
             $query = $this->db->get($this->table_name);
 
             // 可选择仅返回符合条件项的ID列表
@@ -218,8 +219,8 @@
             endif;
 
             // 默认可返回已删除项
-            if ($allow_deleted === FALSE)
-                $this->db->where("`time_delete` IS NULL");
+            if ($allow_deleted === FALSE && !isset($condition['time_delete']))
+                $this->db->where("time_delete IS NULL");
 
 			// 拆分字符串为数组
 			$ids = explode(',', trim($ids, ',')); // 清除多余的前后半角逗号
@@ -310,9 +311,8 @@
 		public function create($data, $return_id = FALSE)
 		{
 			// 未传入创建时间时，默认创建时间为当前时间，创建者和最后操作者为当前用户
-			if ( !isset($data['time_create']) ):
+			if ( !isset($data['time_create']) )
 				$data['time_create'] = date('Y-m-d H:i:s');
-			endif;
 
 			// 尝试写入
 			$insert_result = $this->db->insert($this->table_name, $data);
@@ -346,6 +346,20 @@
 				return $update_result;
 			endif;
 		} // end edit
+
+        // TODO 待应用到具体业务并测试
+        // 根据当前用户的id验证密码是否正确，用于操作验证等情景
+        // 此方法应用频繁，不适合进一步抽象进前述match方法
+        public function password_check($id_name = 'stuff')
+        {
+            $data = array(
+                "{$id_name}_id" => $this->session->{$id_name.'_id'},
+                'password' => sha1( $this->input->post('password') ),
+            );
+
+            $query = $this->db->get_where($id_name, $data);
+            return $query->row_array();
+        } // end password_check
 
 	} // end Class Basic_model
 

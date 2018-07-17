@@ -1,56 +1,103 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// 允许响应指定URL的跨域请求
-$origin = isset($_SERVER['HTTP_ORIGIN'])? $_SERVER['HTTP_ORIGIN']: NULL;
-$allow_origin = array(
-    'http://biz.domain.com',
-    'http://www.domain.com',
-	'http://admin.domain.com',
-);
-if ( in_array($origin, $allow_origin) ):
-    header('Access-Control-Allow-Origin:'.$origin);
-    header('Access-Control-Allow-Methods:POST,GET');
-	header('Access-Control-Allow-Credentials:TRUE'); // 允许将Cookie包含在请求中
+// 当前版本号，仅适用于生产环境
+define('CURRENT_VERSION', '0.0.1');
+define('CURRENT_VERSION_MAJOR', 0); // 主版本号
+define('CURRENT_VERSION_MINOR', 0); // 副版本号，功能新增
+define('CURRENT_VERSION_SUPPORT', 1); // 支持版本号，功能调整
+
+// 根域名及URL
+if (ENVIRONMENT !== 'production'): // 测试环境
+    define('ROOT_DOMAIN', '.123.com');
+else: // 生产环境
+    define('ROOT_DOMAIN', '.abc.com');
+endif;
+define('ROOT_URL', ROOT_DOMAIN.'/');
+
+// 对AJAX请求做安全性方面的特殊处理
+if ( isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json,') !== FALSE):
+    header('X-Content-Type-Options:nosniff'); // 防止IE8+自行推测数据格式
+    header('X-Frame-Options:deny'); // 禁止在FRAME中读取数据
+    header("Content-Security-Policy:default-src 'none'"); // 检测和防御XSS（通过设置资源路径）
+    header('X-XSS-Protection:1;mode=block'); // 部分旧浏览器中检测和防御XSS
+    header('Strict-Transport-Security:max-age=3600;includeSubDomains'); // 只允许通过HTTPS进行访问（一小时内）
+
+    // 允许响应指定URL的跨域请求
+    $origin = isset($_SERVER['HTTP_ORIGIN'])? $_SERVER['HTTP_ORIGIN']: NULL;
+    $allow_origin = array(
+        'https://www'.ROOT_DOMAIN,
+        'https://biz'.ROOT_DOMAIN,
+        'https://admin'.ROOT_DOMAIN,
+    );
+    if ( in_array($origin, $allow_origin) ):
+        header('Access-Control-Allow-Origin:'.$origin);
+        header('Access-Control-Allow-Methods:POST');
+        header('Access-Control-Allow-Credentials:TRUE'); // 允许将Cookie包含在请求中
+    endif;
 endif;
 
 // 需要自定义的常量
-define('SITE_NAME', 'Go Basic!'); // 站点名称
-define('SITE_SLOGAN', '快一点，简单一点。'); // 站点广告语
-define('SITE_KEYWORDS', 'Basic,PHP,开发框架,开源,CodeIgniter,CI,GitHub'); // 站点关键词
-define('SITE_DESCRIPTION', 'Basic是一个开源的PHP开发框架，源自CI最新稳定版'); // 站点描述
-define('ICP_NUMBER', NULL); // ICP备案号码，没有请留空
+define('SITE_NAME', ''); // 站点名称
+define('SITE_SLOGAN', ''); // 站点广告语
+define('SITE_KEYWORDS', ''); // 站点关键词
+define('SITE_DESCRIPTION', ''); // 站点描述
+define('ICP_NUMBER', ''); // ICP备案号码，没有请留空
 
-define('BASE_URL', 'https://'. $_SERVER['SERVER_NAME']); // 可对外使用的站点URL；在本地测试时须替换为类似“localhost/BasicCodeigniter”形式
-//define('IMAGES_URL', 'https://images.xx.com/'); // （可选）非样式图片存储的根目录所在URL，可用于配合又拍云等第三方存储
-define('COOKIE_DOMAIN', '.domain.com'); // cookie存储路径；方便起见可让所有子域共享，若需分离可自行配置
+define('BASE_URL', 'https://'.ROOT_URL); // 可对外使用的站点URL
+define('CURRENT_URL', 'https://'. $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI']);
+define('API_URL', 'https://api'.ROOT_URL); // API URL
+define('WEB_URL', 'https://www'.ROOT_URL); // 客户端 URL
+define('BIZ_URL', 'https://biz'.ROOT_URL); // 商家端 URL
+define('ADMIN_URL', 'https://admin'.ROOT_URL); // 管理端 URL
+function api_url($api_name)
+{
+    return API_URL. $api_name;
+}
+define('VIEWS_PATH', APPPATH.'views/'); // 视图文件夹路径
+
+// JS、CSS等非当前站点特有资源所在URL，可用于配合又拍云等第三方存储
+define('CDN_URL', 'https://cdn.'.ROOT_URL); // CDN
+define('DEFAULT_IMAGE', CDN_URL.'default_avatar.png'); // 默认图片URL
+define('MEDIA_URL', 'https://medias.'.ROOT_URL); // 媒体文件，即非样式图片、视频、音频存储的根目录所在URL，可用于配合又拍云等第三方存储
+
+// COOKIE & SESSION相关
+define('COOKIE_DOMAIN', $_SERVER['SERVER_NAME']); // cookie存储路径；方便起见可让所有子域共享，若需分离可自行配置
 define('SESSION_COOKIE_NAME', 'ci_sessions_web'); // 用于cookie存储的session名（设置此值后，前后台session互不影响）
 define('SESSION_TABLE', 'ci_sessions_web'); // 用于session存储的数据库表名
 define('SESSION_PERIOD', 2592000); // session有效期秒数，此处设为30天，即60秒*60分*24小时*30天
 define('ENCRYPTION_KEY', ''); // 秘钥用于加密相关功能，可为空
 
-// RESTful API
-define('API_TOKEN', '7C4l7JLaM3Fq5biQurtmk9nFS');
-define('API_URL', 'https://api.domain.com/');
-function api_url($api_name)
-{
-	$api_url = API_URL. $api_name;
-	return $api_url;
-}
+// 原生应用scheme
+define('APP_SCHEME', '');
 
-/* 以下是为下一个版本将要增加的功能预留的参数 */
+// APPLE开发平台参数
+define('IOS_APP_ID', '');
+
 // 微信公众平台参数
 define('WECHAT_APP_ID', '');
 define('WECHAT_APP_SECRET', '');
 define('WECHAT_TOKEN', '');
 define('AES_KEY', '');
+define('WECHAT_AUTH_URL', 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='.WECHAT_APP_ID.'&redirect_uri='.urlencode(CURRENT_URL).'&response_type=code&scope=snsapi_userinfo#wechat_redirect');
 
 // 微信支付参数（常用JS调起支付方式及被扫支付方式根路径）
-define('WEPAY_URL_JSAPI', BASE_URL.'/payment/wepay/example/jsapi.php?showwxpaytitle=1&');
-define('WEPAY_URL_NATIVE', BASE_URL.'/payment/wepay/example/native.php?showwxpaytitle=1&');
+define('WEPAY_URL_JSAPI', BASE_URL.'payment/wepay/example/jsapi.php?showwxpaytitle=1&');
+define('WEPAY_URL_NATIVE', BASE_URL.'payment/wepay/example/native.php?showwxpaytitle=1&');
 
 // 支付宝参数
-define('ALIPAY_URL', BASE_URL.'/payment/alipay/alipayapi.php?');
+define('ALIPAY_URL', BASE_URL.'payment/alipay/alipayapi.php?');
+
+// 又拍云
+if (ENVIRONMENT !== 'production'): // 测试环境
+    define('UPYUN_BUCKETNAME', '');
+    define('UPYUN_USERNAME', '');
+    define('UPYUN_USERPASSWORD', '');
+else: // 生产环境
+    define('UPYUN_BUCKETNAME', '');
+    define('UPYUN_USERNAME', '');
+    define('UPYUN_USERPASSWORD', '');
+endif;
 
 /*
 |--------------------------------------------------------------------------

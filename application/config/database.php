@@ -47,7 +47,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |				'ssl_key'    - Path to the private key file
 |				'ssl_cert'   - Path to the public key certificate file
 |				'ssl_ca'     - Path to the certificate authority file
-|				'ssl_capath' - Path to a directory containing trusted CA certificates in PEM format
+|				'ssl_capath' - Path to a directory containing trusted CA certificats in PEM format
 |				'ssl_cipher' - List of *allowed* ciphers to be used for the encryption, separated by colons (':')
 |				'ssl_verify' - TRUE/FALSE; Whether verify the server certificate or not ('mysqli' only)
 |
@@ -70,53 +70,51 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
-$active_group = 'default';
+$active_group = (ENVIRONMENT === 'production')? 'production': 'development';
 $query_builder = TRUE;
 
-/* 适用于生产环境的数据库参数，仅有读权限 */
-$db['default'] = array(
-	'dsn' => 'mysqli://basic:Basic2016@sensestrong.mysql.rds.aliyuncs.com/basic',
-	'hostname' => 'sensestrong.mysql.rds.aliyuncs.com', // 数据库URL，以阿里云为例
-	'username' => 'basic', // 数据库用户名
-	'password' => 'Basic2016', // 数据库密码
-	'database' => 'basic', //数据库名
-	'dbdriver' => 'mysqli',
-	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
+$db['production'] = array(
+    'dsn' => 'mysqli://jinlai_client:Yibang2017@rm-uf6l409rr1qg4g2qso.mysql.rds.aliyuncs.com/jinlai',
+    'hostname' => 'rm-uf6l409rr1qg4g2qso.mysql.rds.aliyuncs.com', // 数据库URL，以阿里云为例
+    'username' => 'jinlai_client', // 数据库用户名
+    'password' => 'Yibang2017', // 数据库密码
+    'database' => 'jinlai', //数据库名
+    'dbdriver' => 'mysqli',
+    'dbprefix' => '',
+    'pconnect' => FALSE,
+    'db_debug' => FALSE, // 生产环境中不显示错误报告
+    'cache_on' => FALSE,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => FALSE,
+    'compress' => FALSE,
+    'stricton' => FALSE,
+    'failover' => array(),
+    'save_queries' => TRUE,
 );
 
-/* 适用于本地开发环境的数据库参数 */
-$db['local'] = array(
-	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'basic',
-	'dbdriver' => 'mysqli', // 根据本地环境的不同，可能需要修改为mysql
-	'dbprefix' => '',
-	'pconnect' => FALSE,
-	'db_debug' => TRUE,
-	'cache_on' => FALSE,
-	'cachedir' => '',
-	'char_set' => 'utf8',
-	'dbcollat' => 'utf8_general_ci',
-	'swap_pre' => '',
-	'encrypt' => FALSE,
-	'compress' => FALSE,
-	'stricton' => FALSE,
-	'failover' => array(),
-	'save_queries' => TRUE
+$db['development'] = array(
+    'dsn' => 'mysqli://jinlai:Yibang2017@sensestrong.mysql.rds.aliyuncs.com/jinlai',
+    'hostname' => 'sensestrong.mysql.rds.aliyuncs.com', // 数据库URL，以阿里云为例
+    'username' => 'jinlai', // 数据库用户名
+    'password' => 'Yibang2017', // 数据库密码
+    'database' => 'jinlai', //数据库名
+    'dbdriver' => 'mysqli',
+    'dbprefix' => '',
+    'pconnect' => FALSE,
+    'db_debug' => TRUE,
+    'cache_on' => FALSE,
+    'cachedir' => '',
+    'char_set' => 'utf8',
+    'dbcollat' => 'utf8_general_ci',
+    'swap_pre' => '',
+    'encrypt' => FALSE,
+    'compress' => FALSE,
+    'stricton' => FALSE,
+    'failover' => array(),
+    'save_queries' => TRUE,
 );
 
 /* End of file database.php */
